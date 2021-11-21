@@ -5431,59 +5431,58 @@ var __webpack_exports__ = {};
 "use strict";
 
 
-const core = __nccwpck_require__(186);
-const Twitter = __nccwpck_require__(651);
-
+const core = __nccwpck_require__(186)
+const Twitter = __nccwpck_require__(651)
 
 // most @actions toolkit packages have async methods
-async function run() {
+async function run () {
   try {
-    const tweet = getInput('tweet-message', { mandatory: true });
+    const tweet = getInput('tweet-message', { mandatory: true })
 
-    const tweetLength = getInput('length', { defaultValue: 280 });
+    const tweetLength = getInput('length', { defaultValue: 280 })
     if (tweet.length > tweetLength) {
-      throw new Error(`Tweet is too long. Max length is ${tweetLength}`);
+      throw new Error(`Tweet is too long. Max length is ${tweetLength}`)
     }
 
-    const consumerKey = getEnv('TWITTER_CONSUMER_API_KEY', { mandatory: true });
-    const consumerSecret = getEnv('TWITTER_CONSUMER_API_SECRET', { mandatory: true });
-    const accessToken = getEnv('TWITTER_ACCESS_TOKEN', { mandatory: false });
-    const accessTokenSecret = getEnv('TWITTER_ACCESS_TOKEN_SECRET', { mandatory: false });
+    const consumerKey = getEnv('TWITTER_CONSUMER_API_KEY', { mandatory: true })
+    const consumerSecret = getEnv('TWITTER_CONSUMER_API_SECRET', { mandatory: true })
+    const accessToken = getEnv('TWITTER_ACCESS_TOKEN', { mandatory: false })
+    const accessTokenSecret = getEnv('TWITTER_ACCESS_TOKEN_SECRET', { mandatory: false })
 
     const client = new Twitter({
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,
       access_token_key: accessToken,
-      access_token_secret: accessTokenSecret,
-    });
-    
-    const { data } = await client.post('tweets', {
-      "text": tweet,
-  });
-    console.log(data);
+      access_token_secret: accessTokenSecret
+    })
 
+    const { data } = await client.post('tweets', {
+      text: tweet
+    })
+    console.log(data)
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error.message)
   }
 }
 
-run();
+run()
 
-function getInput(name, { mandatory, defaultValue } = {}) {
-  const input = core.getInput(name) || defaultValue;
+function getInput (name, { mandatory, defaultValue } = {}) {
+  const input = core.getInput(name) || defaultValue
   if (!input && mandatory === true) {
     throw new Error(`${name} is a required input`)
   }
-  return input;
+  return input
 }
 
-function getEnv(name,{ mandatory, defaultValue } = {}) {
-  const env = process.env[name];
+function getEnv (name, { mandatory, defaultValue } = {}) {
+  const env = process.env[name]
   if (!env && mandatory === true) {
     throw new Error(`${name} is a required environment variable`)
   }
-  return env;
+  return env
 }
+
 })();
 
 module.exports = __webpack_exports__;

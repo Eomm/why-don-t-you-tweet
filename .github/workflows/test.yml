@@ -22,6 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: ./
+      if: github.event_name == 'workflow_dispatch'
       with:
         tweet-message: "Hello world"
       env:
