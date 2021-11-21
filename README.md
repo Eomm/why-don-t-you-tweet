@@ -7,15 +7,26 @@ Send a tweet from a GitHub actions workflow!
 To allow GitHub Actions to send tweets programmatically, you'll need to:
 
 - Create a new Twitter application from your [developer console](https://developer.twitter.com/apps).
+- Turn on the Read and Write permissions
+
+![image](https://user-images.githubusercontent.com/11404065/142760622-1207c238-b66c-4893-8810-6fa6b69b4dd4.png)
+
 - Configure the authentication keys and tokens for your Twitter app as secrets in your repository.
+
+![image](https://user-images.githubusercontent.com/11404065/142760644-eceaeb26-7dbd-4b79-8918-82ad30b5a492.png)
+
 - Add the `Usage` section code to your workflow's.
+
+Done in 10 minutes 🎉
 
 ## Secret Configuration
 
-- `TWITTER_CONSUMER_API_KEY`
-- `TWITTER_CONSUMER_API_SECRET`
-- `TWITTER_ACCESS_TOKEN`
-- `TWITTER_ACCESS_TOKEN_SECRET`
+This configuration lets you to tweet using your Twitter account.
+
+- `TWITTER_CONSUMER_API_KEY`: the application consumer key.
+- `TWITTER_CONSUMER_API_SECRET`: the application consumer secret.
+- `TWITTER_ACCESS_TOKEN`: your user access token, generated from the developer console.
+- `TWITTER_ACCESS_TOKEN_SECRET`: your user access token secret, generated from the developer console.
 
 ## Usage
 

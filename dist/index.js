@@ -1,7 +1,7 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 351:
+/***/ 7351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -27,8 +27,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(87));
-const utils_1 = __nccwpck_require__(278);
+const os = __importStar(__nccwpck_require__(2087));
+const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
  *
@@ -100,7 +100,7 @@ function escapeProperty(s) {
 
 /***/ }),
 
-/***/ 186:
+/***/ 2186:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -135,12 +135,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(351);
+const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
-const utils_1 = __nccwpck_require__(278);
-const os = __importStar(__nccwpck_require__(87));
-const path = __importStar(__nccwpck_require__(622));
-const oidc_utils_1 = __nccwpck_require__(41);
+const utils_1 = __nccwpck_require__(5278);
+const os = __importStar(__nccwpck_require__(2087));
+const path = __importStar(__nccwpck_require__(5622));
+const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
  */
@@ -448,9 +448,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issueCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(747));
-const os = __importStar(__nccwpck_require__(87));
-const utils_1 = __nccwpck_require__(278);
+const fs = __importStar(__nccwpck_require__(5747));
+const os = __importStar(__nccwpck_require__(2087));
+const utils_1 = __nccwpck_require__(5278);
 function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
@@ -468,7 +468,7 @@ exports.issueCommand = issueCommand;
 
 /***/ }),
 
-/***/ 41:
+/***/ 8041:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -484,9 +484,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(925);
-const auth_1 = __nccwpck_require__(702);
-const core_1 = __nccwpck_require__(186);
+const http_client_1 = __nccwpck_require__(9925);
+const auth_1 = __nccwpck_require__(3702);
+const core_1 = __nccwpck_require__(2186);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
         const requestOptions = {
@@ -552,7 +552,7 @@ exports.OidcClient = OidcClient;
 
 /***/ }),
 
-/***/ 278:
+/***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -599,7 +599,7 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 702:
+/***/ 3702:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -665,15 +665,15 @@ exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHand
 
 /***/ }),
 
-/***/ 925:
+/***/ 9925:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(605);
-const https = __nccwpck_require__(211);
-const pm = __nccwpck_require__(443);
+const http = __nccwpck_require__(8605);
+const https = __nccwpck_require__(7211);
+const pm = __nccwpck_require__(6443);
 let tunnel;
 var HttpCodes;
 (function (HttpCodes) {
@@ -1092,7 +1092,7 @@ class HttpClient {
         if (useProxy) {
             // If using proxy, need tunnel
             if (!tunnel) {
-                tunnel = __nccwpck_require__(294);
+                tunnel = __nccwpck_require__(4294);
             }
             const agentOptions = {
                 maxSockets: maxSockets,
@@ -1210,7 +1210,7 @@ exports.HttpClient = HttpClient;
 
 /***/ }),
 
-/***/ 443:
+/***/ 6443:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1275,3267 +1275,27 @@ exports.checkBypass = checkBypass;
 
 /***/ }),
 
-/***/ 659:
-/***/ ((module, exports, __nccwpck_require__) => {
-
-"use strict";
-/**
- * @author Toru Nagashima <https://github.com/mysticatea>
- * See LICENSE file in root directory for full license.
- */
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-var eventTargetShim = __nccwpck_require__(697);
-
-/**
- * The signal class.
- * @see https://dom.spec.whatwg.org/#abortsignal
- */
-class AbortSignal extends eventTargetShim.EventTarget {
-    /**
-     * AbortSignal cannot be constructed directly.
-     */
-    constructor() {
-        super();
-        throw new TypeError("AbortSignal cannot be constructed directly");
-    }
-    /**
-     * Returns `true` if this `AbortSignal`'s `AbortController` has signaled to abort, and `false` otherwise.
-     */
-    get aborted() {
-        const aborted = abortedFlags.get(this);
-        if (typeof aborted !== "boolean") {
-            throw new TypeError(`Expected 'this' to be an 'AbortSignal' object, but got ${this === null ? "null" : typeof this}`);
-        }
-        return aborted;
-    }
-}
-eventTargetShim.defineEventAttribute(AbortSignal.prototype, "abort");
-/**
- * Create an AbortSignal object.
- */
-function createAbortSignal() {
-    const signal = Object.create(AbortSignal.prototype);
-    eventTargetShim.EventTarget.call(signal);
-    abortedFlags.set(signal, false);
-    return signal;
-}
-/**
- * Abort a given signal.
- */
-function abortSignal(signal) {
-    if (abortedFlags.get(signal) !== false) {
-        return;
-    }
-    abortedFlags.set(signal, true);
-    signal.dispatchEvent({ type: "abort" });
-}
-/**
- * Aborted flag for each instances.
- */
-const abortedFlags = new WeakMap();
-// Properties should be enumerable.
-Object.defineProperties(AbortSignal.prototype, {
-    aborted: { enumerable: true },
-});
-// `toString()` should return `"[object AbortSignal]"`
-if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
-    Object.defineProperty(AbortSignal.prototype, Symbol.toStringTag, {
-        configurable: true,
-        value: "AbortSignal",
-    });
-}
-
-/**
- * The AbortController.
- * @see https://dom.spec.whatwg.org/#abortcontroller
- */
-class AbortController {
-    /**
-     * Initialize this controller.
-     */
-    constructor() {
-        signals.set(this, createAbortSignal());
-    }
-    /**
-     * Returns the `AbortSignal` object associated with this object.
-     */
-    get signal() {
-        return getSignal(this);
-    }
-    /**
-     * Abort and signal to any observers that the associated activity is to be aborted.
-     */
-    abort() {
-        abortSignal(getSignal(this));
-    }
-}
-/**
- * Associated signals.
- */
-const signals = new WeakMap();
-/**
- * Get the associated signal of a given controller.
- */
-function getSignal(controller) {
-    const signal = signals.get(controller);
-    if (signal == null) {
-        throw new TypeError(`Expected 'this' to be an 'AbortController' object, but got ${controller === null ? "null" : typeof controller}`);
-    }
-    return signal;
-}
-// Properties should be enumerable.
-Object.defineProperties(AbortController.prototype, {
-    signal: { enumerable: true },
-    abort: { enumerable: true },
-});
-if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
-    Object.defineProperty(AbortController.prototype, Symbol.toStringTag, {
-        configurable: true,
-        value: "AbortController",
-    });
-}
-
-exports.AbortController = AbortController;
-exports.AbortSignal = AbortSignal;
-exports.default = AbortController;
-
-module.exports = AbortController
-module.exports.AbortController = module.exports.default = AbortController
-module.exports.AbortSignal = AbortSignal
-//# sourceMappingURL=abort-controller.js.map
-
-
-/***/ }),
-
-/***/ 697:
-/***/ ((module, exports) => {
-
-"use strict";
-/**
- * @author Toru Nagashima <https://github.com/mysticatea>
- * @copyright 2015 Toru Nagashima. All rights reserved.
- * See LICENSE file in root directory for full license.
- */
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-/**
- * @typedef {object} PrivateData
- * @property {EventTarget} eventTarget The event target.
- * @property {{type:string}} event The original event object.
- * @property {number} eventPhase The current event phase.
- * @property {EventTarget|null} currentTarget The current event target.
- * @property {boolean} canceled The flag to prevent default.
- * @property {boolean} stopped The flag to stop propagation.
- * @property {boolean} immediateStopped The flag to stop propagation immediately.
- * @property {Function|null} passiveListener The listener if the current listener is passive. Otherwise this is null.
- * @property {number} timeStamp The unix time.
- * @private
- */
-
-/**
- * Private data for event wrappers.
- * @type {WeakMap<Event, PrivateData>}
- * @private
- */
-const privateData = new WeakMap();
-
-/**
- * Cache for wrapper classes.
- * @type {WeakMap<Object, Function>}
- * @private
- */
-const wrappers = new WeakMap();
-
-/**
- * Get private data.
- * @param {Event} event The event object to get private data.
- * @returns {PrivateData} The private data of the event.
- * @private
- */
-function pd(event) {
-    const retv = privateData.get(event);
-    console.assert(
-        retv != null,
-        "'this' is expected an Event object, but got",
-        event
-    );
-    return retv
-}
-
-/**
- * https://dom.spec.whatwg.org/#set-the-canceled-flag
- * @param data {PrivateData} private data.
- */
-function setCancelFlag(data) {
-    if (data.passiveListener != null) {
-        if (
-            typeof console !== "undefined" &&
-            typeof console.error === "function"
-        ) {
-            console.error(
-                "Unable to preventDefault inside passive event listener invocation.",
-                data.passiveListener
-            );
-        }
-        return
-    }
-    if (!data.event.cancelable) {
-        return
-    }
-
-    data.canceled = true;
-    if (typeof data.event.preventDefault === "function") {
-        data.event.preventDefault();
-    }
-}
-
-/**
- * @see https://dom.spec.whatwg.org/#interface-event
- * @private
- */
-/**
- * The event wrapper.
- * @constructor
- * @param {EventTarget} eventTarget The event target of this dispatching.
- * @param {Event|{type:string}} event The original event to wrap.
- */
-function Event(eventTarget, event) {
-    privateData.set(this, {
-        eventTarget,
-        event,
-        eventPhase: 2,
-        currentTarget: eventTarget,
-        canceled: false,
-        stopped: false,
-        immediateStopped: false,
-        passiveListener: null,
-        timeStamp: event.timeStamp || Date.now(),
-    });
-
-    // https://heycam.github.io/webidl/#Unforgeable
-    Object.defineProperty(this, "isTrusted", { value: false, enumerable: true });
-
-    // Define accessors
-    const keys = Object.keys(event);
-    for (let i = 0; i < keys.length; ++i) {
-        const key = keys[i];
-        if (!(key in this)) {
-            Object.defineProperty(this, key, defineRedirectDescriptor(key));
-        }
-    }
-}
-
-// Should be enumerable, but class methods are not enumerable.
-Event.prototype = {
-    /**
-     * The type of this event.
-     * @type {string}
-     */
-    get type() {
-        return pd(this).event.type
-    },
-
-    /**
-     * The target of this event.
-     * @type {EventTarget}
-     */
-    get target() {
-        return pd(this).eventTarget
-    },
-
-    /**
-     * The target of this event.
-     * @type {EventTarget}
-     */
-    get currentTarget() {
-        return pd(this).currentTarget
-    },
-
-    /**
-     * @returns {EventTarget[]} The composed path of this event.
-     */
-    composedPath() {
-        const currentTarget = pd(this).currentTarget;
-        if (currentTarget == null) {
-            return []
-        }
-        return [currentTarget]
-    },
-
-    /**
-     * Constant of NONE.
-     * @type {number}
-     */
-    get NONE() {
-        return 0
-    },
-
-    /**
-     * Constant of CAPTURING_PHASE.
-     * @type {number}
-     */
-    get CAPTURING_PHASE() {
-        return 1
-    },
-
-    /**
-     * Constant of AT_TARGET.
-     * @type {number}
-     */
-    get AT_TARGET() {
-        return 2
-    },
-
-    /**
-     * Constant of BUBBLING_PHASE.
-     * @type {number}
-     */
-    get BUBBLING_PHASE() {
-        return 3
-    },
-
-    /**
-     * The target of this event.
-     * @type {number}
-     */
-    get eventPhase() {
-        return pd(this).eventPhase
-    },
-
-    /**
-     * Stop event bubbling.
-     * @returns {void}
-     */
-    stopPropagation() {
-        const data = pd(this);
-
-        data.stopped = true;
-        if (typeof data.event.stopPropagation === "function") {
-            data.event.stopPropagation();
-        }
-    },
-
-    /**
-     * Stop event bubbling.
-     * @returns {void}
-     */
-    stopImmediatePropagation() {
-        const data = pd(this);
-
-        data.stopped = true;
-        data.immediateStopped = true;
-        if (typeof data.event.stopImmediatePropagation === "function") {
-            data.event.stopImmediatePropagation();
-        }
-    },
-
-    /**
-     * The flag to be bubbling.
-     * @type {boolean}
-     */
-    get bubbles() {
-        return Boolean(pd(this).event.bubbles)
-    },
-
-    /**
-     * The flag to be cancelable.
-     * @type {boolean}
-     */
-    get cancelable() {
-        return Boolean(pd(this).event.cancelable)
-    },
-
-    /**
-     * Cancel this event.
-     * @returns {void}
-     */
-    preventDefault() {
-        setCancelFlag(pd(this));
-    },
-
-    /**
-     * The flag to indicate cancellation state.
-     * @type {boolean}
-     */
-    get defaultPrevented() {
-        return pd(this).canceled
-    },
-
-    /**
-     * The flag to be composed.
-     * @type {boolean}
-     */
-    get composed() {
-        return Boolean(pd(this).event.composed)
-    },
-
-    /**
-     * The unix time of this event.
-     * @type {number}
-     */
-    get timeStamp() {
-        return pd(this).timeStamp
-    },
-
-    /**
-     * The target of this event.
-     * @type {EventTarget}
-     * @deprecated
-     */
-    get srcElement() {
-        return pd(this).eventTarget
-    },
-
-    /**
-     * The flag to stop event bubbling.
-     * @type {boolean}
-     * @deprecated
-     */
-    get cancelBubble() {
-        return pd(this).stopped
-    },
-    set cancelBubble(value) {
-        if (!value) {
-            return
-        }
-        const data = pd(this);
-
-        data.stopped = true;
-        if (typeof data.event.cancelBubble === "boolean") {
-            data.event.cancelBubble = true;
-        }
-    },
-
-    /**
-     * The flag to indicate cancellation state.
-     * @type {boolean}
-     * @deprecated
-     */
-    get returnValue() {
-        return !pd(this).canceled
-    },
-    set returnValue(value) {
-        if (!value) {
-            setCancelFlag(pd(this));
-        }
-    },
-
-    /**
-     * Initialize this event object. But do nothing under event dispatching.
-     * @param {string} type The event type.
-     * @param {boolean} [bubbles=false] The flag to be possible to bubble up.
-     * @param {boolean} [cancelable=false] The flag to be possible to cancel.
-     * @deprecated
-     */
-    initEvent() {
-        // Do nothing.
-    },
-};
-
-// `constructor` is not enumerable.
-Object.defineProperty(Event.prototype, "constructor", {
-    value: Event,
-    configurable: true,
-    writable: true,
-});
-
-// Ensure `event instanceof window.Event` is `true`.
-if (typeof window !== "undefined" && typeof window.Event !== "undefined") {
-    Object.setPrototypeOf(Event.prototype, window.Event.prototype);
-
-    // Make association for wrappers.
-    wrappers.set(window.Event.prototype, Event);
-}
-
-/**
- * Get the property descriptor to redirect a given property.
- * @param {string} key Property name to define property descriptor.
- * @returns {PropertyDescriptor} The property descriptor to redirect the property.
- * @private
- */
-function defineRedirectDescriptor(key) {
-    return {
-        get() {
-            return pd(this).event[key]
-        },
-        set(value) {
-            pd(this).event[key] = value;
-        },
-        configurable: true,
-        enumerable: true,
-    }
-}
-
-/**
- * Get the property descriptor to call a given method property.
- * @param {string} key Property name to define property descriptor.
- * @returns {PropertyDescriptor} The property descriptor to call the method property.
- * @private
- */
-function defineCallDescriptor(key) {
-    return {
-        value() {
-            const event = pd(this).event;
-            return event[key].apply(event, arguments)
-        },
-        configurable: true,
-        enumerable: true,
-    }
-}
-
-/**
- * Define new wrapper class.
- * @param {Function} BaseEvent The base wrapper class.
- * @param {Object} proto The prototype of the original event.
- * @returns {Function} The defined wrapper class.
- * @private
- */
-function defineWrapper(BaseEvent, proto) {
-    const keys = Object.keys(proto);
-    if (keys.length === 0) {
-        return BaseEvent
-    }
-
-    /** CustomEvent */
-    function CustomEvent(eventTarget, event) {
-        BaseEvent.call(this, eventTarget, event);
-    }
-
-    CustomEvent.prototype = Object.create(BaseEvent.prototype, {
-        constructor: { value: CustomEvent, configurable: true, writable: true },
-    });
-
-    // Define accessors.
-    for (let i = 0; i < keys.length; ++i) {
-        const key = keys[i];
-        if (!(key in BaseEvent.prototype)) {
-            const descriptor = Object.getOwnPropertyDescriptor(proto, key);
-            const isFunc = typeof descriptor.value === "function";
-            Object.defineProperty(
-                CustomEvent.prototype,
-                key,
-                isFunc
-                    ? defineCallDescriptor(key)
-                    : defineRedirectDescriptor(key)
-            );
-        }
-    }
-
-    return CustomEvent
-}
-
-/**
- * Get the wrapper class of a given prototype.
- * @param {Object} proto The prototype of the original event to get its wrapper.
- * @returns {Function} The wrapper class.
- * @private
- */
-function getWrapper(proto) {
-    if (proto == null || proto === Object.prototype) {
-        return Event
-    }
-
-    let wrapper = wrappers.get(proto);
-    if (wrapper == null) {
-        wrapper = defineWrapper(getWrapper(Object.getPrototypeOf(proto)), proto);
-        wrappers.set(proto, wrapper);
-    }
-    return wrapper
-}
-
-/**
- * Wrap a given event to management a dispatching.
- * @param {EventTarget} eventTarget The event target of this dispatching.
- * @param {Object} event The event to wrap.
- * @returns {Event} The wrapper instance.
- * @private
- */
-function wrapEvent(eventTarget, event) {
-    const Wrapper = getWrapper(Object.getPrototypeOf(event));
-    return new Wrapper(eventTarget, event)
-}
-
-/**
- * Get the immediateStopped flag of a given event.
- * @param {Event} event The event to get.
- * @returns {boolean} The flag to stop propagation immediately.
- * @private
- */
-function isStopped(event) {
-    return pd(event).immediateStopped
-}
-
-/**
- * Set the current event phase of a given event.
- * @param {Event} event The event to set current target.
- * @param {number} eventPhase New event phase.
- * @returns {void}
- * @private
- */
-function setEventPhase(event, eventPhase) {
-    pd(event).eventPhase = eventPhase;
-}
-
-/**
- * Set the current target of a given event.
- * @param {Event} event The event to set current target.
- * @param {EventTarget|null} currentTarget New current target.
- * @returns {void}
- * @private
- */
-function setCurrentTarget(event, currentTarget) {
-    pd(event).currentTarget = currentTarget;
-}
-
-/**
- * Set a passive listener of a given event.
- * @param {Event} event The event to set current target.
- * @param {Function|null} passiveListener New passive listener.
- * @returns {void}
- * @private
- */
-function setPassiveListener(event, passiveListener) {
-    pd(event).passiveListener = passiveListener;
-}
-
-/**
- * @typedef {object} ListenerNode
- * @property {Function} listener
- * @property {1|2|3} listenerType
- * @property {boolean} passive
- * @property {boolean} once
- * @property {ListenerNode|null} next
- * @private
- */
-
-/**
- * @type {WeakMap<object, Map<string, ListenerNode>>}
- * @private
- */
-const listenersMap = new WeakMap();
-
-// Listener types
-const CAPTURE = 1;
-const BUBBLE = 2;
-const ATTRIBUTE = 3;
-
-/**
- * Check whether a given value is an object or not.
- * @param {any} x The value to check.
- * @returns {boolean} `true` if the value is an object.
- */
-function isObject(x) {
-    return x !== null && typeof x === "object" //eslint-disable-line no-restricted-syntax
-}
-
-/**
- * Get listeners.
- * @param {EventTarget} eventTarget The event target to get.
- * @returns {Map<string, ListenerNode>} The listeners.
- * @private
- */
-function getListeners(eventTarget) {
-    const listeners = listenersMap.get(eventTarget);
-    if (listeners == null) {
-        throw new TypeError(
-            "'this' is expected an EventTarget object, but got another value."
-        )
-    }
-    return listeners
-}
-
-/**
- * Get the property descriptor for the event attribute of a given event.
- * @param {string} eventName The event name to get property descriptor.
- * @returns {PropertyDescriptor} The property descriptor.
- * @private
- */
-function defineEventAttributeDescriptor(eventName) {
-    return {
-        get() {
-            const listeners = getListeners(this);
-            let node = listeners.get(eventName);
-            while (node != null) {
-                if (node.listenerType === ATTRIBUTE) {
-                    return node.listener
-                }
-                node = node.next;
-            }
-            return null
-        },
-
-        set(listener) {
-            if (typeof listener !== "function" && !isObject(listener)) {
-                listener = null; // eslint-disable-line no-param-reassign
-            }
-            const listeners = getListeners(this);
-
-            // Traverse to the tail while removing old value.
-            let prev = null;
-            let node = listeners.get(eventName);
-            while (node != null) {
-                if (node.listenerType === ATTRIBUTE) {
-                    // Remove old value.
-                    if (prev !== null) {
-                        prev.next = node.next;
-                    } else if (node.next !== null) {
-                        listeners.set(eventName, node.next);
-                    } else {
-                        listeners.delete(eventName);
-                    }
-                } else {
-                    prev = node;
-                }
-
-                node = node.next;
-            }
-
-            // Add new value.
-            if (listener !== null) {
-                const newNode = {
-                    listener,
-                    listenerType: ATTRIBUTE,
-                    passive: false,
-                    once: false,
-                    next: null,
-                };
-                if (prev === null) {
-                    listeners.set(eventName, newNode);
-                } else {
-                    prev.next = newNode;
-                }
-            }
-        },
-        configurable: true,
-        enumerable: true,
-    }
-}
-
-/**
- * Define an event attribute (e.g. `eventTarget.onclick`).
- * @param {Object} eventTargetPrototype The event target prototype to define an event attrbite.
- * @param {string} eventName The event name to define.
- * @returns {void}
- */
-function defineEventAttribute(eventTargetPrototype, eventName) {
-    Object.defineProperty(
-        eventTargetPrototype,
-        `on${eventName}`,
-        defineEventAttributeDescriptor(eventName)
-    );
-}
-
-/**
- * Define a custom EventTarget with event attributes.
- * @param {string[]} eventNames Event names for event attributes.
- * @returns {EventTarget} The custom EventTarget.
- * @private
- */
-function defineCustomEventTarget(eventNames) {
-    /** CustomEventTarget */
-    function CustomEventTarget() {
-        EventTarget.call(this);
-    }
-
-    CustomEventTarget.prototype = Object.create(EventTarget.prototype, {
-        constructor: {
-            value: CustomEventTarget,
-            configurable: true,
-            writable: true,
-        },
-    });
-
-    for (let i = 0; i < eventNames.length; ++i) {
-        defineEventAttribute(CustomEventTarget.prototype, eventNames[i]);
-    }
-
-    return CustomEventTarget
-}
-
-/**
- * EventTarget.
- *
- * - This is constructor if no arguments.
- * - This is a function which returns a CustomEventTarget constructor if there are arguments.
- *
- * For example:
- *
- *     class A extends EventTarget {}
- *     class B extends EventTarget("message") {}
- *     class C extends EventTarget("message", "error") {}
- *     class D extends EventTarget(["message", "error"]) {}
- */
-function EventTarget() {
-    /*eslint-disable consistent-return */
-    if (this instanceof EventTarget) {
-        listenersMap.set(this, new Map());
-        return
-    }
-    if (arguments.length === 1 && Array.isArray(arguments[0])) {
-        return defineCustomEventTarget(arguments[0])
-    }
-    if (arguments.length > 0) {
-        const types = new Array(arguments.length);
-        for (let i = 0; i < arguments.length; ++i) {
-            types[i] = arguments[i];
-        }
-        return defineCustomEventTarget(types)
-    }
-    throw new TypeError("Cannot call a class as a function")
-    /*eslint-enable consistent-return */
-}
-
-// Should be enumerable, but class methods are not enumerable.
-EventTarget.prototype = {
-    /**
-     * Add a given listener to this event target.
-     * @param {string} eventName The event name to add.
-     * @param {Function} listener The listener to add.
-     * @param {boolean|{capture?:boolean,passive?:boolean,once?:boolean}} [options] The options for this listener.
-     * @returns {void}
-     */
-    addEventListener(eventName, listener, options) {
-        if (listener == null) {
-            return
-        }
-        if (typeof listener !== "function" && !isObject(listener)) {
-            throw new TypeError("'listener' should be a function or an object.")
-        }
-
-        const listeners = getListeners(this);
-        const optionsIsObj = isObject(options);
-        const capture = optionsIsObj
-            ? Boolean(options.capture)
-            : Boolean(options);
-        const listenerType = capture ? CAPTURE : BUBBLE;
-        const newNode = {
-            listener,
-            listenerType,
-            passive: optionsIsObj && Boolean(options.passive),
-            once: optionsIsObj && Boolean(options.once),
-            next: null,
-        };
-
-        // Set it as the first node if the first node is null.
-        let node = listeners.get(eventName);
-        if (node === undefined) {
-            listeners.set(eventName, newNode);
-            return
-        }
-
-        // Traverse to the tail while checking duplication..
-        let prev = null;
-        while (node != null) {
-            if (
-                node.listener === listener &&
-                node.listenerType === listenerType
-            ) {
-                // Should ignore duplication.
-                return
-            }
-            prev = node;
-            node = node.next;
-        }
-
-        // Add it.
-        prev.next = newNode;
-    },
-
-    /**
-     * Remove a given listener from this event target.
-     * @param {string} eventName The event name to remove.
-     * @param {Function} listener The listener to remove.
-     * @param {boolean|{capture?:boolean,passive?:boolean,once?:boolean}} [options] The options for this listener.
-     * @returns {void}
-     */
-    removeEventListener(eventName, listener, options) {
-        if (listener == null) {
-            return
-        }
-
-        const listeners = getListeners(this);
-        const capture = isObject(options)
-            ? Boolean(options.capture)
-            : Boolean(options);
-        const listenerType = capture ? CAPTURE : BUBBLE;
-
-        let prev = null;
-        let node = listeners.get(eventName);
-        while (node != null) {
-            if (
-                node.listener === listener &&
-                node.listenerType === listenerType
-            ) {
-                if (prev !== null) {
-                    prev.next = node.next;
-                } else if (node.next !== null) {
-                    listeners.set(eventName, node.next);
-                } else {
-                    listeners.delete(eventName);
-                }
-                return
-            }
-
-            prev = node;
-            node = node.next;
-        }
-    },
-
-    /**
-     * Dispatch a given event.
-     * @param {Event|{type:string}} event The event to dispatch.
-     * @returns {boolean} `false` if canceled.
-     */
-    dispatchEvent(event) {
-        if (event == null || typeof event.type !== "string") {
-            throw new TypeError('"event.type" should be a string.')
-        }
-
-        // If listeners aren't registered, terminate.
-        const listeners = getListeners(this);
-        const eventName = event.type;
-        let node = listeners.get(eventName);
-        if (node == null) {
-            return true
-        }
-
-        // Since we cannot rewrite several properties, so wrap object.
-        const wrappedEvent = wrapEvent(this, event);
-
-        // This doesn't process capturing phase and bubbling phase.
-        // This isn't participating in a tree.
-        let prev = null;
-        while (node != null) {
-            // Remove this listener if it's once
-            if (node.once) {
-                if (prev !== null) {
-                    prev.next = node.next;
-                } else if (node.next !== null) {
-                    listeners.set(eventName, node.next);
-                } else {
-                    listeners.delete(eventName);
-                }
-            } else {
-                prev = node;
-            }
-
-            // Call this listener
-            setPassiveListener(
-                wrappedEvent,
-                node.passive ? node.listener : null
-            );
-            if (typeof node.listener === "function") {
-                try {
-                    node.listener.call(this, wrappedEvent);
-                } catch (err) {
-                    if (
-                        typeof console !== "undefined" &&
-                        typeof console.error === "function"
-                    ) {
-                        console.error(err);
-                    }
-                }
-            } else if (
-                node.listenerType !== ATTRIBUTE &&
-                typeof node.listener.handleEvent === "function"
-            ) {
-                node.listener.handleEvent(wrappedEvent);
-            }
-
-            // Break if `event.stopImmediatePropagation` was called.
-            if (isStopped(wrappedEvent)) {
-                break
-            }
-
-            node = node.next;
-        }
-        setPassiveListener(wrappedEvent, null);
-        setEventPhase(wrappedEvent, 0);
-        setCurrentTarget(wrappedEvent, null);
-
-        return !wrappedEvent.defaultPrevented
-    },
-};
-
-// `constructor` is not enumerable.
-Object.defineProperty(EventTarget.prototype, "constructor", {
-    value: EventTarget,
-    configurable: true,
-    writable: true,
-});
-
-// Ensure `eventTarget instanceof window.EventTarget` is `true`.
-if (
-    typeof window !== "undefined" &&
-    typeof window.EventTarget !== "undefined"
-) {
-    Object.setPrototypeOf(EventTarget.prototype, window.EventTarget.prototype);
-}
-
-exports.defineEventAttribute = defineEventAttribute;
-exports.EventTarget = EventTarget;
-exports.default = EventTarget;
-
-module.exports = EventTarget
-module.exports.EventTarget = module.exports.default = EventTarget
-module.exports.defineEventAttribute = defineEventAttribute
-//# sourceMappingURL=event-target-shim.js.map
-
-
-/***/ }),
-
-/***/ 467:
-/***/ ((module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var Stream = _interopDefault(__nccwpck_require__(413));
-var http = _interopDefault(__nccwpck_require__(605));
-var Url = _interopDefault(__nccwpck_require__(835));
-var https = _interopDefault(__nccwpck_require__(211));
-var zlib = _interopDefault(__nccwpck_require__(761));
-
-// Based on https://github.com/tmpvar/jsdom/blob/aa85b2abf07766ff7bf5c1f6daafb3726f2f2db5/lib/jsdom/living/blob.js
-
-// fix for "Readable" isn't a named export issue
-const Readable = Stream.Readable;
-
-const BUFFER = Symbol('buffer');
-const TYPE = Symbol('type');
-
-class Blob {
-	constructor() {
-		this[TYPE] = '';
-
-		const blobParts = arguments[0];
-		const options = arguments[1];
-
-		const buffers = [];
-		let size = 0;
-
-		if (blobParts) {
-			const a = blobParts;
-			const length = Number(a.length);
-			for (let i = 0; i < length; i++) {
-				const element = a[i];
-				let buffer;
-				if (element instanceof Buffer) {
-					buffer = element;
-				} else if (ArrayBuffer.isView(element)) {
-					buffer = Buffer.from(element.buffer, element.byteOffset, element.byteLength);
-				} else if (element instanceof ArrayBuffer) {
-					buffer = Buffer.from(element);
-				} else if (element instanceof Blob) {
-					buffer = element[BUFFER];
-				} else {
-					buffer = Buffer.from(typeof element === 'string' ? element : String(element));
-				}
-				size += buffer.length;
-				buffers.push(buffer);
-			}
-		}
-
-		this[BUFFER] = Buffer.concat(buffers);
-
-		let type = options && options.type !== undefined && String(options.type).toLowerCase();
-		if (type && !/[^\u0020-\u007E]/.test(type)) {
-			this[TYPE] = type;
-		}
-	}
-	get size() {
-		return this[BUFFER].length;
-	}
-	get type() {
-		return this[TYPE];
-	}
-	text() {
-		return Promise.resolve(this[BUFFER].toString());
-	}
-	arrayBuffer() {
-		const buf = this[BUFFER];
-		const ab = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-		return Promise.resolve(ab);
-	}
-	stream() {
-		const readable = new Readable();
-		readable._read = function () {};
-		readable.push(this[BUFFER]);
-		readable.push(null);
-		return readable;
-	}
-	toString() {
-		return '[object Blob]';
-	}
-	slice() {
-		const size = this.size;
-
-		const start = arguments[0];
-		const end = arguments[1];
-		let relativeStart, relativeEnd;
-		if (start === undefined) {
-			relativeStart = 0;
-		} else if (start < 0) {
-			relativeStart = Math.max(size + start, 0);
-		} else {
-			relativeStart = Math.min(start, size);
-		}
-		if (end === undefined) {
-			relativeEnd = size;
-		} else if (end < 0) {
-			relativeEnd = Math.max(size + end, 0);
-		} else {
-			relativeEnd = Math.min(end, size);
-		}
-		const span = Math.max(relativeEnd - relativeStart, 0);
-
-		const buffer = this[BUFFER];
-		const slicedBuffer = buffer.slice(relativeStart, relativeStart + span);
-		const blob = new Blob([], { type: arguments[2] });
-		blob[BUFFER] = slicedBuffer;
-		return blob;
-	}
-}
-
-Object.defineProperties(Blob.prototype, {
-	size: { enumerable: true },
-	type: { enumerable: true },
-	slice: { enumerable: true }
-});
-
-Object.defineProperty(Blob.prototype, Symbol.toStringTag, {
-	value: 'Blob',
-	writable: false,
-	enumerable: false,
-	configurable: true
-});
-
-/**
- * fetch-error.js
- *
- * FetchError interface for operational errors
- */
-
-/**
- * Create FetchError instance
- *
- * @param   String      message      Error message for human
- * @param   String      type         Error type for machine
- * @param   String      systemError  For Node.js system error
- * @return  FetchError
- */
-function FetchError(message, type, systemError) {
-  Error.call(this, message);
-
-  this.message = message;
-  this.type = type;
-
-  // when err.type is `system`, err.code contains system error code
-  if (systemError) {
-    this.code = this.errno = systemError.code;
-  }
-
-  // hide custom error implementation details from end-users
-  Error.captureStackTrace(this, this.constructor);
-}
-
-FetchError.prototype = Object.create(Error.prototype);
-FetchError.prototype.constructor = FetchError;
-FetchError.prototype.name = 'FetchError';
-
-let convert;
-try {
-	convert = __nccwpck_require__(877).convert;
-} catch (e) {}
-
-const INTERNALS = Symbol('Body internals');
-
-// fix an issue where "PassThrough" isn't a named export for node <10
-const PassThrough = Stream.PassThrough;
-
-/**
- * Body mixin
- *
- * Ref: https://fetch.spec.whatwg.org/#body
- *
- * @param   Stream  body  Readable stream
- * @param   Object  opts  Response options
- * @return  Void
- */
-function Body(body) {
-	var _this = this;
-
-	var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-	    _ref$size = _ref.size;
-
-	let size = _ref$size === undefined ? 0 : _ref$size;
-	var _ref$timeout = _ref.timeout;
-	let timeout = _ref$timeout === undefined ? 0 : _ref$timeout;
-
-	if (body == null) {
-		// body is undefined or null
-		body = null;
-	} else if (isURLSearchParams(body)) {
-		// body is a URLSearchParams
-		body = Buffer.from(body.toString());
-	} else if (isBlob(body)) ; else if (Buffer.isBuffer(body)) ; else if (Object.prototype.toString.call(body) === '[object ArrayBuffer]') {
-		// body is ArrayBuffer
-		body = Buffer.from(body);
-	} else if (ArrayBuffer.isView(body)) {
-		// body is ArrayBufferView
-		body = Buffer.from(body.buffer, body.byteOffset, body.byteLength);
-	} else if (body instanceof Stream) ; else {
-		// none of the above
-		// coerce to string then buffer
-		body = Buffer.from(String(body));
-	}
-	this[INTERNALS] = {
-		body,
-		disturbed: false,
-		error: null
-	};
-	this.size = size;
-	this.timeout = timeout;
-
-	if (body instanceof Stream) {
-		body.on('error', function (err) {
-			const error = err.name === 'AbortError' ? err : new FetchError(`Invalid response body while trying to fetch ${_this.url}: ${err.message}`, 'system', err);
-			_this[INTERNALS].error = error;
-		});
-	}
-}
-
-Body.prototype = {
-	get body() {
-		return this[INTERNALS].body;
-	},
-
-	get bodyUsed() {
-		return this[INTERNALS].disturbed;
-	},
-
-	/**
-  * Decode response as ArrayBuffer
-  *
-  * @return  Promise
-  */
-	arrayBuffer() {
-		return consumeBody.call(this).then(function (buf) {
-			return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
-		});
-	},
-
-	/**
-  * Return raw response as Blob
-  *
-  * @return Promise
-  */
-	blob() {
-		let ct = this.headers && this.headers.get('content-type') || '';
-		return consumeBody.call(this).then(function (buf) {
-			return Object.assign(
-			// Prevent copying
-			new Blob([], {
-				type: ct.toLowerCase()
-			}), {
-				[BUFFER]: buf
-			});
-		});
-	},
-
-	/**
-  * Decode response as json
-  *
-  * @return  Promise
-  */
-	json() {
-		var _this2 = this;
-
-		return consumeBody.call(this).then(function (buffer) {
-			try {
-				return JSON.parse(buffer.toString());
-			} catch (err) {
-				return Body.Promise.reject(new FetchError(`invalid json response body at ${_this2.url} reason: ${err.message}`, 'invalid-json'));
-			}
-		});
-	},
-
-	/**
-  * Decode response as text
-  *
-  * @return  Promise
-  */
-	text() {
-		return consumeBody.call(this).then(function (buffer) {
-			return buffer.toString();
-		});
-	},
-
-	/**
-  * Decode response as buffer (non-spec api)
-  *
-  * @return  Promise
-  */
-	buffer() {
-		return consumeBody.call(this);
-	},
-
-	/**
-  * Decode response as text, while automatically detecting the encoding and
-  * trying to decode to UTF-8 (non-spec api)
-  *
-  * @return  Promise
-  */
-	textConverted() {
-		var _this3 = this;
-
-		return consumeBody.call(this).then(function (buffer) {
-			return convertBody(buffer, _this3.headers);
-		});
-	}
-};
-
-// In browsers, all properties are enumerable.
-Object.defineProperties(Body.prototype, {
-	body: { enumerable: true },
-	bodyUsed: { enumerable: true },
-	arrayBuffer: { enumerable: true },
-	blob: { enumerable: true },
-	json: { enumerable: true },
-	text: { enumerable: true }
-});
-
-Body.mixIn = function (proto) {
-	for (const name of Object.getOwnPropertyNames(Body.prototype)) {
-		// istanbul ignore else: future proof
-		if (!(name in proto)) {
-			const desc = Object.getOwnPropertyDescriptor(Body.prototype, name);
-			Object.defineProperty(proto, name, desc);
-		}
-	}
-};
-
-/**
- * Consume and convert an entire Body to a Buffer.
- *
- * Ref: https://fetch.spec.whatwg.org/#concept-body-consume-body
- *
- * @return  Promise
- */
-function consumeBody() {
-	var _this4 = this;
-
-	if (this[INTERNALS].disturbed) {
-		return Body.Promise.reject(new TypeError(`body used already for: ${this.url}`));
-	}
-
-	this[INTERNALS].disturbed = true;
-
-	if (this[INTERNALS].error) {
-		return Body.Promise.reject(this[INTERNALS].error);
-	}
-
-	let body = this.body;
-
-	// body is null
-	if (body === null) {
-		return Body.Promise.resolve(Buffer.alloc(0));
-	}
-
-	// body is blob
-	if (isBlob(body)) {
-		body = body.stream();
-	}
-
-	// body is buffer
-	if (Buffer.isBuffer(body)) {
-		return Body.Promise.resolve(body);
-	}
-
-	// istanbul ignore if: should never happen
-	if (!(body instanceof Stream)) {
-		return Body.Promise.resolve(Buffer.alloc(0));
-	}
-
-	// body is stream
-	// get ready to actually consume the body
-	let accum = [];
-	let accumBytes = 0;
-	let abort = false;
-
-	return new Body.Promise(function (resolve, reject) {
-		let resTimeout;
-
-		// allow timeout on slow response body
-		if (_this4.timeout) {
-			resTimeout = setTimeout(function () {
-				abort = true;
-				reject(new FetchError(`Response timeout while trying to fetch ${_this4.url} (over ${_this4.timeout}ms)`, 'body-timeout'));
-			}, _this4.timeout);
-		}
-
-		// handle stream errors
-		body.on('error', function (err) {
-			if (err.name === 'AbortError') {
-				// if the request was aborted, reject with this Error
-				abort = true;
-				reject(err);
-			} else {
-				// other errors, such as incorrect content-encoding
-				reject(new FetchError(`Invalid response body while trying to fetch ${_this4.url}: ${err.message}`, 'system', err));
-			}
-		});
-
-		body.on('data', function (chunk) {
-			if (abort || chunk === null) {
-				return;
-			}
-
-			if (_this4.size && accumBytes + chunk.length > _this4.size) {
-				abort = true;
-				reject(new FetchError(`content size at ${_this4.url} over limit: ${_this4.size}`, 'max-size'));
-				return;
-			}
-
-			accumBytes += chunk.length;
-			accum.push(chunk);
-		});
-
-		body.on('end', function () {
-			if (abort) {
-				return;
-			}
-
-			clearTimeout(resTimeout);
-
-			try {
-				resolve(Buffer.concat(accum, accumBytes));
-			} catch (err) {
-				// handle streams that have accumulated too much data (issue #414)
-				reject(new FetchError(`Could not create Buffer from response body for ${_this4.url}: ${err.message}`, 'system', err));
-			}
-		});
-	});
-}
-
-/**
- * Detect buffer encoding and convert to target encoding
- * ref: http://www.w3.org/TR/2011/WD-html5-20110113/parsing.html#determining-the-character-encoding
- *
- * @param   Buffer  buffer    Incoming buffer
- * @param   String  encoding  Target encoding
- * @return  String
- */
-function convertBody(buffer, headers) {
-	if (typeof convert !== 'function') {
-		throw new Error('The package `encoding` must be installed to use the textConverted() function');
-	}
-
-	const ct = headers.get('content-type');
-	let charset = 'utf-8';
-	let res, str;
-
-	// header
-	if (ct) {
-		res = /charset=([^;]*)/i.exec(ct);
-	}
-
-	// no charset in content type, peek at response body for at most 1024 bytes
-	str = buffer.slice(0, 1024).toString();
-
-	// html5
-	if (!res && str) {
-		res = /<meta.+?charset=(['"])(.+?)\1/i.exec(str);
-	}
-
-	// html4
-	if (!res && str) {
-		res = /<meta[\s]+?http-equiv=(['"])content-type\1[\s]+?content=(['"])(.+?)\2/i.exec(str);
-		if (!res) {
-			res = /<meta[\s]+?content=(['"])(.+?)\1[\s]+?http-equiv=(['"])content-type\3/i.exec(str);
-			if (res) {
-				res.pop(); // drop last quote
-			}
-		}
-
-		if (res) {
-			res = /charset=(.*)/i.exec(res.pop());
-		}
-	}
-
-	// xml
-	if (!res && str) {
-		res = /<\?xml.+?encoding=(['"])(.+?)\1/i.exec(str);
-	}
-
-	// found charset
-	if (res) {
-		charset = res.pop();
-
-		// prevent decode issues when sites use incorrect encoding
-		// ref: https://hsivonen.fi/encoding-menu/
-		if (charset === 'gb2312' || charset === 'gbk') {
-			charset = 'gb18030';
-		}
-	}
-
-	// turn raw buffers into a single utf-8 buffer
-	return convert(buffer, 'UTF-8', charset).toString();
-}
-
-/**
- * Detect a URLSearchParams object
- * ref: https://github.com/bitinn/node-fetch/issues/296#issuecomment-307598143
- *
- * @param   Object  obj     Object to detect by type or brand
- * @return  String
- */
-function isURLSearchParams(obj) {
-	// Duck-typing as a necessary condition.
-	if (typeof obj !== 'object' || typeof obj.append !== 'function' || typeof obj.delete !== 'function' || typeof obj.get !== 'function' || typeof obj.getAll !== 'function' || typeof obj.has !== 'function' || typeof obj.set !== 'function') {
-		return false;
-	}
-
-	// Brand-checking and more duck-typing as optional condition.
-	return obj.constructor.name === 'URLSearchParams' || Object.prototype.toString.call(obj) === '[object URLSearchParams]' || typeof obj.sort === 'function';
-}
-
-/**
- * Check if `obj` is a W3C `Blob` object (which `File` inherits from)
- * @param  {*} obj
- * @return {boolean}
- */
-function isBlob(obj) {
-	return typeof obj === 'object' && typeof obj.arrayBuffer === 'function' && typeof obj.type === 'string' && typeof obj.stream === 'function' && typeof obj.constructor === 'function' && typeof obj.constructor.name === 'string' && /^(Blob|File)$/.test(obj.constructor.name) && /^(Blob|File)$/.test(obj[Symbol.toStringTag]);
-}
-
-/**
- * Clone body given Res/Req instance
- *
- * @param   Mixed  instance  Response or Request instance
- * @return  Mixed
- */
-function clone(instance) {
-	let p1, p2;
-	let body = instance.body;
-
-	// don't allow cloning a used body
-	if (instance.bodyUsed) {
-		throw new Error('cannot clone body after it is used');
-	}
-
-	// check that body is a stream and not form-data object
-	// note: we can't clone the form-data object without having it as a dependency
-	if (body instanceof Stream && typeof body.getBoundary !== 'function') {
-		// tee instance body
-		p1 = new PassThrough();
-		p2 = new PassThrough();
-		body.pipe(p1);
-		body.pipe(p2);
-		// set instance body to teed body and return the other teed body
-		instance[INTERNALS].body = p1;
-		body = p2;
-	}
-
-	return body;
-}
-
-/**
- * Performs the operation "extract a `Content-Type` value from |object|" as
- * specified in the specification:
- * https://fetch.spec.whatwg.org/#concept-bodyinit-extract
- *
- * This function assumes that instance.body is present.
- *
- * @param   Mixed  instance  Any options.body input
- */
-function extractContentType(body) {
-	if (body === null) {
-		// body is null
-		return null;
-	} else if (typeof body === 'string') {
-		// body is string
-		return 'text/plain;charset=UTF-8';
-	} else if (isURLSearchParams(body)) {
-		// body is a URLSearchParams
-		return 'application/x-www-form-urlencoded;charset=UTF-8';
-	} else if (isBlob(body)) {
-		// body is blob
-		return body.type || null;
-	} else if (Buffer.isBuffer(body)) {
-		// body is buffer
-		return null;
-	} else if (Object.prototype.toString.call(body) === '[object ArrayBuffer]') {
-		// body is ArrayBuffer
-		return null;
-	} else if (ArrayBuffer.isView(body)) {
-		// body is ArrayBufferView
-		return null;
-	} else if (typeof body.getBoundary === 'function') {
-		// detect form data input from form-data module
-		return `multipart/form-data;boundary=${body.getBoundary()}`;
-	} else if (body instanceof Stream) {
-		// body is stream
-		// can't really do much about this
-		return null;
-	} else {
-		// Body constructor defaults other things to string
-		return 'text/plain;charset=UTF-8';
-	}
-}
-
-/**
- * The Fetch Standard treats this as if "total bytes" is a property on the body.
- * For us, we have to explicitly get it with a function.
- *
- * ref: https://fetch.spec.whatwg.org/#concept-body-total-bytes
- *
- * @param   Body    instance   Instance of Body
- * @return  Number?            Number of bytes, or null if not possible
- */
-function getTotalBytes(instance) {
-	const body = instance.body;
-
-
-	if (body === null) {
-		// body is null
-		return 0;
-	} else if (isBlob(body)) {
-		return body.size;
-	} else if (Buffer.isBuffer(body)) {
-		// body is buffer
-		return body.length;
-	} else if (body && typeof body.getLengthSync === 'function') {
-		// detect form data input from form-data module
-		if (body._lengthRetrievers && body._lengthRetrievers.length == 0 || // 1.x
-		body.hasKnownLength && body.hasKnownLength()) {
-			// 2.x
-			return body.getLengthSync();
-		}
-		return null;
-	} else {
-		// body is stream
-		return null;
-	}
-}
-
-/**
- * Write a Body to a Node.js WritableStream (e.g. http.Request) object.
- *
- * @param   Body    instance   Instance of Body
- * @return  Void
- */
-function writeToStream(dest, instance) {
-	const body = instance.body;
-
-
-	if (body === null) {
-		// body is null
-		dest.end();
-	} else if (isBlob(body)) {
-		body.stream().pipe(dest);
-	} else if (Buffer.isBuffer(body)) {
-		// body is buffer
-		dest.write(body);
-		dest.end();
-	} else {
-		// body is stream
-		body.pipe(dest);
-	}
-}
-
-// expose Promise
-Body.Promise = global.Promise;
-
-/**
- * headers.js
- *
- * Headers class offers convenient helpers
- */
-
-const invalidTokenRegex = /[^\^_`a-zA-Z\-0-9!#$%&'*+.|~]/;
-const invalidHeaderCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
-
-function validateName(name) {
-	name = `${name}`;
-	if (invalidTokenRegex.test(name) || name === '') {
-		throw new TypeError(`${name} is not a legal HTTP header name`);
-	}
-}
-
-function validateValue(value) {
-	value = `${value}`;
-	if (invalidHeaderCharRegex.test(value)) {
-		throw new TypeError(`${value} is not a legal HTTP header value`);
-	}
-}
-
-/**
- * Find the key in the map object given a header name.
- *
- * Returns undefined if not found.
- *
- * @param   String  name  Header name
- * @return  String|Undefined
- */
-function find(map, name) {
-	name = name.toLowerCase();
-	for (const key in map) {
-		if (key.toLowerCase() === name) {
-			return key;
-		}
-	}
-	return undefined;
-}
-
-const MAP = Symbol('map');
-class Headers {
-	/**
-  * Headers class
-  *
-  * @param   Object  headers  Response headers
-  * @return  Void
-  */
-	constructor() {
-		let init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : undefined;
-
-		this[MAP] = Object.create(null);
-
-		if (init instanceof Headers) {
-			const rawHeaders = init.raw();
-			const headerNames = Object.keys(rawHeaders);
-
-			for (const headerName of headerNames) {
-				for (const value of rawHeaders[headerName]) {
-					this.append(headerName, value);
-				}
-			}
-
-			return;
-		}
-
-		// We don't worry about converting prop to ByteString here as append()
-		// will handle it.
-		if (init == null) ; else if (typeof init === 'object') {
-			const method = init[Symbol.iterator];
-			if (method != null) {
-				if (typeof method !== 'function') {
-					throw new TypeError('Header pairs must be iterable');
-				}
-
-				// sequence<sequence<ByteString>>
-				// Note: per spec we have to first exhaust the lists then process them
-				const pairs = [];
-				for (const pair of init) {
-					if (typeof pair !== 'object' || typeof pair[Symbol.iterator] !== 'function') {
-						throw new TypeError('Each header pair must be iterable');
-					}
-					pairs.push(Array.from(pair));
-				}
-
-				for (const pair of pairs) {
-					if (pair.length !== 2) {
-						throw new TypeError('Each header pair must be a name/value tuple');
-					}
-					this.append(pair[0], pair[1]);
-				}
-			} else {
-				// record<ByteString, ByteString>
-				for (const key of Object.keys(init)) {
-					const value = init[key];
-					this.append(key, value);
-				}
-			}
-		} else {
-			throw new TypeError('Provided initializer must be an object');
-		}
-	}
-
-	/**
-  * Return combined header value given name
-  *
-  * @param   String  name  Header name
-  * @return  Mixed
-  */
-	get(name) {
-		name = `${name}`;
-		validateName(name);
-		const key = find(this[MAP], name);
-		if (key === undefined) {
-			return null;
-		}
-
-		return this[MAP][key].join(', ');
-	}
-
-	/**
-  * Iterate over all headers
-  *
-  * @param   Function  callback  Executed for each item with parameters (value, name, thisArg)
-  * @param   Boolean   thisArg   `this` context for callback function
-  * @return  Void
-  */
-	forEach(callback) {
-		let thisArg = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-
-		let pairs = getHeaders(this);
-		let i = 0;
-		while (i < pairs.length) {
-			var _pairs$i = pairs[i];
-			const name = _pairs$i[0],
-			      value = _pairs$i[1];
-
-			callback.call(thisArg, value, name, this);
-			pairs = getHeaders(this);
-			i++;
-		}
-	}
-
-	/**
-  * Overwrite header values given name
-  *
-  * @param   String  name   Header name
-  * @param   String  value  Header value
-  * @return  Void
-  */
-	set(name, value) {
-		name = `${name}`;
-		value = `${value}`;
-		validateName(name);
-		validateValue(value);
-		const key = find(this[MAP], name);
-		this[MAP][key !== undefined ? key : name] = [value];
-	}
-
-	/**
-  * Append a value onto existing header
-  *
-  * @param   String  name   Header name
-  * @param   String  value  Header value
-  * @return  Void
-  */
-	append(name, value) {
-		name = `${name}`;
-		value = `${value}`;
-		validateName(name);
-		validateValue(value);
-		const key = find(this[MAP], name);
-		if (key !== undefined) {
-			this[MAP][key].push(value);
-		} else {
-			this[MAP][name] = [value];
-		}
-	}
-
-	/**
-  * Check for header name existence
-  *
-  * @param   String   name  Header name
-  * @return  Boolean
-  */
-	has(name) {
-		name = `${name}`;
-		validateName(name);
-		return find(this[MAP], name) !== undefined;
-	}
-
-	/**
-  * Delete all header values given name
-  *
-  * @param   String  name  Header name
-  * @return  Void
-  */
-	delete(name) {
-		name = `${name}`;
-		validateName(name);
-		const key = find(this[MAP], name);
-		if (key !== undefined) {
-			delete this[MAP][key];
-		}
-	}
-
-	/**
-  * Return raw headers (non-spec api)
-  *
-  * @return  Object
-  */
-	raw() {
-		return this[MAP];
-	}
-
-	/**
-  * Get an iterator on keys.
-  *
-  * @return  Iterator
-  */
-	keys() {
-		return createHeadersIterator(this, 'key');
-	}
-
-	/**
-  * Get an iterator on values.
-  *
-  * @return  Iterator
-  */
-	values() {
-		return createHeadersIterator(this, 'value');
-	}
-
-	/**
-  * Get an iterator on entries.
-  *
-  * This is the default iterator of the Headers object.
-  *
-  * @return  Iterator
-  */
-	[Symbol.iterator]() {
-		return createHeadersIterator(this, 'key+value');
-	}
-}
-Headers.prototype.entries = Headers.prototype[Symbol.iterator];
-
-Object.defineProperty(Headers.prototype, Symbol.toStringTag, {
-	value: 'Headers',
-	writable: false,
-	enumerable: false,
-	configurable: true
-});
-
-Object.defineProperties(Headers.prototype, {
-	get: { enumerable: true },
-	forEach: { enumerable: true },
-	set: { enumerable: true },
-	append: { enumerable: true },
-	has: { enumerable: true },
-	delete: { enumerable: true },
-	keys: { enumerable: true },
-	values: { enumerable: true },
-	entries: { enumerable: true }
-});
-
-function getHeaders(headers) {
-	let kind = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'key+value';
-
-	const keys = Object.keys(headers[MAP]).sort();
-	return keys.map(kind === 'key' ? function (k) {
-		return k.toLowerCase();
-	} : kind === 'value' ? function (k) {
-		return headers[MAP][k].join(', ');
-	} : function (k) {
-		return [k.toLowerCase(), headers[MAP][k].join(', ')];
-	});
-}
-
-const INTERNAL = Symbol('internal');
-
-function createHeadersIterator(target, kind) {
-	const iterator = Object.create(HeadersIteratorPrototype);
-	iterator[INTERNAL] = {
-		target,
-		kind,
-		index: 0
-	};
-	return iterator;
-}
-
-const HeadersIteratorPrototype = Object.setPrototypeOf({
-	next() {
-		// istanbul ignore if
-		if (!this || Object.getPrototypeOf(this) !== HeadersIteratorPrototype) {
-			throw new TypeError('Value of `this` is not a HeadersIterator');
-		}
-
-		var _INTERNAL = this[INTERNAL];
-		const target = _INTERNAL.target,
-		      kind = _INTERNAL.kind,
-		      index = _INTERNAL.index;
-
-		const values = getHeaders(target, kind);
-		const len = values.length;
-		if (index >= len) {
-			return {
-				value: undefined,
-				done: true
-			};
-		}
-
-		this[INTERNAL].index = index + 1;
-
-		return {
-			value: values[index],
-			done: false
-		};
-	}
-}, Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]())));
-
-Object.defineProperty(HeadersIteratorPrototype, Symbol.toStringTag, {
-	value: 'HeadersIterator',
-	writable: false,
-	enumerable: false,
-	configurable: true
-});
-
-/**
- * Export the Headers object in a form that Node.js can consume.
- *
- * @param   Headers  headers
- * @return  Object
- */
-function exportNodeCompatibleHeaders(headers) {
-	const obj = Object.assign({ __proto__: null }, headers[MAP]);
-
-	// http.request() only supports string as Host header. This hack makes
-	// specifying custom Host header possible.
-	const hostHeaderKey = find(headers[MAP], 'Host');
-	if (hostHeaderKey !== undefined) {
-		obj[hostHeaderKey] = obj[hostHeaderKey][0];
-	}
-
-	return obj;
-}
-
-/**
- * Create a Headers object from an object of headers, ignoring those that do
- * not conform to HTTP grammar productions.
- *
- * @param   Object  obj  Object of headers
- * @return  Headers
- */
-function createHeadersLenient(obj) {
-	const headers = new Headers();
-	for (const name of Object.keys(obj)) {
-		if (invalidTokenRegex.test(name)) {
-			continue;
-		}
-		if (Array.isArray(obj[name])) {
-			for (const val of obj[name]) {
-				if (invalidHeaderCharRegex.test(val)) {
-					continue;
-				}
-				if (headers[MAP][name] === undefined) {
-					headers[MAP][name] = [val];
-				} else {
-					headers[MAP][name].push(val);
-				}
-			}
-		} else if (!invalidHeaderCharRegex.test(obj[name])) {
-			headers[MAP][name] = [obj[name]];
-		}
-	}
-	return headers;
-}
-
-const INTERNALS$1 = Symbol('Response internals');
-
-// fix an issue where "STATUS_CODES" aren't a named export for node <10
-const STATUS_CODES = http.STATUS_CODES;
-
-/**
- * Response class
- *
- * @param   Stream  body  Readable stream
- * @param   Object  opts  Response options
- * @return  Void
- */
-class Response {
-	constructor() {
-		let body = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-		let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-		Body.call(this, body, opts);
-
-		const status = opts.status || 200;
-		const headers = new Headers(opts.headers);
-
-		if (body != null && !headers.has('Content-Type')) {
-			const contentType = extractContentType(body);
-			if (contentType) {
-				headers.append('Content-Type', contentType);
-			}
-		}
-
-		this[INTERNALS$1] = {
-			url: opts.url,
-			status,
-			statusText: opts.statusText || STATUS_CODES[status],
-			headers,
-			counter: opts.counter
-		};
-	}
-
-	get url() {
-		return this[INTERNALS$1].url || '';
-	}
-
-	get status() {
-		return this[INTERNALS$1].status;
-	}
-
-	/**
-  * Convenience property representing if the request ended normally
-  */
-	get ok() {
-		return this[INTERNALS$1].status >= 200 && this[INTERNALS$1].status < 300;
-	}
-
-	get redirected() {
-		return this[INTERNALS$1].counter > 0;
-	}
-
-	get statusText() {
-		return this[INTERNALS$1].statusText;
-	}
-
-	get headers() {
-		return this[INTERNALS$1].headers;
-	}
-
-	/**
-  * Clone this response
-  *
-  * @return  Response
-  */
-	clone() {
-		return new Response(clone(this), {
-			url: this.url,
-			status: this.status,
-			statusText: this.statusText,
-			headers: this.headers,
-			ok: this.ok,
-			redirected: this.redirected
-		});
-	}
-}
-
-Body.mixIn(Response.prototype);
-
-Object.defineProperties(Response.prototype, {
-	url: { enumerable: true },
-	status: { enumerable: true },
-	ok: { enumerable: true },
-	redirected: { enumerable: true },
-	statusText: { enumerable: true },
-	headers: { enumerable: true },
-	clone: { enumerable: true }
-});
-
-Object.defineProperty(Response.prototype, Symbol.toStringTag, {
-	value: 'Response',
-	writable: false,
-	enumerable: false,
-	configurable: true
-});
-
-const INTERNALS$2 = Symbol('Request internals');
-
-// fix an issue where "format", "parse" aren't a named export for node <10
-const parse_url = Url.parse;
-const format_url = Url.format;
-
-const streamDestructionSupported = 'destroy' in Stream.Readable.prototype;
-
-/**
- * Check if a value is an instance of Request.
- *
- * @param   Mixed   input
- * @return  Boolean
- */
-function isRequest(input) {
-	return typeof input === 'object' && typeof input[INTERNALS$2] === 'object';
-}
-
-function isAbortSignal(signal) {
-	const proto = signal && typeof signal === 'object' && Object.getPrototypeOf(signal);
-	return !!(proto && proto.constructor.name === 'AbortSignal');
-}
-
-/**
- * Request class
- *
- * @param   Mixed   input  Url or Request instance
- * @param   Object  init   Custom options
- * @return  Void
- */
-class Request {
-	constructor(input) {
-		let init = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-		let parsedURL;
-
-		// normalize input
-		if (!isRequest(input)) {
-			if (input && input.href) {
-				// in order to support Node.js' Url objects; though WHATWG's URL objects
-				// will fall into this branch also (since their `toString()` will return
-				// `href` property anyway)
-				parsedURL = parse_url(input.href);
-			} else {
-				// coerce input to a string before attempting to parse
-				parsedURL = parse_url(`${input}`);
-			}
-			input = {};
-		} else {
-			parsedURL = parse_url(input.url);
-		}
-
-		let method = init.method || input.method || 'GET';
-		method = method.toUpperCase();
-
-		if ((init.body != null || isRequest(input) && input.body !== null) && (method === 'GET' || method === 'HEAD')) {
-			throw new TypeError('Request with GET/HEAD method cannot have body');
-		}
-
-		let inputBody = init.body != null ? init.body : isRequest(input) && input.body !== null ? clone(input) : null;
-
-		Body.call(this, inputBody, {
-			timeout: init.timeout || input.timeout || 0,
-			size: init.size || input.size || 0
-		});
-
-		const headers = new Headers(init.headers || input.headers || {});
-
-		if (inputBody != null && !headers.has('Content-Type')) {
-			const contentType = extractContentType(inputBody);
-			if (contentType) {
-				headers.append('Content-Type', contentType);
-			}
-		}
-
-		let signal = isRequest(input) ? input.signal : null;
-		if ('signal' in init) signal = init.signal;
-
-		if (signal != null && !isAbortSignal(signal)) {
-			throw new TypeError('Expected signal to be an instanceof AbortSignal');
-		}
-
-		this[INTERNALS$2] = {
-			method,
-			redirect: init.redirect || input.redirect || 'follow',
-			headers,
-			parsedURL,
-			signal
-		};
-
-		// node-fetch-only options
-		this.follow = init.follow !== undefined ? init.follow : input.follow !== undefined ? input.follow : 20;
-		this.compress = init.compress !== undefined ? init.compress : input.compress !== undefined ? input.compress : true;
-		this.counter = init.counter || input.counter || 0;
-		this.agent = init.agent || input.agent;
-	}
-
-	get method() {
-		return this[INTERNALS$2].method;
-	}
-
-	get url() {
-		return format_url(this[INTERNALS$2].parsedURL);
-	}
-
-	get headers() {
-		return this[INTERNALS$2].headers;
-	}
-
-	get redirect() {
-		return this[INTERNALS$2].redirect;
-	}
-
-	get signal() {
-		return this[INTERNALS$2].signal;
-	}
-
-	/**
-  * Clone this request
-  *
-  * @return  Request
-  */
-	clone() {
-		return new Request(this);
-	}
-}
-
-Body.mixIn(Request.prototype);
-
-Object.defineProperty(Request.prototype, Symbol.toStringTag, {
-	value: 'Request',
-	writable: false,
-	enumerable: false,
-	configurable: true
-});
-
-Object.defineProperties(Request.prototype, {
-	method: { enumerable: true },
-	url: { enumerable: true },
-	headers: { enumerable: true },
-	redirect: { enumerable: true },
-	clone: { enumerable: true },
-	signal: { enumerable: true }
-});
-
-/**
- * Convert a Request to Node.js http request options.
- *
- * @param   Request  A Request instance
- * @return  Object   The options object to be passed to http.request
- */
-function getNodeRequestOptions(request) {
-	const parsedURL = request[INTERNALS$2].parsedURL;
-	const headers = new Headers(request[INTERNALS$2].headers);
-
-	// fetch step 1.3
-	if (!headers.has('Accept')) {
-		headers.set('Accept', '*/*');
-	}
-
-	// Basic fetch
-	if (!parsedURL.protocol || !parsedURL.hostname) {
-		throw new TypeError('Only absolute URLs are supported');
-	}
-
-	if (!/^https?:$/.test(parsedURL.protocol)) {
-		throw new TypeError('Only HTTP(S) protocols are supported');
-	}
-
-	if (request.signal && request.body instanceof Stream.Readable && !streamDestructionSupported) {
-		throw new Error('Cancellation of streamed requests with AbortSignal is not supported in node < 8');
-	}
-
-	// HTTP-network-or-cache fetch steps 2.4-2.7
-	let contentLengthValue = null;
-	if (request.body == null && /^(POST|PUT)$/i.test(request.method)) {
-		contentLengthValue = '0';
-	}
-	if (request.body != null) {
-		const totalBytes = getTotalBytes(request);
-		if (typeof totalBytes === 'number') {
-			contentLengthValue = String(totalBytes);
-		}
-	}
-	if (contentLengthValue) {
-		headers.set('Content-Length', contentLengthValue);
-	}
-
-	// HTTP-network-or-cache fetch step 2.11
-	if (!headers.has('User-Agent')) {
-		headers.set('User-Agent', 'node-fetch/1.0 (+https://github.com/bitinn/node-fetch)');
-	}
-
-	// HTTP-network-or-cache fetch step 2.15
-	if (request.compress && !headers.has('Accept-Encoding')) {
-		headers.set('Accept-Encoding', 'gzip,deflate');
-	}
-
-	let agent = request.agent;
-	if (typeof agent === 'function') {
-		agent = agent(parsedURL);
-	}
-
-	if (!headers.has('Connection') && !agent) {
-		headers.set('Connection', 'close');
-	}
-
-	// HTTP-network fetch step 4.2
-	// chunked encoding is handled by Node.js
-
-	return Object.assign({}, parsedURL, {
-		method: request.method,
-		headers: exportNodeCompatibleHeaders(headers),
-		agent
-	});
-}
-
-/**
- * abort-error.js
- *
- * AbortError interface for cancelled requests
- */
-
-/**
- * Create AbortError instance
- *
- * @param   String      message      Error message for human
- * @return  AbortError
- */
-function AbortError(message) {
-  Error.call(this, message);
-
-  this.type = 'aborted';
-  this.message = message;
-
-  // hide custom error implementation details from end-users
-  Error.captureStackTrace(this, this.constructor);
-}
-
-AbortError.prototype = Object.create(Error.prototype);
-AbortError.prototype.constructor = AbortError;
-AbortError.prototype.name = 'AbortError';
-
-// fix an issue where "PassThrough", "resolve" aren't a named export for node <10
-const PassThrough$1 = Stream.PassThrough;
-const resolve_url = Url.resolve;
-
-/**
- * Fetch function
- *
- * @param   Mixed    url   Absolute url or Request instance
- * @param   Object   opts  Fetch options
- * @return  Promise
- */
-function fetch(url, opts) {
-
-	// allow custom promise
-	if (!fetch.Promise) {
-		throw new Error('native promise missing, set fetch.Promise to your favorite alternative');
-	}
-
-	Body.Promise = fetch.Promise;
-
-	// wrap http.request into fetch
-	return new fetch.Promise(function (resolve, reject) {
-		// build request object
-		const request = new Request(url, opts);
-		const options = getNodeRequestOptions(request);
-
-		const send = (options.protocol === 'https:' ? https : http).request;
-		const signal = request.signal;
-
-		let response = null;
-
-		const abort = function abort() {
-			let error = new AbortError('The user aborted a request.');
-			reject(error);
-			if (request.body && request.body instanceof Stream.Readable) {
-				request.body.destroy(error);
-			}
-			if (!response || !response.body) return;
-			response.body.emit('error', error);
-		};
-
-		if (signal && signal.aborted) {
-			abort();
-			return;
-		}
-
-		const abortAndFinalize = function abortAndFinalize() {
-			abort();
-			finalize();
-		};
-
-		// send request
-		const req = send(options);
-		let reqTimeout;
-
-		if (signal) {
-			signal.addEventListener('abort', abortAndFinalize);
-		}
-
-		function finalize() {
-			req.abort();
-			if (signal) signal.removeEventListener('abort', abortAndFinalize);
-			clearTimeout(reqTimeout);
-		}
-
-		if (request.timeout) {
-			req.once('socket', function (socket) {
-				reqTimeout = setTimeout(function () {
-					reject(new FetchError(`network timeout at: ${request.url}`, 'request-timeout'));
-					finalize();
-				}, request.timeout);
-			});
-		}
-
-		req.on('error', function (err) {
-			reject(new FetchError(`request to ${request.url} failed, reason: ${err.message}`, 'system', err));
-			finalize();
-		});
-
-		req.on('response', function (res) {
-			clearTimeout(reqTimeout);
-
-			const headers = createHeadersLenient(res.headers);
-
-			// HTTP fetch step 5
-			if (fetch.isRedirect(res.statusCode)) {
-				// HTTP fetch step 5.2
-				const location = headers.get('Location');
-
-				// HTTP fetch step 5.3
-				const locationURL = location === null ? null : resolve_url(request.url, location);
-
-				// HTTP fetch step 5.5
-				switch (request.redirect) {
-					case 'error':
-						reject(new FetchError(`uri requested responds with a redirect, redirect mode is set to error: ${request.url}`, 'no-redirect'));
-						finalize();
-						return;
-					case 'manual':
-						// node-fetch-specific step: make manual redirect a bit easier to use by setting the Location header value to the resolved URL.
-						if (locationURL !== null) {
-							// handle corrupted header
-							try {
-								headers.set('Location', locationURL);
-							} catch (err) {
-								// istanbul ignore next: nodejs server prevent invalid response headers, we can't test this through normal request
-								reject(err);
-							}
-						}
-						break;
-					case 'follow':
-						// HTTP-redirect fetch step 2
-						if (locationURL === null) {
-							break;
-						}
-
-						// HTTP-redirect fetch step 5
-						if (request.counter >= request.follow) {
-							reject(new FetchError(`maximum redirect reached at: ${request.url}`, 'max-redirect'));
-							finalize();
-							return;
-						}
-
-						// HTTP-redirect fetch step 6 (counter increment)
-						// Create a new Request object.
-						const requestOpts = {
-							headers: new Headers(request.headers),
-							follow: request.follow,
-							counter: request.counter + 1,
-							agent: request.agent,
-							compress: request.compress,
-							method: request.method,
-							body: request.body,
-							signal: request.signal,
-							timeout: request.timeout,
-							size: request.size
-						};
-
-						// HTTP-redirect fetch step 9
-						if (res.statusCode !== 303 && request.body && getTotalBytes(request) === null) {
-							reject(new FetchError('Cannot follow redirect with body being a readable stream', 'unsupported-redirect'));
-							finalize();
-							return;
-						}
-
-						// HTTP-redirect fetch step 11
-						if (res.statusCode === 303 || (res.statusCode === 301 || res.statusCode === 302) && request.method === 'POST') {
-							requestOpts.method = 'GET';
-							requestOpts.body = undefined;
-							requestOpts.headers.delete('content-length');
-						}
-
-						// HTTP-redirect fetch step 15
-						resolve(fetch(new Request(locationURL, requestOpts)));
-						finalize();
-						return;
-				}
-			}
-
-			// prepare response
-			res.once('end', function () {
-				if (signal) signal.removeEventListener('abort', abortAndFinalize);
-			});
-			let body = res.pipe(new PassThrough$1());
-
-			const response_options = {
-				url: request.url,
-				status: res.statusCode,
-				statusText: res.statusMessage,
-				headers: headers,
-				size: request.size,
-				timeout: request.timeout,
-				counter: request.counter
-			};
-
-			// HTTP-network fetch step 12.1.1.3
-			const codings = headers.get('Content-Encoding');
-
-			// HTTP-network fetch step 12.1.1.4: handle content codings
-
-			// in following scenarios we ignore compression support
-			// 1. compression support is disabled
-			// 2. HEAD request
-			// 3. no Content-Encoding header
-			// 4. no content response (204)
-			// 5. content not modified response (304)
-			if (!request.compress || request.method === 'HEAD' || codings === null || res.statusCode === 204 || res.statusCode === 304) {
-				response = new Response(body, response_options);
-				resolve(response);
-				return;
-			}
-
-			// For Node v6+
-			// Be less strict when decoding compressed responses, since sometimes
-			// servers send slightly invalid responses that are still accepted
-			// by common browsers.
-			// Always using Z_SYNC_FLUSH is what cURL does.
-			const zlibOptions = {
-				flush: zlib.Z_SYNC_FLUSH,
-				finishFlush: zlib.Z_SYNC_FLUSH
-			};
-
-			// for gzip
-			if (codings == 'gzip' || codings == 'x-gzip') {
-				body = body.pipe(zlib.createGunzip(zlibOptions));
-				response = new Response(body, response_options);
-				resolve(response);
-				return;
-			}
-
-			// for deflate
-			if (codings == 'deflate' || codings == 'x-deflate') {
-				// handle the infamous raw deflate response from old servers
-				// a hack for old IIS and Apache servers
-				const raw = res.pipe(new PassThrough$1());
-				raw.once('data', function (chunk) {
-					// see http://stackoverflow.com/questions/37519828
-					if ((chunk[0] & 0x0F) === 0x08) {
-						body = body.pipe(zlib.createInflate());
-					} else {
-						body = body.pipe(zlib.createInflateRaw());
-					}
-					response = new Response(body, response_options);
-					resolve(response);
-				});
-				return;
-			}
-
-			// for br
-			if (codings == 'br' && typeof zlib.createBrotliDecompress === 'function') {
-				body = body.pipe(zlib.createBrotliDecompress());
-				response = new Response(body, response_options);
-				resolve(response);
-				return;
-			}
-
-			// otherwise, use response as-is
-			response = new Response(body, response_options);
-			resolve(response);
-		});
-
-		writeToStream(req, request);
-	});
-}
-/**
- * Redirect code matching
- *
- * @param   Number   code  Status code
- * @return  Boolean
- */
-fetch.isRedirect = function (code) {
-	return code === 301 || code === 302 || code === 303 || code === 307 || code === 308;
-};
-
-// expose Promise
-fetch.Promise = global.Promise;
-
-module.exports = exports = fetch;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.default = exports;
-exports.Headers = Headers;
-exports.Request = Request;
-exports.Response = Response;
-exports.FetchError = FetchError;
-
-
-/***/ }),
-
-/***/ 379:
-/***/ ((module) => {
-
-if (true) {
-    module.exports = OAuth;
-}
-
-/**
- * Constructor
- * @param {Object} opts consumer key and secret
- */
-function OAuth(opts) {
-    if(!(this instanceof OAuth)) {
-        return new OAuth(opts);
-    }
-
-    if(!opts) {
-        opts = {};
-    }
-
-    if(!opts.consumer) {
-        throw new Error('consumer option is required');
-    }
-
-    this.consumer            = opts.consumer;
-    this.nonce_length        = opts.nonce_length || 32;
-    this.version             = opts.version || '1.0';
-    this.parameter_seperator = opts.parameter_seperator || ', ';
-    this.realm               = opts.realm;
-
-    if(typeof opts.last_ampersand === 'undefined') {
-        this.last_ampersand = true;
-    } else {
-        this.last_ampersand = opts.last_ampersand;
-    }
-
-    // default signature_method is 'PLAINTEXT'
-    this.signature_method = opts.signature_method || 'PLAINTEXT';
-
-    if(this.signature_method == 'PLAINTEXT' && !opts.hash_function) {
-        opts.hash_function = function(base_string, key) {
-            return key;
-        }
-    }
-
-    if(!opts.hash_function) {
-        throw new Error('hash_function option is required');
-    }
-
-    this.hash_function = opts.hash_function;
-    this.body_hash_function = opts.body_hash_function || this.hash_function;
-}
-
-/**
- * OAuth request authorize
- * @param  {Object} request data
- * {
- *     method,
- *     url,
- *     data
- * }
- * @param  {Object} key and secret token
- * @return {Object} OAuth Authorized data
- */
-OAuth.prototype.authorize = function(request, token) {
-    var oauth_data = {
-        oauth_consumer_key: this.consumer.key,
-        oauth_nonce: this.getNonce(),
-        oauth_signature_method: this.signature_method,
-        oauth_timestamp: this.getTimeStamp(),
-        oauth_version: this.version
-    };
-
-    if(!token) {
-        token = {};
-    }
-
-    if(token.key !== undefined) {
-        oauth_data.oauth_token = token.key;
-    }
-
-    if(!request.data) {
-        request.data = {};
-    }
-
-    if(request.includeBodyHash) {
-      oauth_data.oauth_body_hash = this.getBodyHash(request, token.secret)
-    }
-
-    oauth_data.oauth_signature = this.getSignature(request, token.secret, oauth_data);
-
-    return oauth_data;
-};
-
-/**
- * Create a OAuth Signature
- * @param  {Object} request data
- * @param  {Object} token_secret key and secret token
- * @param  {Object} oauth_data   OAuth data
- * @return {String} Signature
- */
-OAuth.prototype.getSignature = function(request, token_secret, oauth_data) {
-    return this.hash_function(this.getBaseString(request, oauth_data), this.getSigningKey(token_secret));
-};
-
-/**
- * Create a OAuth Body Hash
- * @param {Object} request data
- */
-OAuth.prototype.getBodyHash = function(request, token_secret) {
-  var body = typeof request.data === 'string' ? request.data : JSON.stringify(request.data)
-
-  if (!this.body_hash_function) {
-    throw new Error('body_hash_function option is required');
-  }
-
-  return this.body_hash_function(body, this.getSigningKey(token_secret))
-};
-
-/**
- * Base String = Method + Base Url + ParameterString
- * @param  {Object} request data
- * @param  {Object} OAuth data
- * @return {String} Base String
- */
-OAuth.prototype.getBaseString = function(request, oauth_data) {
-    return request.method.toUpperCase() + '&' + this.percentEncode(this.getBaseUrl(request.url)) + '&' + this.percentEncode(this.getParameterString(request, oauth_data));
-};
-
-/**
- * Get data from url
- * -> merge with oauth data
- * -> percent encode key & value
- * -> sort
- *
- * @param  {Object} request data
- * @param  {Object} OAuth data
- * @return {Object} Parameter string data
- */
-OAuth.prototype.getParameterString = function(request, oauth_data) {
-    var base_string_data;
-    if (oauth_data.oauth_body_hash) {
-        base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(oauth_data, this.deParamUrl(request.url))));
-    } else {
-        base_string_data = this.sortObject(this.percentEncodeData(this.mergeObject(oauth_data, this.mergeObject(request.data, this.deParamUrl(request.url)))));
-    }
-
-    var data_str = '';
-
-    //base_string_data to string
-    for(var i = 0; i < base_string_data.length; i++) {
-        var key = base_string_data[i].key;
-        var value = base_string_data[i].value;
-        // check if the value is an array
-        // this means that this key has multiple values
-        if (value && Array.isArray(value)){
-          // sort the array first
-          value.sort();
-
-          var valString = "";
-          // serialize all values for this key: e.g. formkey=formvalue1&formkey=formvalue2
-          value.forEach((function(item, i){
-            valString += key + '=' + item;
-            if (i < value.length){
-              valString += "&";
-            }
-          }).bind(this));
-          data_str += valString;
-        } else {
-          data_str += key + '=' + value + '&';
-        }
-    }
-
-    //remove the last character
-    data_str = data_str.substr(0, data_str.length - 1);
-    return data_str;
-};
-
-/**
- * Create a Signing Key
- * @param  {String} token_secret Secret Token
- * @return {String} Signing Key
- */
-OAuth.prototype.getSigningKey = function(token_secret) {
-    token_secret = token_secret || '';
-
-    if(!this.last_ampersand && !token_secret) {
-        return this.percentEncode(this.consumer.secret);
-    }
-
-    return this.percentEncode(this.consumer.secret) + '&' + this.percentEncode(token_secret);
-};
-
-/**
- * Get base url
- * @param  {String} url
- * @return {String}
- */
-OAuth.prototype.getBaseUrl = function(url) {
-    return url.split('?')[0];
-};
-
-/**
- * Get data from String
- * @param  {String} string
- * @return {Object}
- */
-OAuth.prototype.deParam = function(string) {
-    var arr = string.split('&');
-    var data = {};
-
-    for(var i = 0; i < arr.length; i++) {
-        var item = arr[i].split('=');
-
-        // '' value
-        item[1] = item[1] || '';
-
-        // check if the key already exists
-        // this can occur if the QS part of the url contains duplicate keys like this: ?formkey=formvalue1&formkey=formvalue2
-        if (data[item[0]]){
-          // the key exists already
-          if (!Array.isArray(data[item[0]])) {
-            // replace the value with an array containing the already present value
-            data[item[0]] = [data[item[0]]];
-          }
-          // and add the new found value to it
-          data[item[0]].push(decodeURIComponent(item[1]));
-        } else {
-          // it doesn't exist, just put the found value in the data object
-          data[item[0]] = decodeURIComponent(item[1]);
-        }
-    }
-
-    return data;
-};
-
-/**
- * Get data from url
- * @param  {String} url
- * @return {Object}
- */
-OAuth.prototype.deParamUrl = function(url) {
-    var tmp = url.split('?');
-
-    if (tmp.length === 1)
-        return {};
-
-    return this.deParam(tmp[1]);
-};
-
-/**
- * Percent Encode
- * @param  {String} str
- * @return {String} percent encoded string
- */
-OAuth.prototype.percentEncode = function(str) {
-    return encodeURIComponent(str)
-        .replace(/\!/g, "%21")
-        .replace(/\*/g, "%2A")
-        .replace(/\'/g, "%27")
-        .replace(/\(/g, "%28")
-        .replace(/\)/g, "%29");
-};
-
-/**
- * Percent Encode Object
- * @param  {Object} data
- * @return {Object} percent encoded data
- */
-OAuth.prototype.percentEncodeData = function(data) {
-    var result = {};
-
-    for(var key in data) {
-        var value = data[key];
-        // check if the value is an array
-        if (value && Array.isArray(value)){
-          var newValue = [];
-          // percentEncode every value
-          value.forEach((function(val){
-            newValue.push(this.percentEncode(val));
-          }).bind(this));
-          value = newValue;
-        } else {
-          value = this.percentEncode(value);
-        }
-        result[this.percentEncode(key)] = value;
-    }
-
-    return result;
-};
-
-/**
- * Get OAuth data as Header
- * @param  {Object} oauth_data
- * @return {String} Header data key - value
- */
-OAuth.prototype.toHeader = function(oauth_data) {
-    var sorted = this.sortObject(oauth_data);
-
-    var header_value = 'OAuth ';
-
-    if (this.realm) {
-        header_value += 'realm="' + this.realm + '"' + this.parameter_seperator;
-    }
-
-    for(var i = 0; i < sorted.length; i++) {
-        if (sorted[i].key.indexOf('oauth_') !== 0)
-            continue;
-
-        header_value += this.percentEncode(sorted[i].key) + '="' + this.percentEncode(sorted[i].value) + '"' + this.parameter_seperator;
-    }
-
-    return {
-        Authorization: header_value.substr(0, header_value.length - this.parameter_seperator.length) //cut the last chars
-    };
-};
-
-/**
- * Create a random word characters string with input length
- * @return {String} a random word characters string
- */
-OAuth.prototype.getNonce = function() {
-    var word_characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    var result = '';
-
-    for(var i = 0; i < this.nonce_length; i++) {
-        result += word_characters[parseInt(Math.random() * word_characters.length, 10)];
-    }
-
-    return result;
-};
-
-/**
- * Get Current Unix TimeStamp
- * @return {Int} current unix timestamp
- */
-OAuth.prototype.getTimeStamp = function() {
-    return parseInt(new Date().getTime()/1000, 10);
-};
-
-////////////////////// HELPER FUNCTIONS //////////////////////
-
-/**
- * Merge object
- * @param  {Object} obj1
- * @param  {Object} obj2
- * @return {Object}
- */
-OAuth.prototype.mergeObject = function(obj1, obj2) {
-    obj1 = obj1 || {};
-    obj2 = obj2 || {};
-
-    var merged_obj = obj1;
-    for(var key in obj2) {
-        merged_obj[key] = obj2[key];
-    }
-    return merged_obj;
-};
-
-/**
- * Sort object by key
- * @param  {Object} data
- * @return {Array} sorted array
- */
-OAuth.prototype.sortObject = function(data) {
-    var keys = Object.keys(data);
-    var result = [];
-
-    keys.sort();
-
-    for(var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        result.push({
-            key: key,
-            value: data[key],
-        });
-    }
-
-    return result;
-};
-
-
-/***/ }),
-
-/***/ 354:
+/***/ 4294:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-//filter will reemit the data if cb(err,pass) pass is truthy
-
-// reduce is more tricky
-// maybe we want to group the reductions or emit progress updates occasionally
-// the most basic reduce just emits one 'data' event after it has recieved 'end'
-
-
-var through = __nccwpck_require__(421)
-var Decoder = __nccwpck_require__(304).StringDecoder
-
-module.exports = split
-
-//TODO pass in a function to map across the lines.
-
-function split (matcher, mapper, options) {
-  var decoder = new Decoder()
-  var soFar = ''
-  var maxLength = options && options.maxLength;
-  var trailing = options && options.trailing === false ? false : true
-  if('function' === typeof matcher)
-    mapper = matcher, matcher = null
-  if (!matcher)
-    matcher = /\r?\n/
-
-  function emit(stream, piece) {
-    if(mapper) {
-      try {
-        piece = mapper(piece)
-      }
-      catch (err) {
-        return stream.emit('error', err)
-      }
-      if('undefined' !== typeof piece)
-        stream.queue(piece)
-    }
-    else
-      stream.queue(piece)
-  }
-
-  function next (stream, buffer) {
-    var pieces = ((soFar != null ? soFar : '') + buffer).split(matcher)
-    soFar = pieces.pop()
-
-    if (maxLength && soFar.length > maxLength)
-      return stream.emit('error', new Error('maximum buffer reached'))
-
-    for (var i = 0; i < pieces.length; i++) {
-      var piece = pieces[i]
-      emit(stream, piece)
-    }
-  }
-
-  return through(function (b) {
-    next(this, decoder.write(b))
-  },
-  function () {
-    if(decoder.end)
-      next(this, decoder.end())
-    if(trailing && soFar != null)
-      emit(this, soFar)
-    this.queue(null)
-  })
-}
+module.exports = __nccwpck_require__(4219);
 
 
 /***/ }),
 
-/***/ 421:
-/***/ ((module, exports, __nccwpck_require__) => {
-
-var Stream = __nccwpck_require__(413)
-
-// through
-//
-// a stream that does nothing but re-emit the input.
-// useful for aggregating a series of changing but not ending streams into one stream)
-
-exports = module.exports = through
-through.through = through
-
-//create a readable writable stream.
-
-function through (write, end, opts) {
-  write = write || function (data) { this.queue(data) }
-  end = end || function () { this.queue(null) }
-
-  var ended = false, destroyed = false, buffer = [], _ended = false
-  var stream = new Stream()
-  stream.readable = stream.writable = true
-  stream.paused = false
-
-//  stream.autoPause   = !(opts && opts.autoPause   === false)
-  stream.autoDestroy = !(opts && opts.autoDestroy === false)
-
-  stream.write = function (data) {
-    write.call(this, data)
-    return !stream.paused
-  }
-
-  function drain() {
-    while(buffer.length && !stream.paused) {
-      var data = buffer.shift()
-      if(null === data)
-        return stream.emit('end')
-      else
-        stream.emit('data', data)
-    }
-  }
-
-  stream.queue = stream.push = function (data) {
-//    console.error(ended)
-    if(_ended) return stream
-    if(data === null) _ended = true
-    buffer.push(data)
-    drain()
-    return stream
-  }
-
-  //this will be registered as the first 'end' listener
-  //must call destroy next tick, to make sure we're after any
-  //stream piped from here.
-  //this is only a problem if end is not emitted synchronously.
-  //a nicer way to do this is to make sure this is the last listener for 'end'
-
-  stream.on('end', function () {
-    stream.readable = false
-    if(!stream.writable && stream.autoDestroy)
-      process.nextTick(function () {
-        stream.destroy()
-      })
-  })
-
-  function _end () {
-    stream.writable = false
-    end.call(stream)
-    if(!stream.readable && stream.autoDestroy)
-      stream.destroy()
-  }
-
-  stream.end = function (data) {
-    if(ended) return
-    ended = true
-    if(arguments.length) stream.write(data)
-    _end() // will emit or queue
-    return stream
-  }
-
-  stream.destroy = function () {
-    if(destroyed) return
-    destroyed = true
-    ended = true
-    buffer.length = 0
-    stream.writable = stream.readable = false
-    stream.emit('close')
-    return stream
-  }
-
-  stream.pause = function () {
-    if(stream.paused) return
-    stream.paused = true
-    return stream
-  }
-
-  stream.resume = function () {
-    if(stream.paused) {
-      stream.paused = false
-      stream.emit('resume')
-    }
-    drain()
-    //may have become paused again,
-    //as drain emits 'data'.
-    if(!stream.paused)
-      stream.emit('drain')
-    return stream
-  }
-  return stream
-}
-
-
-
-/***/ }),
-
-/***/ 294:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = __nccwpck_require__(219);
-
-
-/***/ }),
-
-/***/ 219:
+/***/ 4219:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 
-var net = __nccwpck_require__(631);
-var tls = __nccwpck_require__(16);
-var http = __nccwpck_require__(605);
-var https = __nccwpck_require__(211);
-var events = __nccwpck_require__(614);
-var assert = __nccwpck_require__(357);
-var util = __nccwpck_require__(669);
+var net = __nccwpck_require__(1631);
+var tls = __nccwpck_require__(4016);
+var http = __nccwpck_require__(8605);
+var https = __nccwpck_require__(7211);
+var events = __nccwpck_require__(8614);
+var assert = __nccwpck_require__(2357);
+var util = __nccwpck_require__(1669);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -4795,359 +1555,344 @@ exports.debug = debug; // for test
 
 /***/ }),
 
-/***/ 382:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ 8274:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const oauth_1_0a_1 = __importDefault(__nccwpck_require__(379));
-const crypto_1 = __importDefault(__nccwpck_require__(417));
-const node_fetch_1 = __importDefault(__nccwpck_require__(467));
-const TwitterError_1 = __importDefault(__nccwpck_require__(990));
-function removeNullAndUndefined(obj) {
-    Object.keys(obj).forEach((key) => obj[key] == null && delete obj[key]);
-}
-function validate(credentials) {
-    if ('consumer_key' in credentials &&
-        typeof credentials.consumer_key != 'string') {
-        throw new Error('Invalid value for consumer_key. Expected string but got ' +
-            typeof credentials.consumer_key);
-    }
-    if ('consumer_secret' in credentials &&
-        typeof credentials.consumer_secret != 'string') {
-        throw new Error('Invalid value for consumer_secret. Expected string but got ' +
-            typeof credentials.consumer_secret);
-    }
-    if ('bearer_token' in credentials &&
-        typeof credentials.bearer_token != 'string') {
-        throw new Error('Invalid value for bearer_token. Expected string but got ' +
-            typeof credentials.bearer_token);
-    }
-    if ('access_token_key' in credentials &&
-        typeof credentials.access_token_key != 'string') {
-        throw new Error('Invalid value for access_token_key. Expected string but got ' +
-            typeof credentials.access_token_key);
-    }
-    if ('access_token_secret' in credentials &&
-        typeof credentials.access_token_secret != 'string') {
-        throw new Error('Invalid value for access_token_secret. Expected string but got ' +
-            typeof credentials.access_token_secret);
-    }
-    if (!('access_token_key' in credentials) &&
-        !('access_token_secret' in credentials) &&
-        !('consumer_key' in credentials) &&
-        !('consumer_secret' in credentials) &&
-        !('bearer_token' in credentials)) {
-        throw new Error('Invalid argument: no credentials defined');
-    }
-    if (('consumer_key' in credentials && !('consumer_secret' in credentials)) ||
-        (!('consumer_key' in credentials) && 'consumer_secret' in credentials)) {
-        throw new Error('Invalid argument: when using consumer keys, both consumer_key and ' +
-            'consumer_secret must be defined');
-    }
-    if (('access_token_key' in credentials &&
-        !('access_token_secret' in credentials)) ||
-        (!('access_token_key' in credentials) &&
-            'access_token_secret' in credentials)) {
-        throw new Error('Invalid argument: access_token_key and access_token_secret must both ' +
-            'be defined when using user authorization');
-    }
-    if (('access_token_key' in credentials ||
-        'access_token_secret' in credentials) &&
-        (!('consumer_key' in credentials) || !('consumer_secret' in credentials))) {
-        throw new Error('Invalid argument: user authentication requires consumer_key and ' +
-            'consumer_secret to be defined');
-    }
-    if (('access_token_key' in credentials ||
-        'access_token_secret' in credentials) &&
-        'bearer_token' in credentials) {
-        throw new Error('Invalid argument: access_token_key and access_token_secret cannot be ' +
-            'used with bearer_token');
-    }
-}
-async function createBearerToken({ consumer_key, consumer_secret }) {
-    const response = await node_fetch_1.default('https://api.twitter.com/oauth2/token', {
-        method: 'post',
-        headers: {
-            Authorization: 'Basic ' +
-                Buffer.from(`${consumer_key}:${consumer_secret}`).toString('base64'),
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        },
-        body: 'grant_type=client_credentials',
-    });
-    const body = await response.json();
-    if (body.errors) {
-        const error = body.errors[0];
-        throw new TwitterError_1.default(`${body.title}: ${error.message}`, body.type, body.detail);
-    }
-    if (body.token_type != 'bearer') {
-        throw new TwitterError_1.default('Unexpected reply from Twitter upon obtaining bearer token', undefined, `Expected "bearer" but found ${body.token_type}`);
-    }
-    return body.access_token;
-}
-class Credentials {
-    constructor(args) {
-        removeNullAndUndefined(args);
-        validate(args);
-        if ('consumer_key' in args) {
-            this._consumer_key = args.consumer_key;
-            this._consumer_secret = args.consumer_secret;
-        }
-        if ('bearer_token' in args) {
-            this._bearer_token = args.bearer_token.startsWith('Bearer ')
-                ? args.bearer_token.substr(7)
-                : args.bearer_token;
-        }
-        if ('access_token_key' in args) {
-            this._access_token_key = args.access_token_key;
-            this._access_token_secret = args.access_token_secret;
-            this._oauth = new oauth_1_0a_1.default({
-                consumer: {
-                    key: args.consumer_key,
-                    secret: args.consumer_secret,
-                },
-                signature_method: 'HMAC-SHA1',
-                hash_function(base_string, key) {
-                    return crypto_1.default
-                        .createHmac('sha1', key)
-                        .update(base_string)
-                        .digest('base64');
-                },
-            });
-        }
-    }
-    get consumer_key() {
-        return this._consumer_key;
-    }
-    get consumer_secret() {
-        return this._consumer_secret;
-    }
-    get bearer_token() {
-        return this._bearer_token;
-    }
-    get access_token_key() {
-        return this._access_token_key;
-    }
-    get access_token_secret() {
-        return this._access_token_secret;
-    }
-    appAuth() {
-        return !this.access_token_key && !this.access_token_secret;
-    }
-    userAuth() {
-        return !this.appAuth();
-    }
-    async createBearerToken() {
-        if (this.userAuth()) {
-            throw new Error('Refusing to create a bearer token when using user authentication');
-        }
-        if (this.bearer_token) {
-            return;
-        }
-        if (this._bearer_token_promise) {
-            return this._bearer_token_promise;
-        }
-        this._bearer_token_promise = createBearerToken({
-            consumer_key: this.consumer_key,
-            consumer_secret: this.consumer_secret,
-        })
-            .then((token) => {
-            this._bearer_token = token;
-        })
-            .finally(() => {
-            this._bearer_token_promise = undefined;
-        });
-        return this._bearer_token_promise;
-    }
-    async authorizationHeader(url, request) {
-        if (this.appAuth()) {
-            await this.createBearerToken();
-            return `Bearer ${this.bearer_token}`;
-        }
-        if (!this._oauth) {
-            throw 'OAuth should be defined for user authentication';
-        }
-        else if (!this.access_token_key || !this.access_token_secret) {
-            throw 'Access token should be defined for user authentication';
-        }
-        return this._oauth.toHeader(this._oauth.authorize({
-            url: url.toString(),
-            method: request.method,
-            data: request.body,
-        }, {
-            key: this.access_token_key,
-            secret: this.access_token_secret,
-        })).Authorization;
-    }
-}
-exports.default = Credentials;
-
-
-/***/ }),
-
-/***/ 990:
-/***/ ((module) => {
-
-"use strict";
-
-module.exports = class TwitterError extends Error {
-    constructor(message, code, details) {
-        super(message);
-        if (code) {
-            Object.defineProperty(this, 'code', {
-                value: code,
-                writable: false,
-                enumerable: true,
-            });
-        }
-        if (details) {
-            Object.defineProperty(this, 'details', {
-                value: details,
-                writable: false,
-                enumerable: true,
-            });
-        }
-    }
-};
-module.exports.fromJson = (json) => {
-    if (json.status && json.status != 200) {
-        return new module.exports(json.title, json.status, json.detail);
-    }
-    if (json.type) {
-        return new module.exports(`${json.title}: ${json.detail}`, null, json.type);
-    }
-    return null;
-};
-
-
-/***/ }),
-
-/***/ 936:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const split_1 = __importDefault(__nccwpck_require__(354));
-const TwitterError_1 = __importDefault(__nccwpck_require__(990));
-var State;
-(function (State) {
-    State[State["NOT_STARTED"] = 0] = "NOT_STARTED";
-    State[State["STARTED"] = 1] = "STARTED";
-    State[State["CLOSED"] = 2] = "CLOSED";
-})(State || (State = {}));
-class DeferredPromise {
+exports.FormDataHelper = void 0;
+const helpers_1 = __nccwpck_require__(1120);
+// This class is partially inspired by https://github.com/form-data/form-data/blob/master/lib/form_data.js
+// All credits to their authors.
+class FormDataHelper {
     constructor() {
-        this.resolve = () => { };
-        this.reject = () => { };
-        this.promise = new Promise((resolve, reject) => {
-            this.resolve = resolve;
-            this.reject = reject;
-        });
+        this._boundary = '';
+        this._chunks = [];
     }
-}
-class TwitterStream {
-    constructor(connect, close, options) {
-        const { timeout = 30 } = options;
-        this._connect = connect;
-        this._close = close;
-        this._state = State.NOT_STARTED;
-        this._events = [new DeferredPromise()];
-        this._wait = timeout * 1000;
+    bodyAppend(...values) {
+        const allAsBuffer = values.map(val => val instanceof Buffer ? val : Buffer.from(val));
+        this._chunks.push(...allAsBuffer);
     }
-    _emit(promise) {
-        this._events[this._events.length - 1].resolve(promise);
-        this._events.push(new DeferredPromise());
+    append(field, value, contentType) {
+        const convertedValue = value instanceof Buffer ? value : value.toString();
+        const header = this.getMultipartHeader(field, convertedValue, contentType);
+        this.bodyAppend(header, convertedValue, FormDataHelper.LINE_BREAK);
     }
-    _refreshTimeout() {
-        if (this._state !== State.CLOSED) {
-            if (this._timeout) {
-                clearTimeout(this._timeout);
-            }
-            this._timeout = setTimeout(() => {
-                this._closeWithError(new TwitterError_1.default('Stream unresponsive'));
-            }, this._wait);
-        }
-    }
-    _closeWithError(error) {
-        if (this._state !== State.CLOSED) {
-            this._state = State.CLOSED;
-            if (this._timeout) {
-                clearTimeout(this._timeout);
-            }
-            this._emit(Promise.reject(error));
-            this._close();
-        }
-    }
-    [Symbol.asyncIterator]() {
-        if (this._state == State.CLOSED) {
-            throw new Error('Stream has already been closed.');
-        }
+    getHeaders() {
         return {
-            next: async () => {
-                if (this._state == State.NOT_STARTED) {
-                    this._state = State.STARTED;
-                    const response = await this._connect();
-                    const stream = response.body.pipe(split_1.default());
-                    this._refreshTimeout();
-                    stream.on('data', (line) => {
-                        this._refreshTimeout();
-                        if (!line.trim()) {
-                            return;
-                        }
-                        if (line == 'Rate limit exceeded') {
-                            this._closeWithError(new TwitterError_1.default('Rate limit exceeded'));
-                            return;
-                        }
-                        const json = JSON.parse(line);
-                        const error = TwitterError_1.default.fromJson(json);
-                        if (error) {
-                            this._closeWithError(error);
-                            return;
-                        }
-                        this._emit(Promise.resolve({ done: false, value: json }));
-                    });
-                    stream.on('error', (error) => {
-                        this._closeWithError(error);
-                    });
-                    stream.on('end', (error) => {
-                        this.close();
-                    });
-                }
-                const event = this._events[0];
-                return event.promise.finally(() => {
-                    if (event === this._events[0]) {
-                        this._events.shift();
-                    }
-                });
-            },
+            'content-type': 'multipart/form-data; boundary=' + this.getBoundary(),
         };
     }
-    close() {
-        if (this._state !== State.CLOSED) {
-            this._state = State.CLOSED;
-            if (this._timeout) {
-                clearTimeout(this._timeout);
+    /** Length of form-data (including footer length). */
+    getLength() {
+        return this._chunks.reduce((acc, cur) => acc + cur.length, this.getMultipartFooter().length);
+    }
+    getBuffer() {
+        const allChunks = [...this._chunks, this.getMultipartFooter()];
+        const totalBuffer = Buffer.alloc(this.getLength());
+        let i = 0;
+        for (const chunk of allChunks) {
+            for (let j = 0; j < chunk.length; i++, j++) {
+                totalBuffer[i] = chunk[j];
             }
-            this._emit(Promise.resolve({ done: true }));
-            this._close();
         }
+        return totalBuffer;
+    }
+    getBoundary() {
+        if (!this._boundary) {
+            this.generateBoundary();
+        }
+        return this._boundary;
+    }
+    generateBoundary() {
+        // This generates a 50 character boundary similar to those used by Firefox.
+        let boundary = '--------------------------';
+        for (let i = 0; i < 24; i++) {
+            boundary += Math.floor(Math.random() * 10).toString(16);
+        }
+        this._boundary = boundary;
+    }
+    getMultipartHeader(field, value, contentType) {
+        // In this lib no need to guess more the content type, octet stream is ok of buffers
+        if (!contentType) {
+            contentType = value instanceof Buffer ? FormDataHelper.DEFAULT_CONTENT_TYPE : '';
+        }
+        const headers = {
+            'Content-Disposition': ['form-data', `name="${field}"`],
+            'Content-Type': contentType,
+        };
+        let contents = '';
+        for (const [prop, header] of Object.entries(headers)) {
+            // skip nullish headers.
+            if (!header.length) {
+                continue;
+            }
+            contents += prop + ': ' + helpers_1.arrayWrap(header).join('; ') + FormDataHelper.LINE_BREAK;
+        }
+        return '--' + this.getBoundary() + FormDataHelper.LINE_BREAK + contents + FormDataHelper.LINE_BREAK;
+    }
+    getMultipartFooter() {
+        if (this._footerChunk) {
+            return this._footerChunk;
+        }
+        return this._footerChunk = Buffer.from('--' + this.getBoundary() + '--' + FormDataHelper.LINE_BREAK);
     }
 }
-exports.default = TwitterStream;
+exports.FormDataHelper = FormDataHelper;
+FormDataHelper.LINE_BREAK = '\r\n';
+FormDataHelper.DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 
 
 /***/ }),
 
-/***/ 651:
-/***/ (function(module, exports, __nccwpck_require__) {
+/***/ 8291:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OAuth1Helper = void 0;
+const crypto = __importStar(__nccwpck_require__(6417));
+class OAuth1Helper {
+    constructor(options) {
+        this.nonceLength = 32;
+        this.consumerKeys = options.consumerKeys;
+    }
+    hash(base, key) {
+        return crypto
+            .createHmac('sha1', key)
+            .update(base)
+            .digest('base64');
+    }
+    authorize(request, accessTokens = {}) {
+        const oauthInfo = {
+            oauth_consumer_key: this.consumerKeys.key,
+            oauth_nonce: this.getNonce(),
+            oauth_signature_method: 'HMAC-SHA1',
+            oauth_timestamp: this.getTimestamp(),
+            oauth_version: '1.0',
+        };
+        if (accessTokens.key !== undefined) {
+            oauthInfo.oauth_token = accessTokens.key;
+        }
+        if (!request.data) {
+            request.data = {};
+        }
+        oauthInfo.oauth_signature = this.getSignature(request, accessTokens.secret, oauthInfo);
+        return oauthInfo;
+    }
+    toHeader(oauthInfo) {
+        const sorted = sortObject(oauthInfo);
+        let header_value = 'OAuth ';
+        for (const element of sorted) {
+            if (element.key.indexOf('oauth_') !== 0) {
+                continue;
+            }
+            header_value += percentEncode(element.key) + '="' + percentEncode(element.value) + '",';
+        }
+        return {
+            // Remove the last ,
+            Authorization: header_value.slice(0, header_value.length - 1),
+        };
+    }
+    getNonce() {
+        const wordCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+        for (let i = 0; i < this.nonceLength; i++) {
+            result += wordCharacters[Math.trunc(Math.random() * wordCharacters.length)];
+        }
+        return result;
+    }
+    getTimestamp() {
+        return Math.trunc(new Date().getTime() / 1000);
+    }
+    getSignature(request, tokenSecret, oauthInfo) {
+        return this.hash(this.getBaseString(request, oauthInfo), this.getSigningKey(tokenSecret));
+    }
+    getSigningKey(tokenSecret) {
+        return percentEncode(this.consumerKeys.secret) + '&' + percentEncode(tokenSecret || '');
+    }
+    getBaseString(request, oauthInfo) {
+        return request.method.toUpperCase() + '&'
+            + percentEncode(this.getBaseUrl(request.url)) + '&'
+            + percentEncode(this.getParameterString(request, oauthInfo));
+    }
+    getParameterString(request, oauthInfo) {
+        const baseStringData = sortObject(percentEncodeData(mergeObject(oauthInfo, mergeObject(request.data, deParamUrl(request.url)))));
+        let dataStr = '';
+        for (const { key, value } of baseStringData) {
+            // check if the value is an array
+            // this means that this key has multiple values
+            if (value && Array.isArray(value)) {
+                // sort the array first
+                value.sort();
+                let valString = '';
+                // serialize all values for this key: e.g. formkey=formvalue1&formkey=formvalue2
+                value.forEach((item, i) => {
+                    valString += key + '=' + item;
+                    if (i < value.length) {
+                        valString += '&';
+                    }
+                });
+                dataStr += valString;
+            }
+            else {
+                dataStr += key + '=' + value + '&';
+            }
+        }
+        // Remove the last character
+        return dataStr.slice(0, dataStr.length - 1);
+    }
+    getBaseUrl(url) {
+        return url.split('?')[0];
+    }
+}
+exports.OAuth1Helper = OAuth1Helper;
+exports.default = OAuth1Helper;
+// Helper functions //
+function mergeObject(obj1, obj2) {
+    return {
+        ...obj1 || {},
+        ...obj2 || {},
+    };
+}
+function sortObject(data) {
+    return Object.keys(data)
+        .sort()
+        .map(key => ({ key, value: data[key] }));
+}
+function deParam(string) {
+    const splitted = string.split('&');
+    const data = {};
+    for (const coupleKeyValue of splitted) {
+        const [key, value = ''] = coupleKeyValue.split('=');
+        // check if the key already exists
+        // this can occur if the QS part of the url contains duplicate keys like this: ?formkey=formvalue1&formkey=formvalue2
+        if (data[key]) {
+            // the key exists already
+            if (!Array.isArray(data[key])) {
+                // replace the value with an array containing the already present value
+                data[key] = [data[key]];
+            }
+            // and add the new found value to it
+            data[key].push(decodeURIComponent(value));
+        }
+        else {
+            // it doesn't exist, just put the found value in the data object
+            data[key] = decodeURIComponent(value);
+        }
+    }
+    return data;
+}
+function deParamUrl(url) {
+    const tmp = url.split('?');
+    if (tmp.length === 1)
+        return {};
+    return deParam(tmp[1]);
+}
+function percentEncode(str) {
+    return encodeURIComponent(str)
+        .replace(/!/g, '%21')
+        .replace(/\*/g, '%2A')
+        .replace(/'/g, '%27')
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29');
+}
+function percentEncodeData(data) {
+    const result = {};
+    for (const key in data) {
+        let value = data[key];
+        // check if the value is an array
+        if (value && Array.isArray(value)) {
+            value = value.map(v => percentEncode(v));
+        }
+        else {
+            value = percentEncode(value);
+        }
+        result[percentEncode(key)] = value;
+    }
+    return result;
+}
+
+
+/***/ }),
+
+/***/ 9791:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OAuth2Helper = void 0;
+const crypto = __importStar(__nccwpck_require__(6417));
+class OAuth2Helper {
+    static getCodeVerifier() {
+        return this.generateRandomString(128);
+    }
+    static getCodeChallengeFromVerifier(verifier) {
+        return this.escapeBase64Url(crypto
+            .createHash('sha256')
+            .update(verifier)
+            .digest('base64'));
+    }
+    static generateRandomString(length) {
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+        for (let i = 0; i < length; i++) {
+            text += possible[Math.floor(Math.random() * possible.length)];
+        }
+        return text;
+    }
+    static escapeBase64Url(string) {
+        return string.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    }
+}
+exports.OAuth2Helper = OAuth2Helper;
+
+
+/***/ }),
+
+/***/ 3768:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -5155,119 +1900,5095 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const abort_controller_1 = __importDefault(__nccwpck_require__(659));
-const node_fetch_1 = __importDefault(__nccwpck_require__(467));
-const url_1 = __nccwpck_require__(835);
-const Credentials_1 = __importDefault(__nccwpck_require__(382));
-const TwitterError_js_1 = __importDefault(__nccwpck_require__(990));
-const TwitterStream_1 = __importDefault(__nccwpck_require__(936));
-function applyParameters(url, parameters, prefix) {
-    prefix = prefix || '';
-    if (!parameters) {
-        return;
+exports.RequestHandlerHelper = void 0;
+const https_1 = __nccwpck_require__(7211);
+const settings_1 = __nccwpck_require__(6273);
+const TweetStream_1 = __importDefault(__nccwpck_require__(9362));
+const types_1 = __nccwpck_require__(1638);
+class RequestHandlerHelper {
+    constructor(requestData) {
+        this.requestData = requestData;
+        this.responseData = '';
     }
-    for (const [key, value] of Object.entries(parameters)) {
-        if (typeof value == 'object' && value instanceof Array) {
-            url.searchParams.set(prefix + key, value.join(','));
+    get hrefPathname() {
+        const url = this.requestData.url;
+        return url.hostname + url.pathname;
+    }
+    isFormEncodedEndpoint() {
+        return this.requestData.url.href.startsWith('https://api.twitter.com/oauth/');
+    }
+    getRateLimitFromResponse(res) {
+        let rateLimit = undefined;
+        if (res.headers['x-rate-limit-limit']) {
+            rateLimit = {
+                limit: Number(res.headers['x-rate-limit-limit']),
+                remaining: Number(res.headers['x-rate-limit-remaining']),
+                reset: Number(res.headers['x-rate-limit-reset']),
+            };
+            if (this.requestData.rateLimitSaver) {
+                this.requestData.rateLimitSaver(rateLimit);
+            }
         }
-        else if (typeof value == 'object') {
-            applyParameters(url, value, `${prefix}${key}.`);
+        return rateLimit;
+    }
+    createRequestError(error) {
+        if (settings_1.TwitterApiV2Settings.debug) {
+            console.log('Request network error:', error);
+        }
+        return new types_1.ApiRequestError('Request failed.', {
+            request: this.req,
+            error,
+        });
+    }
+    formatV1Errors(errors) {
+        return errors
+            .map(({ code, message }) => `${message} (Twitter code ${code})`)
+            .join(', ');
+    }
+    formatV2Error(error) {
+        return `${error.title}: ${error.detail} (see ${error.type})`;
+    }
+    createResponseError({ res, data, rateLimit, code }) {
+        var _a;
+        if (settings_1.TwitterApiV2Settings.debug) {
+            console.log('Request failed with code', code, ', data:', data, 'response headers:', res.headers);
+        }
+        // Errors formatting.
+        let errorString = `Request failed with code ${code}`;
+        if ((_a = data === null || data === void 0 ? void 0 : data.errors) === null || _a === void 0 ? void 0 : _a.length) {
+            const errors = data.errors;
+            if ('code' in errors[0]) {
+                errorString += ' - ' + this.formatV1Errors(errors);
+            }
+            else {
+                errorString += ' - ' + this.formatV2Error(data);
+            }
+        }
+        return new types_1.ApiResponseError(errorString, {
+            code,
+            data,
+            headers: res.headers,
+            request: this.req,
+            response: res,
+            rateLimit,
+        });
+    }
+    getParsedResponse(res) {
+        var _a;
+        let data = this.responseData;
+        // Auto parse if server responds with JSON body
+        if (data.length && ((_a = res.headers['content-type']) === null || _a === void 0 ? void 0 : _a.includes('application/json'))) {
+            data = JSON.parse(data);
+        }
+        // f-e oauth token endpoints
+        else if (this.isFormEncodedEndpoint()) {
+            const response_form_entries = {};
+            for (const [item, value] of new URLSearchParams(data)) {
+                response_form_entries[item] = value;
+            }
+            data = response_form_entries;
+        }
+        return data;
+    }
+    requestErrorHandler(reject, requestError) {
+        reject(this.createRequestError(requestError));
+    }
+    classicResponseHandler(resolve, reject, res) {
+        // Register the response data
+        res.on('data', chunk => this.responseData += chunk);
+        res.on('end', this.onResponseEndHandler.bind(this, resolve, reject, res));
+    }
+    onResponseEndHandler(resolve, reject, res) {
+        const rateLimit = this.getRateLimitFromResponse(res);
+        const data = this.getParsedResponse(res);
+        // Handle bad error codes
+        const code = res.statusCode;
+        if (code >= 400) {
+            reject(this.createResponseError({ data, res, rateLimit, code }));
+        }
+        if (settings_1.TwitterApiV2Settings.debug) {
+            console.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${res.statusCode}`);
+            console.log('Response body:', data);
+        }
+        resolve({
+            data,
+            headers: res.headers,
+            rateLimit,
+        });
+    }
+    streamResponseHandler(resolve, reject, res) {
+        const code = res.statusCode;
+        if (code < 400) {
+            if (settings_1.TwitterApiV2Settings.debug) {
+                console.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${res.statusCode} (starting stream)`);
+            }
+            // HTTP code ok, consume stream
+            resolve({ req: this.req, res, requestData: this.requestData });
         }
         else {
-            url.searchParams.set(prefix + key, value);
+            // Handle response normally, can only rejects
+            this.classicResponseHandler(() => undefined, reject, res);
+        }
+    }
+    debugRequest() {
+        const url = this.requestData.url;
+        console.log(`[${this.requestData.options.method} ${this.hrefPathname}]`, this.requestData.options);
+        if (url.search) {
+            console.log('Request parameters:', [...url.searchParams.entries()].map(([key, value]) => `${key}: ${value}`));
+        }
+        if (this.requestData.body) {
+            console.log('Request body:', this.requestData.body);
+        }
+    }
+    buildRequest() {
+        if (settings_1.TwitterApiV2Settings.debug) {
+            this.debugRequest();
+        }
+        const url = this.requestData.url;
+        const auth = url.username ? `${url.username}:${url.password}` : undefined;
+        this.req = https_1.request({
+            ...this.requestData.options,
+            // Define URL params manually, addresses dependencies error https://github.com/PLhery/node-twitter-api-v2/issues/94
+            host: url.hostname,
+            port: url.port || undefined,
+            path: url.pathname + url.search,
+            protocol: url.protocol,
+            auth,
+        });
+    }
+    makeRequest() {
+        this.buildRequest();
+        return new Promise((resolve, reject) => {
+            const req = this.req;
+            // Handle request errors
+            req.on('error', this.requestErrorHandler.bind(this, reject));
+            req.on('response', this.classicResponseHandler.bind(this, resolve, reject));
+            if (this.requestData.body) {
+                req.write(this.requestData.body);
+            }
+            req.end();
+        });
+    }
+    async makeRequestAsStream() {
+        const { req, res, requestData } = await this.makeRequestAndResolveWhenReady();
+        return new TweetStream_1.default(requestData, req, res);
+    }
+    makeRequestAndResolveWhenReady() {
+        this.buildRequest();
+        return new Promise((resolve, reject) => {
+            const req = this.req;
+            // Handle request errors
+            req.on('error', this.requestErrorHandler.bind(this, reject));
+            req.on('response', this.streamResponseHandler.bind(this, resolve, reject));
+            if (this.requestData.body) {
+                req.write(this.requestData.body);
+            }
+            req.end();
+        });
+    }
+}
+exports.RequestHandlerHelper = RequestHandlerHelper;
+exports.default = RequestHandlerHelper;
+
+
+/***/ }),
+
+/***/ 6131:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ClientRequestMaker = void 0;
+const TweetStream_1 = __importDefault(__nccwpck_require__(9362));
+const helpers_1 = __nccwpck_require__(1120);
+const oauth1_helper_1 = __importDefault(__nccwpck_require__(8291));
+const request_handler_helper_1 = __importDefault(__nccwpck_require__(3768));
+const request_param_helper_1 = __importDefault(__nccwpck_require__(7954));
+class ClientRequestMaker {
+    constructor() {
+        this._rateLimits = {};
+    }
+    saveRateLimit(originalUrl, rateLimit) {
+        this._rateLimits[originalUrl] = rateLimit;
+    }
+    /** Send a new request and returns a wrapped `Promise<TwitterResponse<T>`. */
+    send(requestParams) {
+        const args = this.getHttpRequestArgs(requestParams);
+        const options = { method: args.method, headers: args.headers, timeout: requestParams.timeout };
+        const enableRateLimitSave = requestParams.enableRateLimitSave !== false;
+        if (args.body) {
+            request_param_helper_1.default.setBodyLengthHeader(options, args.body);
+        }
+        return new request_handler_helper_1.default({
+            url: args.url,
+            options,
+            body: args.body,
+            rateLimitSaver: enableRateLimitSave ? this.saveRateLimit.bind(this, args.rawUrl) : undefined,
+        })
+            .makeRequest();
+    }
+    sendStream(requestParams) {
+        const args = this.getHttpRequestArgs(requestParams);
+        const options = { method: args.method, headers: args.headers };
+        const enableRateLimitSave = requestParams.enableRateLimitSave !== false;
+        const enableAutoConnect = requestParams.autoConnect !== false;
+        if (args.body) {
+            request_param_helper_1.default.setBodyLengthHeader(options, args.body);
+        }
+        const requestData = {
+            url: args.url,
+            options,
+            body: args.body,
+            rateLimitSaver: enableRateLimitSave ? this.saveRateLimit.bind(this, args.rawUrl) : undefined,
+            payloadIsError: requestParams.payloadIsError,
+        };
+        const stream = new TweetStream_1.default(requestData);
+        if (!enableAutoConnect) {
+            return stream;
+        }
+        return stream.connect();
+    }
+    /* Token helpers */
+    buildOAuth() {
+        if (!this._consumerSecret || !this._consumerToken)
+            throw new Error('Invalid consumer tokens');
+        return new oauth1_helper_1.default({
+            consumerKeys: { key: this._consumerToken, secret: this._consumerSecret },
+        });
+    }
+    getOAuthAccessTokens() {
+        if (!this._accessSecret || !this._accessToken)
+            return;
+        return {
+            key: this._accessToken,
+            secret: this._accessSecret,
+        };
+    }
+    /* Request helpers */
+    writeAuthHeaders({ headers, bodyInSignature, url, method, query, body }) {
+        headers = { ...headers };
+        if (this._bearerToken) {
+            headers.Authorization = 'Bearer ' + this._bearerToken;
+        }
+        else if (this._basicToken) {
+            // Basic auth, to request a bearer token
+            headers.Authorization = 'Basic ' + this._basicToken;
+        }
+        else if (this._consumerSecret && this._oauth) {
+            // Merge query and body
+            const data = bodyInSignature ? request_param_helper_1.default.mergeQueryAndBodyForOAuth(query, body) : query;
+            const auth = this._oauth.authorize({
+                url: url.toString(),
+                method,
+                data,
+            }, this.getOAuthAccessTokens());
+            headers = { ...headers, ...this._oauth.toHeader(auth) };
+        }
+        return headers;
+    }
+    getHttpRequestArgs({ url, method, query: rawQuery = {}, body: rawBody = {}, headers, forceBodyMode, enableAuth, params, }) {
+        let body = undefined;
+        method = method.toUpperCase();
+        headers = headers !== null && headers !== void 0 ? headers : {};
+        // Add user agent header (Twitter recommands it)
+        if (!headers['x-user-agent']) {
+            headers['x-user-agent'] = 'Node.twitter-api-v2';
+        }
+        // Add protocol to URL if needed
+        if (!url.startsWith('http')) {
+            url = 'https://' + url;
+        }
+        // Convert URL to object that will receive all URL modifications
+        const urlObject = new URL(url);
+        // URL without query string to save as endpoint name
+        const rawUrl = urlObject.origin + urlObject.pathname;
+        // Apply URL parameters
+        if (params) {
+            request_param_helper_1.default.applyRequestParametersToUrl(urlObject, params);
+        }
+        // Build an URL without anything in QS, and QSP in query
+        const query = request_param_helper_1.default.formatQueryToString(rawQuery);
+        request_param_helper_1.default.moveUrlQueryParamsIntoObject(urlObject, query);
+        // Delete undefined parameters
+        if (!(rawBody instanceof Buffer)) {
+            helpers_1.trimUndefinedProperties(rawBody);
+        }
+        // OAuth signature should not include parameters when using multipart.
+        const bodyType = forceBodyMode !== null && forceBodyMode !== void 0 ? forceBodyMode : request_param_helper_1.default.autoDetectBodyType(urlObject);
+        // If undefined or true, enable auth by headers
+        if (enableAuth !== false) {
+            // OAuth needs body signature only if body is URL encoded.
+            const bodyInSignature = ClientRequestMaker.BODY_METHODS.has(method) && bodyType === 'url';
+            headers = this.writeAuthHeaders({ headers, bodyInSignature, method, query, url: urlObject, body: rawBody });
+        }
+        if (ClientRequestMaker.BODY_METHODS.has(method)) {
+            body = request_param_helper_1.default.constructBodyParams(rawBody, headers, bodyType) || undefined;
+        }
+        request_param_helper_1.default.addQueryParamsToUrl(urlObject, query);
+        return {
+            rawUrl,
+            url: urlObject,
+            method,
+            headers,
+            body,
+        };
+    }
+}
+exports.ClientRequestMaker = ClientRequestMaker;
+ClientRequestMaker.BODY_METHODS = new Set(['POST', 'PUT', 'PATCH']);
+
+
+/***/ }),
+
+/***/ 7954:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RequestParamHelpers = void 0;
+const form_data_helper_1 = __nccwpck_require__(8274);
+/* Helpers functions that are specific to this class but do not depends on instance */
+class RequestParamHelpers {
+    static formatQueryToString(query) {
+        const formattedQuery = {};
+        for (const prop in query) {
+            if (typeof query[prop] === 'string') {
+                formattedQuery[prop] = query[prop];
+            }
+            else if (typeof query[prop] !== 'undefined') {
+                formattedQuery[prop] = String(query[prop]);
+            }
+        }
+        return formattedQuery;
+    }
+    static autoDetectBodyType(url) {
+        if (url.pathname.startsWith('/2/') || url.pathname.startsWith('/labs/2/')) {
+            // oauth2 takes url encoded
+            if (url.password.startsWith('/2/oauth2')) {
+                return 'url';
+            }
+            // Twitter API v2 has JSON-encoded requests for everything else
+            return 'json';
+        }
+        if (url.hostname === 'upload.twitter.com') {
+            if (url.pathname === '/1.1/media/upload.json') {
+                return 'form-data';
+            }
+            // json except for media/upload command, that is form-data.
+            return 'json';
+        }
+        const endpoint = url.pathname.split('/1.1/', 2)[1];
+        if (this.JSON_1_1_ENDPOINTS.has(endpoint)) {
+            return 'json';
+        }
+        return 'url';
+    }
+    static addQueryParamsToUrl(url, query) {
+        for (const [key, value] of Object.entries(query)) {
+            url.searchParams.append(key, value);
+        }
+        if (url.search) {
+            // URLSearchParams doesnt encode '*', but Twitter wants it encoded.
+            url.search = url.search.replace(/\*/g, '%2A');
+        }
+    }
+    static constructBodyParams(body, headers, mode) {
+        if (body instanceof Buffer) {
+            return body;
+        }
+        if (mode === 'json') {
+            headers['content-type'] = 'application/json;charset=UTF-8';
+            return JSON.stringify(body);
+        }
+        else if (mode === 'url') {
+            headers['content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+            if (Object.keys(body).length) {
+                return new URLSearchParams(body)
+                    .toString()
+                    .replace(/\*/g, '%2A'); // URLSearchParams doesnt encode '*', but Twitter wants it encoded.
+            }
+            return '';
+        }
+        else if (mode === 'raw') {
+            throw new Error('You can only use raw body mode with Buffers. To give a string, use Buffer.from(str).');
+        }
+        else {
+            const form = new form_data_helper_1.FormDataHelper();
+            for (const parameter in body) {
+                form.append(parameter, body[parameter]);
+            }
+            const formHeaders = form.getHeaders();
+            headers['content-type'] = formHeaders['content-type'];
+            return form.getBuffer();
+        }
+    }
+    static setBodyLengthHeader(options, body) {
+        var _a;
+        options.headers = (_a = options.headers) !== null && _a !== void 0 ? _a : {};
+        if (typeof body === 'string') {
+            options.headers['content-length'] = Buffer.byteLength(body);
+        }
+        else {
+            options.headers['content-length'] = body.length;
+        }
+    }
+    static isOAuthSerializable(item) {
+        return !(item instanceof Buffer);
+    }
+    static mergeQueryAndBodyForOAuth(query, body) {
+        const parameters = {};
+        for (const prop in query) {
+            parameters[prop] = query[prop];
+        }
+        if (this.isOAuthSerializable(body)) {
+            for (const prop in body) {
+                const bodyProp = body[prop];
+                if (this.isOAuthSerializable(bodyProp)) {
+                    parameters[prop] = typeof bodyProp === 'object' && bodyProp !== null && 'toString' in bodyProp
+                        ? bodyProp.toString()
+                        : bodyProp;
+                }
+            }
+        }
+        return parameters;
+    }
+    static moveUrlQueryParamsIntoObject(url, query) {
+        for (const [param, value] of url.searchParams) {
+            query[param] = value;
+        }
+        // Remove the query string
+        url.search = '';
+        return url;
+    }
+    /**
+     * Replace URL parameters available in pathname, like `:id`, with data given in `parameters`:
+     * `https://twitter.com/:id.json` + `{ id: '20' }` => `https://twitter.com/20.json`
+     */
+    static applyRequestParametersToUrl(url, parameters) {
+        url.pathname = url.pathname.replace(/:([A-Z_-]+)/ig, (fullMatch, paramName) => {
+            if (parameters[paramName] !== undefined) {
+                return String(parameters[paramName]);
+            }
+            return fullMatch;
+        });
+        return url;
+    }
+}
+exports.RequestParamHelpers = RequestParamHelpers;
+RequestParamHelpers.JSON_1_1_ENDPOINTS = new Set([
+    'direct_messages/events/new.json',
+    'direct_messages/welcome_messages/new.json',
+    'direct_messages/welcome_messages/rules/new.json',
+    'media/metadata/create.json',
+    'collections/entries/curate.json',
+]);
+exports.default = RequestParamHelpers;
+
+
+/***/ }),
+
+/***/ 8726:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const request_maker_mixin_1 = __nccwpck_require__(6131);
+/**
+ * Base class for Twitter instances
+ */
+class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
+    constructor(token) {
+        super();
+        this._currentUser = null;
+        if (typeof token === 'string') {
+            this._bearerToken = token;
+        }
+        else if (token instanceof TwitterApiBase) {
+            this._accessToken = token._accessToken;
+            this._accessSecret = token._accessSecret;
+            this._consumerToken = token._consumerToken;
+            this._consumerSecret = token._consumerSecret;
+            this._oauth = token._oauth;
+            this._prefix = token._prefix;
+            this._bearerToken = token._bearerToken;
+            this._basicToken = token._basicToken;
+            this._clientId = token._clientId;
+            this._rateLimits = token._rateLimits;
+        }
+        else if (typeof token === 'object' && 'appKey' in token) {
+            this._consumerToken = token.appKey;
+            this._consumerSecret = token.appSecret;
+            if (token.accessToken && token.accessSecret) {
+                this._accessToken = token.accessToken;
+                this._accessSecret = token.accessSecret;
+            }
+            this._oauth = this.buildOAuth();
+        }
+        else if (typeof token === 'object' && 'username' in token) {
+            const key = encodeURIComponent(token.username) + ':' + encodeURIComponent(token.password);
+            this._basicToken = Buffer.from(key).toString('base64');
+        }
+        else if (typeof token === 'object' && 'clientId' in token) {
+            this._clientId = token.clientId;
+        }
+    }
+    /* Prefix/Token handling */
+    setPrefix(prefix) {
+        this._prefix = prefix;
+    }
+    cloneWithPrefix(prefix) {
+        const clone = this.constructor(this);
+        clone.setPrefix(prefix);
+        return clone;
+    }
+    getActiveTokens() {
+        if (this._bearerToken) {
+            return {
+                type: 'oauth2',
+                bearerToken: this._bearerToken,
+            };
+        }
+        else if (this._basicToken) {
+            return {
+                type: 'basic',
+                token: this._basicToken,
+            };
+        }
+        else if (this._consumerSecret && this._oauth) {
+            return {
+                type: 'oauth-1.0a',
+                appKey: this._consumerToken,
+                appSecret: this._consumerSecret,
+                accessToken: this._accessToken,
+                accessSecret: this._accessSecret,
+            };
+        }
+        return { type: 'none' };
+    }
+    /* Rate limit cache */
+    /**
+     * Tells if you hit the Twitter rate limit for {endpoint}.
+     * (local data only, this should not ask anything to Twitter)
+     */
+    hasHitRateLimit(endpoint) {
+        var _a;
+        if (this.isRateLimitStatusObsolete(endpoint)) {
+            return false;
+        }
+        return ((_a = this.getLastRateLimitStatus(endpoint)) === null || _a === void 0 ? void 0 : _a.remaining) === 0;
+    }
+    /**
+     * Tells if you hit the returned Twitter rate limit for {endpoint} has expired.
+     * If client has no saved rate limit data for {endpoint}, this will gives you `true`.
+     */
+    isRateLimitStatusObsolete(endpoint) {
+        const rateLimit = this.getLastRateLimitStatus(endpoint);
+        if (rateLimit === undefined) {
+            return true;
+        }
+        // Timestamps are exprimed in seconds, JS works with ms
+        return (rateLimit.reset * 1000) < Date.now();
+    }
+    /**
+     * Get the last obtained Twitter rate limit information for {endpoint}.
+     * (local data only, this should not ask anything to Twitter)
+     */
+    getLastRateLimitStatus(endpoint) {
+        const endpointWithPrefix = endpoint.match(/^https?:\/\//) ? endpoint : (this._prefix + endpoint);
+        return this._rateLimits[endpointWithPrefix];
+    }
+    /* Current user cache */
+    /** Get cached current user. */
+    async getCurrentUserObject(forceFetch = false) {
+        if (!forceFetch && this._currentUser) {
+            return this._currentUser;
+        }
+        const currentUser = await this.get('account/verify_credentials.json', { tweet_mode: 'extended' }, { prefix: 'https://api.twitter.com/1.1/' });
+        this._currentUser = currentUser;
+        return currentUser;
+    }
+    async get(url, query = {}, { fullResponse, prefix = this._prefix, ...rest } = {}) {
+        if (prefix)
+            url = prefix + url;
+        const resp = await this.send({
+            url,
+            method: 'GET',
+            query,
+            ...rest,
+        });
+        return fullResponse ? resp : resp.data;
+    }
+    async delete(url, query = {}, { fullResponse, prefix = this._prefix, ...rest } = {}) {
+        if (prefix)
+            url = prefix + url;
+        const resp = await this.send({
+            url,
+            method: 'DELETE',
+            query,
+            ...rest,
+        });
+        return fullResponse ? resp : resp.data;
+    }
+    async post(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
+        if (prefix)
+            url = prefix + url;
+        const resp = await this.send({
+            url,
+            method: 'POST',
+            body,
+            ...rest,
+        });
+        return fullResponse ? resp : resp.data;
+    }
+    async put(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
+        if (prefix)
+            url = prefix + url;
+        const resp = await this.send({
+            url,
+            method: 'PUT',
+            body,
+            ...rest,
+        });
+        return fullResponse ? resp : resp.data;
+    }
+    async patch(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
+        if (prefix)
+            url = prefix + url;
+        const resp = await this.send({
+            url,
+            method: 'PATCH',
+            body,
+            ...rest,
+        });
+        return fullResponse ? resp : resp.data;
+    }
+    getStream(url, query, { prefix = this._prefix, ...rest } = {}) {
+        return this.sendStream({
+            url: prefix ? prefix + url : url,
+            method: 'GET',
+            query,
+            ...rest,
+        });
+    }
+    postStream(url, body, { prefix = this._prefix, ...rest } = {}) {
+        return this.sendStream({
+            url: prefix ? prefix + url : url,
+            method: 'POST',
+            body,
+            ...rest,
+        });
+    }
+}
+exports.default = TwitterApiBase;
+
+
+/***/ }),
+
+/***/ 3810:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const client_base_1 = __importDefault(__nccwpck_require__(8726));
+/**
+ * Base subclient for every v1 and v2 client.
+ */
+class TwitterApiSubClient extends client_base_1.default {
+    constructor(instance) {
+        super();
+        if (!(instance instanceof client_base_1.default)) {
+            throw new Error('You must instance TwitterApiv1 instance from existing TwitterApi instance.');
+        }
+        const inst = instance;
+        this._bearerToken = inst._bearerToken;
+        this._consumerToken = inst._consumerToken;
+        this._consumerSecret = inst._consumerSecret;
+        this._accessToken = inst._accessToken;
+        this._accessSecret = inst._accessSecret;
+        this._basicToken = inst._basicToken;
+        this._oauth = inst._oauth;
+        this._clientId = inst._clientId;
+        this._rateLimits = inst._rateLimits;
+    }
+}
+exports.default = TwitterApiSubClient;
+
+
+/***/ }),
+
+/***/ 6118:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiReadOnly = exports.TwitterApiReadWrite = exports.TwitterApi = void 0;
+const client_v1_1 = __importDefault(__nccwpck_require__(7030));
+const client_v2_1 = __importDefault(__nccwpck_require__(4692));
+const readwrite_1 = __importDefault(__nccwpck_require__(489));
+// "Real" exported client for usage of TwitterApi.
+/**
+ * Twitter v1.1 and v2 API client.
+ */
+class TwitterApi extends readwrite_1.default {
+    /* Direct access to subclients */
+    get v1() {
+        if (this._v1)
+            return this._v1;
+        return this._v1 = new client_v1_1.default(this);
+    }
+    get v2() {
+        if (this._v2)
+            return this._v2;
+        return this._v2 = new client_v2_1.default(this);
+    }
+    /**
+     * Get a client with read/write rights.
+     */
+    get readWrite() {
+        return this;
+    }
+    /* Static helpers */
+    static getErrors(error) {
+        var _a;
+        if (typeof error !== 'object')
+            return [];
+        if (!('data' in error))
+            return [];
+        return (_a = error.data.errors) !== null && _a !== void 0 ? _a : [];
+    }
+    /** Extract another image size than obtained in a `profile_image_url` or `profile_image_url_https` field of a user object. */
+    static getProfileImageInSize(profileImageUrl, size) {
+        const lastPart = profileImageUrl.split('/').pop();
+        const sizes = ['normal', 'bigger', 'mini'];
+        let originalUrl = profileImageUrl;
+        for (const availableSize of sizes) {
+            if (lastPart.includes(`_${availableSize}`)) {
+                originalUrl = profileImageUrl.replace(`_${availableSize}`, '');
+                break;
+            }
+        }
+        if (size === 'original') {
+            return originalUrl;
+        }
+        const extPos = originalUrl.lastIndexOf('.');
+        if (extPos !== -1) {
+            const ext = originalUrl.slice(extPos + 1);
+            return originalUrl.slice(0, extPos) + '_' + size + '.' + ext;
+        }
+        else {
+            return originalUrl + '_' + size;
         }
     }
 }
-class Twitter {
-    constructor(args) {
-        this.credentials = new Credentials_1.default(args);
+exports.TwitterApi = TwitterApi;
+var readwrite_2 = __nccwpck_require__(489);
+Object.defineProperty(exports, "TwitterApiReadWrite", ({ enumerable: true, get: function () { return __importDefault(readwrite_2).default; } }));
+var readonly_1 = __nccwpck_require__(7344);
+Object.defineProperty(exports, "TwitterApiReadOnly", ({ enumerable: true, get: function () { return __importDefault(readonly_1).default; } }));
+exports.default = TwitterApi;
+
+
+/***/ }),
+
+/***/ 7344:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const _1 = __importDefault(__nccwpck_require__(6118));
+const client_base_1 = __importDefault(__nccwpck_require__(8726));
+const client_v1_read_1 = __importDefault(__nccwpck_require__(4273));
+const client_v2_read_1 = __importDefault(__nccwpck_require__(7318));
+const oauth2_helper_1 = __nccwpck_require__(9791);
+/**
+ * Twitter v1.1 and v2 API client.
+ */
+class TwitterApiReadOnly extends client_base_1.default {
+    /* Direct access to subclients */
+    get v1() {
+        if (this._v1)
+            return this._v1;
+        return this._v1 = new client_v1_read_1.default(this);
     }
-    async get(endpoint, parameters) {
-        const url = new url_1.URL(`https://api.twitter.com/2/${endpoint}`);
-        applyParameters(url, parameters);
-        const json = await node_fetch_1.default(url.toString(), {
-            headers: {
-                Authorization: await this.credentials.authorizationHeader(url, {
-                    method: 'GET',
-                }),
-            },
-        }).then((response) => response.json());
-        const error = TwitterError_js_1.default.fromJson(json);
-        if (error) {
-            throw error;
+    get v2() {
+        if (this._v2)
+            return this._v2;
+        return this._v2 = new client_v2_read_1.default(this);
+    }
+    /**
+     * Fetch and cache current user.
+     * This method can only be called with a OAuth 1.0a user authentification.
+     *
+     * You can use this method to test if authentification was successful.
+     * Next calls to this methods will use the cached user, unless `forceFetch: true` is given.
+     */
+    async currentUser(forceFetch = false) {
+        return await this.getCurrentUserObject(forceFetch);
+    }
+    /* Shortcuts to endpoints */
+    search(what, options) {
+        return this.v2.search(what, options);
+    }
+    /* Authentification */
+    /**
+     * Generate the OAuth request token link for user-based OAuth 1.0 auth.
+     *
+     * ```ts
+     * // Instanciate TwitterApi with consumer keys
+     * const client = new TwitterApi({ appKey: 'consumer_key', appSecret: 'consumer_secret' });
+     *
+     * const tokenRequest = await client.generateAuthLink('oob-or-your-callback-url');
+     * // redirect end-user to tokenRequest.url
+     *
+     * // Save tokenRequest.oauth_token_secret somewhere, it will be needed for next auth step.
+     * ```
+     */
+    async generateAuthLink(oauth_callback = 'oob', { authAccessType, linkMode = 'authenticate', forceLogin, screenName, } = {}) {
+        const oauthResult = await this.post('https://api.twitter.com/oauth/request_token', { oauth_callback, x_auth_access_type: authAccessType });
+        let url = `https://api.twitter.com/oauth/${linkMode}?oauth_token=${encodeURIComponent(oauthResult.oauth_token)}`;
+        if (forceLogin !== undefined) {
+            url += `&force_login=${encodeURIComponent(forceLogin)}`;
         }
-        return json;
-    }
-    async post(endpoint, body, parameters) {
-        const url = new url_1.URL(`https://api.twitter.com/2/${endpoint}`);
-        applyParameters(url, parameters);
-        const json = await node_fetch_1.default(url.toString(), {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: await this.credentials.authorizationHeader(url, {
-                    method: 'POST',
-                    body: body,
-                }),
-            },
-            body: JSON.stringify(body || {}),
-        }).then((response) => response.json());
-        const error = TwitterError_js_1.default.fromJson(json);
-        if (error) {
-            throw error;
+        if (screenName !== undefined) {
+            url += `&screen_name=${encodeURIComponent(screenName)}`;
         }
-        return json;
+        return {
+            url,
+            ...oauthResult,
+        };
     }
-    async delete(endpoint, parameters) {
-        const url = new url_1.URL(`https://api.twitter.com/2/${endpoint}`);
-        applyParameters(url, parameters);
-        const json = await node_fetch_1.default(url.toString(), {
-            method: 'delete',
-            headers: {
-                Authorization: await this.credentials.authorizationHeader(url, {
-                    method: 'DELETE',
-                }),
-            },
-        }).then((response) => response.json());
-        const error = TwitterError_js_1.default.fromJson(json);
-        if (error) {
-            throw error;
+    /**
+     * Obtain access to user-based OAuth 1.0 auth.
+     *
+     * After user is redirect from your callback, use obtained oauth_token and oauth_verifier to
+     * instanciate the new TwitterApi instance.
+     *
+     * ```ts
+     * // Use the saved oauth_token_secret associated to oauth_token returned by callback
+     * const requestClient = new TwitterApi({
+     *  appKey: 'consumer_key',
+     *  appSecret: 'consumer_secret',
+     *  accessToken: 'oauth_token',
+     *  accessSecret: 'oauth_token_secret'
+     * });
+     *
+     * // Use oauth_verifier obtained from callback request
+     * const { client: userClient } = await requestClient.login('oauth_verifier');
+     *
+     * // {userClient} is a valid {TwitterApi} object you can use for future requests
+     * ```
+     */
+    async login(oauth_verifier) {
+        const oauth_result = await this.post('https://api.twitter.com/oauth/access_token', { oauth_token: this._accessToken, oauth_verifier });
+        const client = new _1.default({
+            appKey: this._consumerToken,
+            appSecret: this._consumerSecret,
+            accessToken: oauth_result.oauth_token,
+            accessSecret: oauth_result.oauth_token_secret,
+        });
+        return {
+            accessToken: oauth_result.oauth_token,
+            accessSecret: oauth_result.oauth_token_secret,
+            userId: oauth_result.user_id,
+            screenName: oauth_result.screen_name,
+            client,
+        };
+    }
+    /**
+     * Enable application-only authentification.
+     *
+     * To make the request, instanciate TwitterApi with consumer and secret.
+     *
+     * ```ts
+     * const requestClient = new TwitterApi({ appKey: 'consumer', appSecret: 'secret' });
+     * const appClient = await requestClient.appLogin();
+     *
+     * // Use {appClient} to make requests
+     * ```
+     */
+    async appLogin() {
+        if (!this._consumerToken || !this._consumerSecret)
+            throw new Error('You must setup TwitterApi instance with consumers to enable app-only login');
+        // Create a client with Basic authentification
+        const basicClient = new _1.default({ username: this._consumerToken, password: this._consumerSecret });
+        const res = await basicClient.post('https://api.twitter.com/oauth2/token', { grant_type: 'client_credentials' });
+        // New object with Bearer token
+        return new _1.default(res.access_token);
+    }
+    /* OAuth 2 user authentification */
+    /**
+     * Generate the OAuth request token link for user-based OAuth 2.0 auth.
+     *
+     * ```ts
+     * // Instanciate TwitterApi with client ID
+     * const client = new TwitterApi({ clientId: 'yourClientId' });
+     *
+     * // Generate a link to callback URL that will gives a token with tweet+user read access
+     * const link = client.generateOAuth2AuthLink('your-callback-url', { scope: ['tweet.read', 'users.read'] });
+     *
+     * // Extract props from generate link
+     * const { url, state, codeVerifier } = link;
+     *
+     * // redirect end-user to url
+     * // Save `state` and `codeVerifier` somewhere, it will be needed for next auth step.
+     * ```
+     */
+    generateOAuth2AuthLink(redirectUri, options = {}) {
+        var _a, _b;
+        if (!this._clientId) {
+            throw new Error('Twitter API instance is not initialized with client ID. ' +
+                'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
         }
-        return json;
+        const state = (_a = options.state) !== null && _a !== void 0 ? _a : oauth2_helper_1.OAuth2Helper.generateRandomString(32);
+        const codeVerifier = oauth2_helper_1.OAuth2Helper.getCodeVerifier();
+        const codeChallenge = oauth2_helper_1.OAuth2Helper.getCodeChallengeFromVerifier(codeVerifier);
+        const rawScope = (_b = options.scope) !== null && _b !== void 0 ? _b : '';
+        const scope = Array.isArray(rawScope) ? rawScope.join(' ') : rawScope;
+        const url = new URL('https://twitter.com/i/oauth2/authorize');
+        url.searchParams.set('response_type', 'code');
+        url.searchParams.set('client_id', this._clientId);
+        url.searchParams.set('redirect_uri', redirectUri);
+        url.searchParams.set('state', state);
+        url.searchParams.set('code_challenge', codeChallenge);
+        url.searchParams.set('code_challenge_method', 's256');
+        url.searchParams.set('scope', scope);
+        return {
+            url: url.toString(),
+            state,
+            codeVerifier,
+            codeChallenge,
+        };
     }
-    stream(endpoint, parameters, options) {
-        const abortController = new abort_controller_1.default();
-        return new TwitterStream_1.default(async () => {
-            const url = new url_1.URL(`https://api.twitter.com/2/${endpoint}`);
-            applyParameters(url, parameters);
-            return node_fetch_1.default(url.toString(), {
-                signal: abortController.signal,
-                headers: {
-                    Authorization: await this.credentials.authorizationHeader(url, {
-                        method: 'GET',
-                    }),
-                },
+    /**
+     * Obtain access to user-based OAuth 2.0 auth.
+     *
+     * After user is redirect from your callback, use obtained code to
+     * instanciate the new TwitterApi instance.
+     *
+     * ```ts
+     * // Use the saved codeVerifier associated to state (present in query string of callback)
+     * const requestClient = new TwitterApi({ clientId: 'yourClientId' });
+     *
+     * const { client: userClient, refreshToken } = await requestClient.loginWithOAuth2({
+     *  code: 'codeFromQueryString',
+     *  // the same URL given to generateOAuth2AuthLink
+     *  redirectUri,
+     *  // the verifier returned by generateOAuth2AuthLink
+     *  codeVerifier,
+     * });
+     *
+     * // {userClient} is a valid {TwitterApi} object you can use for future requests
+     * // {refreshToken} is defined if 'offline.access' is in scope.
+     * ```
+     */
+    async loginWithOAuth2({ code, codeVerifier, redirectUri }) {
+        if (!this._clientId) {
+            throw new Error('Twitter API instance is not initialized with client ID. ' +
+                'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
+        }
+        const accessTokenResult = await this.post('https://api.twitter.com/2/oauth2/token', {
+            code,
+            code_verifier: codeVerifier,
+            redirect_uri: redirectUri,
+            grant_type: 'authorization_code',
+            client_id: this._clientId,
+        });
+        return this.parseOAuth2AccessTokenResult(accessTokenResult);
+    }
+    /**
+     * Obtain a new access token to user-based OAuth 2.0 auth from a refresh token.
+     *
+     * ```ts
+     * const requestClient = new TwitterApi({ clientId: 'yourClientId' });
+     *
+     * const { client: userClient } = await requestClient.refreshOAuth2Token('refreshToken');
+     * // {userClient} is a valid {TwitterApi} object you can use for future requests
+     * ```
+     */
+    async refreshOAuth2Token(refreshToken) {
+        if (!this._clientId) {
+            throw new Error('Twitter API instance is not initialized with client ID. ' +
+                'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
+        }
+        const accessTokenResult = await this.post('https://api.twitter.com/2/oauth2/token', {
+            refresh_token: refreshToken,
+            grant_type: 'refresh_token',
+            client_id: this._clientId,
+        });
+        return this.parseOAuth2AccessTokenResult(accessTokenResult);
+    }
+    /**
+     * Revoke a single user-based OAuth 2.0 token.
+     *
+     * You must specify its source, access token (directly after login)
+     * or refresh token (if you've called `.refreshOAuth2Token` before).
+     */
+    async revokeOAuth2Token(token, tokenType = 'access_token') {
+        if (!this._clientId) {
+            throw new Error('Twitter API instance is not initialized with client ID. ' +
+                'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
+        }
+        return await this.post('https://api.twitter.com/2/oauth2/revoke', {
+            client_id: this._clientId,
+            token,
+            token_type_hint: tokenType,
+        });
+    }
+    parseOAuth2AccessTokenResult(result) {
+        const client = new _1.default(result.access_token);
+        const scope = result.scope.split(' ').filter(e => e);
+        return {
+            client,
+            expiresIn: result.expires_in,
+            accessToken: result.access_token,
+            scope,
+            refreshToken: result.refresh_token,
+        };
+    }
+}
+exports.default = TwitterApiReadOnly;
+
+
+/***/ }),
+
+/***/ 489:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const client_v1_write_1 = __importDefault(__nccwpck_require__(6685));
+const client_v2_write_1 = __importDefault(__nccwpck_require__(5587));
+const readonly_1 = __importDefault(__nccwpck_require__(7344));
+/**
+ * Twitter v1.1 and v2 API client.
+ */
+class TwitterApiReadWrite extends readonly_1.default {
+    /* Direct access to subclients */
+    get v1() {
+        if (this._v1)
+            return this._v1;
+        return this._v1 = new client_v1_write_1.default(this);
+    }
+    get v2() {
+        if (this._v2)
+            return this._v2;
+        return this._v2 = new client_v2_write_1.default(this);
+    }
+    /**
+     * Get a client with read only rights.
+     */
+    get readOnly() {
+        return this;
+    }
+}
+exports.default = TwitterApiReadWrite;
+
+
+/***/ }),
+
+/***/ 3444:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.API_V1_1_STREAM_PREFIX = exports.API_V1_1_UPLOAD_PREFIX = exports.API_V1_1_PREFIX = exports.API_V2_LABS_PREFIX = exports.API_V2_PREFIX = void 0;
+exports.API_V2_PREFIX = 'https://api.twitter.com/2/';
+exports.API_V2_LABS_PREFIX = 'https://api.twitter.com/labs/2/';
+exports.API_V1_1_PREFIX = 'https://api.twitter.com/1.1/';
+exports.API_V1_1_UPLOAD_PREFIX = 'https://upload.twitter.com/1.1/';
+exports.API_V1_1_STREAM_PREFIX = 'https://stream.twitter.com/1.1/';
+
+
+/***/ }),
+
+/***/ 1120:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.safeDeprecationWarning = exports.hasMultipleItems = exports.isTweetStreamV2ErrorPayload = exports.trimUndefinedProperties = exports.arrayWrap = void 0;
+const settings_1 = __nccwpck_require__(6273);
+function arrayWrap(value) {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    return [value];
+}
+exports.arrayWrap = arrayWrap;
+function trimUndefinedProperties(object) {
+    // Delete undefined parameters
+    for (const parameter in object) {
+        if (object[parameter] === undefined)
+            delete object[parameter];
+    }
+}
+exports.trimUndefinedProperties = trimUndefinedProperties;
+function isTweetStreamV2ErrorPayload(payload) {
+    // Is error only if 'errors' is present and 'data' does not exists
+    return typeof payload === 'object'
+        && 'errors' in payload
+        && !('data' in payload);
+}
+exports.isTweetStreamV2ErrorPayload = isTweetStreamV2ErrorPayload;
+function hasMultipleItems(item) {
+    if (Array.isArray(item) && item.length > 1) {
+        return true;
+    }
+    return item.toString().includes(',');
+}
+exports.hasMultipleItems = hasMultipleItems;
+const deprecationWarningsCache = new Set();
+function safeDeprecationWarning(message) {
+    if (typeof console === 'undefined' || !console.warn || !settings_1.TwitterApiV2Settings.deprecationWarnings) {
+        return;
+    }
+    const hash = `${message.instance}-${message.method}-${message.problem}`;
+    if (deprecationWarningsCache.has(hash)) {
+        return;
+    }
+    const formattedMsg = `[twitter-api-v2] Deprecation warning: In ${message.instance}.${message.method}() call` +
+        `, ${message.problem}.\n${message.resolution}.`;
+    console.warn(formattedMsg);
+    console.warn('To disable this message, import TwitterApiV2Settings from twitter-api-v2 and set TwitterApiV2Settings.deprecationWarnings to false.');
+    deprecationWarningsCache.add(hash);
+}
+exports.safeDeprecationWarning = safeDeprecationWarning;
+
+
+/***/ }),
+
+/***/ 9360:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.default = void 0;
+var client_1 = __nccwpck_require__(6118);
+Object.defineProperty(exports, "default", ({ enumerable: true, get: function () { return __importDefault(client_1).default; } }));
+__exportStar(__nccwpck_require__(6118), exports);
+__exportStar(__nccwpck_require__(7030), exports);
+__exportStar(__nccwpck_require__(4692), exports);
+__exportStar(__nccwpck_require__(1204), exports);
+__exportStar(__nccwpck_require__(1638), exports);
+__exportStar(__nccwpck_require__(5814), exports);
+__exportStar(__nccwpck_require__(9362), exports);
+__exportStar(__nccwpck_require__(6273), exports);
+
+
+/***/ }),
+
+/***/ 5317:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PreviousableTwitterPaginator = exports.TwitterPaginator = void 0;
+/** TwitterPaginator: able to get consume data from initial request, then fetch next data sequentially. */
+class TwitterPaginator {
+    // noinspection TypeScriptAbstractClassConstructorCanBeMadeProtected
+    constructor({ realData, rateLimit, instance, queryParams, sharedParams }) {
+        this._maxResultsWhenFetchLast = 100;
+        this._realData = realData;
+        this._rateLimit = rateLimit;
+        this._instance = instance;
+        this._queryParams = queryParams;
+        this._sharedParams = sharedParams;
+    }
+    get _isRateLimitOk() {
+        const resetDate = this._rateLimit.reset * 1000;
+        if (resetDate < Date.now()) {
+            return true;
+        }
+        return this._rateLimit.remaining > 0;
+    }
+    makeRequest(queryParams) {
+        return this._instance.get(this.getEndpoint(), queryParams, { fullResponse: true, params: this._sharedParams });
+    }
+    makeNewInstanceFromResult(result, queryParams) {
+        // Construct a subclass
+        return new this.constructor({
+            realData: result.data,
+            rateLimit: result.rateLimit,
+            instance: this._instance,
+            queryParams,
+            sharedParams: this._sharedParams,
+        });
+    }
+    getEndpoint() {
+        return this._endpoint;
+    }
+    injectQueryParams(maxResults) {
+        return {
+            ...(maxResults ? { max_results: maxResults } : {}),
+            ...this._queryParams,
+        };
+    }
+    /* ---------------------- */
+    /* Real paginator methods */
+    /* ---------------------- */
+    /**
+     * Next page.
+     */
+    async next(maxResults) {
+        const queryParams = this.getNextQueryParams(maxResults);
+        const result = await this.makeRequest(queryParams);
+        return this.makeNewInstanceFromResult(result, queryParams);
+    }
+    /**
+     * Next page, but store it in current instance.
+     */
+    async fetchNext(maxResults) {
+        const queryParams = this.getNextQueryParams(maxResults);
+        const result = await this.makeRequest(queryParams);
+        // Await in case of async sub-methods
+        await this.refreshInstanceFromResult(result, true);
+        return this;
+    }
+    /**
+     * Fetch up to {count} items after current page,
+     * as long as rate limit is not hit and Twitter has some results
+     */
+    async fetchLast(count = Infinity) {
+        let queryParams = this.getNextQueryParams(this._maxResultsWhenFetchLast);
+        let resultCount = 0;
+        // Break at rate limit limit
+        while (resultCount < count && this._isRateLimitOk) {
+            const response = await this.makeRequest(queryParams);
+            await this.refreshInstanceFromResult(response, true);
+            resultCount += this.getPageLengthFromRequest(response);
+            if (this.isFetchLastOver(response)) {
+                break;
+            }
+            queryParams = this.getNextQueryParams(this._maxResultsWhenFetchLast);
+        }
+        return this;
+    }
+    get rateLimit() {
+        return { ...this._rateLimit };
+    }
+    /** Get raw data returned by Twitter API. */
+    get data() {
+        return this._realData;
+    }
+    /**
+     * Iterate over currently fetched items.
+     */
+    *[Symbol.iterator]() {
+        yield* this.getItemArray();
+    }
+    /**
+     * Iterate over items "undefinitely" (until rate limit is hit / they're no more tweets available)
+     */
+    async *[Symbol.asyncIterator]() {
+        yield* this.getItemArray();
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let paginator = this;
+        while (this._isRateLimitOk && paginator.getItemArray().length > 0) {
+            const next = await paginator.next(this._maxResultsWhenFetchLast);
+            this._rateLimit = next._rateLimit;
+            const items = next.getItemArray();
+            yield* items;
+            paginator = next;
+        }
+    }
+}
+exports.TwitterPaginator = TwitterPaginator;
+/** PreviousableTwitterPaginator: a TwitterPaginator able to get consume data from both side, next and previous. */
+class PreviousableTwitterPaginator extends TwitterPaginator {
+    /**
+     * Previous page (new tweets)
+     */
+    async previous(maxResults) {
+        const queryParams = this.getPreviousQueryParams(maxResults);
+        const result = await this.makeRequest(queryParams);
+        return this.makeNewInstanceFromResult(result, queryParams);
+    }
+    /**
+     * Previous page, but in current instance.
+     */
+    async fetchPrevious(maxResults) {
+        const queryParams = this.getPreviousQueryParams(maxResults);
+        const result = await this.makeRequest(queryParams);
+        await this.refreshInstanceFromResult(result, false);
+        return this;
+    }
+}
+exports.PreviousableTwitterPaginator = PreviousableTwitterPaginator;
+exports.default = TwitterPaginator;
+
+
+/***/ }),
+
+/***/ 823:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WelcomeDmV1Paginator = exports.DmEventsV1Paginator = void 0;
+const paginator_v1_1 = __nccwpck_require__(593);
+class DmEventsV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'direct_messages/events/list.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.events.push(...result.events);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.events.length;
+    }
+    getItemArray() {
+        return this.events;
+    }
+    /**
+     * Events returned by paginator.
+     */
+    get events() {
+        return this._realData.events;
+    }
+}
+exports.DmEventsV1Paginator = DmEventsV1Paginator;
+class WelcomeDmV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'direct_messages/welcome_messages/list.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.welcome_messages.push(...result.welcome_messages);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.welcome_messages.length;
+    }
+    getItemArray() {
+        return this.welcomeMessages;
+    }
+    get welcomeMessages() {
+        return this._realData.welcome_messages;
+    }
+}
+exports.WelcomeDmV1Paginator = WelcomeDmV1Paginator;
+
+
+/***/ }),
+
+/***/ 5814:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(6301), exports);
+__exportStar(__nccwpck_require__(5317), exports);
+__exportStar(__nccwpck_require__(823), exports);
+__exportStar(__nccwpck_require__(7277), exports);
+__exportStar(__nccwpck_require__(9848), exports);
+__exportStar(__nccwpck_require__(8985), exports);
+__exportStar(__nccwpck_require__(2178), exports);
+__exportStar(__nccwpck_require__(5631), exports);
+
+
+/***/ }),
+
+/***/ 5631:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListSubscribersV1Paginator = exports.ListMembersV1Paginator = exports.ListSubscriptionsV1Paginator = exports.ListOwnershipsV1Paginator = exports.ListMembershipsV1Paginator = void 0;
+const paginator_v1_1 = __nccwpck_require__(593);
+class ListListsV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.lists.push(...result.lists);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.lists.length;
+    }
+    getItemArray() {
+        return this.lists;
+    }
+    /**
+     * Lists returned by paginator.
+     */
+    get lists() {
+        return this._realData.lists;
+    }
+}
+class ListMembershipsV1Paginator extends ListListsV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/memberships.json';
+    }
+}
+exports.ListMembershipsV1Paginator = ListMembershipsV1Paginator;
+class ListOwnershipsV1Paginator extends ListListsV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/ownerships.json';
+    }
+}
+exports.ListOwnershipsV1Paginator = ListOwnershipsV1Paginator;
+class ListSubscriptionsV1Paginator extends ListListsV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/subscriptions.json';
+    }
+}
+exports.ListSubscriptionsV1Paginator = ListSubscriptionsV1Paginator;
+class ListUsersV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.users.push(...result.users);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.users.length;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        return this._realData.users;
+    }
+}
+class ListMembersV1Paginator extends ListUsersV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/members.json';
+    }
+}
+exports.ListMembersV1Paginator = ListMembersV1Paginator;
+class ListSubscribersV1Paginator extends ListUsersV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/subscribers.json';
+    }
+}
+exports.ListSubscribersV1Paginator = ListSubscribersV1Paginator;
+
+
+/***/ }),
+
+/***/ 7277:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MuteUserIdsV1Paginator = exports.MuteUserListV1Paginator = void 0;
+const paginator_v1_1 = __nccwpck_require__(593);
+class MuteUserListV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'mutes/users/list.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.users.push(...result.users);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.users.length;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        return this._realData.users;
+    }
+}
+exports.MuteUserListV1Paginator = MuteUserListV1Paginator;
+class MuteUserIdsV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'mutes/users/ids.json';
+        this._maxResultsWhenFetchLast = 5000;
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.ids.push(...result.ids);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.ids.length;
+    }
+    getItemArray() {
+        return this.ids;
+    }
+    /**
+     * Users IDs returned by paginator.
+     */
+    get ids() {
+        return this._realData.ids;
+    }
+}
+exports.MuteUserIdsV1Paginator = MuteUserIdsV1Paginator;
+
+
+/***/ }),
+
+/***/ 593:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CursoredV1Paginator = void 0;
+const TwitterPaginator_1 = __importDefault(__nccwpck_require__(5317));
+class CursoredV1Paginator extends TwitterPaginator_1.default {
+    getNextQueryParams(maxResults) {
+        var _a;
+        return {
+            ...this._queryParams,
+            cursor: (_a = this._realData.next_cursor_str) !== null && _a !== void 0 ? _a : this._realData.next_cursor,
+            ...(maxResults ? { count: maxResults } : {}),
+        };
+    }
+    isFetchLastOver(result) {
+        return this.isNextCursorInvalid(result.data.next_cursor) && this.isNextCursorInvalid(result.data.next_cursor_str);
+    }
+    isNextCursorInvalid(value) {
+        return value === undefined
+            || value === 0
+            || value === -1
+            || value === '0'
+            || value === '-1';
+    }
+}
+exports.CursoredV1Paginator = CursoredV1Paginator;
+
+
+/***/ }),
+
+/***/ 9848:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListTimelineV1Paginator = exports.UserTimelineV1Paginator = exports.MentionTimelineV1Paginator = exports.HomeTimelineV1Paginator = void 0;
+const TwitterPaginator_1 = __importDefault(__nccwpck_require__(5317));
+/** A generic TwitterPaginator able to consume TweetV1 timelines. */
+class TweetTimelineV1Paginator extends TwitterPaginator_1.default {
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.push(...result);
+        }
+    }
+    getNextQueryParams(maxResults) {
+        const lastestId = BigInt(this._realData[this._realData.length - 1].id_str);
+        return {
+            ...this.injectQueryParams(maxResults),
+            max_id: (lastestId - BigInt(1)).toString(),
+        };
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.length;
+    }
+    isFetchLastOver(result) {
+        return !result.data.length;
+    }
+    getItemArray() {
+        return this.tweets;
+    }
+    /**
+     * Tweets returned by paginator.
+     */
+    get tweets() {
+        return this._realData;
+    }
+}
+// Timelines
+// Home
+class HomeTimelineV1Paginator extends TweetTimelineV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'statuses/home_timeline.json';
+    }
+}
+exports.HomeTimelineV1Paginator = HomeTimelineV1Paginator;
+// Mention
+class MentionTimelineV1Paginator extends TweetTimelineV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'statuses/mentions_timeline.json';
+    }
+}
+exports.MentionTimelineV1Paginator = MentionTimelineV1Paginator;
+// User
+class UserTimelineV1Paginator extends TweetTimelineV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'statuses/user_timeline.json';
+    }
+}
+exports.UserTimelineV1Paginator = UserTimelineV1Paginator;
+// Lists
+class ListTimelineV1Paginator extends TweetTimelineV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/statuses.json';
+    }
+}
+exports.ListTimelineV1Paginator = ListTimelineV1Paginator;
+
+
+/***/ }),
+
+/***/ 6301:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TweetV2UserLikedTweetsPaginator = exports.TweetUserMentionTimelineV2Paginator = exports.TweetUserTimelineV2Paginator = exports.TweetSearchAllV2Paginator = exports.TweetSearchRecentV2Paginator = void 0;
+const TwitterPaginator_1 = __nccwpck_require__(5317);
+/** A generic PreviousableTwitterPaginator able to consume TweetV2[]. */
+class TweetsV2Paginator extends TwitterPaginator_1.PreviousableTwitterPaginator {
+    updateIncludes(data) {
+        if (!data.includes) {
+            return;
+        }
+        if (!this._realData.includes) {
+            this._realData.includes = {};
+        }
+        const includesRealData = this._realData.includes;
+        for (const [includeKey, includeArray] of Object.entries(data.includes)) {
+            if (!includesRealData[includeKey]) {
+                includesRealData[includeKey] = [];
+            }
+            includesRealData[includeKey] = [
+                ...includesRealData[includeKey],
+                ...includeArray,
+            ];
+        }
+    }
+    getPageLengthFromRequest(result) {
+        var _a, _b;
+        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+    }
+    isFetchLastOver(result) {
+        var _a;
+        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !result.data.meta.next_token;
+    }
+    getItemArray() {
+        return this.tweets;
+    }
+    /**
+     * Tweets returned by paginator.
+     */
+    get tweets() {
+        var _a;
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
+    }
+    get meta() {
+        return this._realData.meta;
+    }
+    get includes() {
+        var _a;
+        return (_a = this._realData.includes) !== null && _a !== void 0 ? _a : {};
+    }
+}
+/** A generic PreviousableTwitterPaginator able to consume TweetV2 timelines. */
+class TweetTimelineV2Paginator extends TweetsV2Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        var _a;
+        const result = response.data;
+        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
+        this._rateLimit = response.rateLimit;
+        if (!this._realData.data) {
+            this._realData.data = [];
+        }
+        if (isNextPage) {
+            this._realData.meta.oldest_id = result.meta.oldest_id;
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.next_token = result.meta.next_token;
+            this._realData.data.push(...resultData);
+        }
+        else {
+            this._realData.meta.newest_id = result.meta.newest_id;
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.data.unshift(...resultData);
+        }
+        this.updateIncludes(result);
+    }
+    getNextQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            until_id: this._realData.meta.oldest_id,
+        };
+    }
+    getPreviousQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            since_id: this._realData.meta.newest_id,
+        };
+    }
+}
+// ----------------
+// - Tweet search -
+// ----------------
+class TweetSearchRecentV2Paginator extends TweetTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'tweets/search/recent';
+    }
+}
+exports.TweetSearchRecentV2Paginator = TweetSearchRecentV2Paginator;
+class TweetSearchAllV2Paginator extends TweetTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'tweets/search/all';
+    }
+}
+exports.TweetSearchAllV2Paginator = TweetSearchAllV2Paginator;
+class TweetUserTimelineV2Paginator extends TweetTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/tweets';
+    }
+}
+exports.TweetUserTimelineV2Paginator = TweetUserTimelineV2Paginator;
+class TweetUserMentionTimelineV2Paginator extends TweetTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/mentions';
+    }
+}
+exports.TweetUserMentionTimelineV2Paginator = TweetUserMentionTimelineV2Paginator;
+// ---------------------------------------------------------------------------------
+// - Tweet lists (consume tweets with pagination tokens instead of since/until id) -
+// ---------------------------------------------------------------------------------
+/** A generic TwitterPaginator able to consume TweetV2 timelines. */
+class TweetListV2Paginator extends TweetsV2Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        var _a;
+        const result = response.data;
+        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
+        this._rateLimit = response.rateLimit;
+        if (!this._realData.data) {
+            this._realData.data = [];
+        }
+        if (isNextPage) {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.next_token = result.meta.next_token;
+            this._realData.data.push(...resultData);
+        }
+        else {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.previous_token = result.meta.previous_token;
+            this._realData.data.unshift(...resultData);
+        }
+        this.updateIncludes(result);
+    }
+    getNextQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.next_token,
+        };
+    }
+    getPreviousQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.previous_token,
+        };
+    }
+}
+class TweetV2UserLikedTweetsPaginator extends TweetListV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/liked_tweets';
+    }
+}
+exports.TweetV2UserLikedTweetsPaginator = TweetV2UserLikedTweetsPaginator;
+
+
+/***/ }),
+
+/***/ 8985:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FriendshipsOutgoingV1Paginator = exports.FriendshipsIncomingV1Paginator = exports.UserSearchV1Paginator = void 0;
+const TwitterPaginator_1 = __importDefault(__nccwpck_require__(5317));
+const paginator_v1_1 = __nccwpck_require__(593);
+/** A generic TwitterPaginator able to consume TweetV1 timelines. */
+class UserSearchV1Paginator extends TwitterPaginator_1.default {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/search.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.push(...result);
+        }
+    }
+    getNextQueryParams(maxResults) {
+        var _a;
+        const previousPage = Number((_a = this._queryParams.page) !== null && _a !== void 0 ? _a : '1');
+        return {
+            ...this._queryParams,
+            page: previousPage + 1,
+            ...maxResults ? { count: maxResults } : {},
+        };
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.length;
+    }
+    isFetchLastOver(result) {
+        return !result.data.length;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        return this._realData;
+    }
+}
+exports.UserSearchV1Paginator = UserSearchV1Paginator;
+class FriendshipsIncomingV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'friendships/incoming.json';
+        this._maxResultsWhenFetchLast = 5000;
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.ids.push(...result.ids);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.ids.length;
+    }
+    getItemArray() {
+        return this.ids;
+    }
+    /**
+     * Users IDs returned by paginator.
+     */
+    get ids() {
+        return this._realData.ids;
+    }
+}
+exports.FriendshipsIncomingV1Paginator = FriendshipsIncomingV1Paginator;
+class FriendshipsOutgoingV1Paginator extends FriendshipsIncomingV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'friendships/outgoing.json';
+    }
+}
+exports.FriendshipsOutgoingV1Paginator = FriendshipsOutgoingV1Paginator;
+
+
+/***/ }),
+
+/***/ 2178:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserFollowingV2Paginator = exports.UserFollowersV2Paginator = exports.UserMutingUsersV2Paginator = exports.UserBlockingUsersV2Paginator = void 0;
+const TwitterPaginator_1 = __nccwpck_require__(5317);
+/** A generic PreviousableTwitterPaginator able to consume UserV2 timelines. */
+class UserTimelineV2Paginator extends TwitterPaginator_1.PreviousableTwitterPaginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        var _a;
+        const result = response.data;
+        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
+        this._rateLimit = response.rateLimit;
+        if (!this._realData.data) {
+            this._realData.data = [];
+        }
+        if (isNextPage) {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.next_token = result.meta.next_token;
+            this._realData.data.push(...resultData);
+        }
+        else {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.previous_token = result.meta.previous_token;
+            this._realData.data.unshift(...resultData);
+        }
+        this.updateIncludes(result);
+    }
+    updateIncludes(data) {
+        if (!data.includes) {
+            return;
+        }
+        if (!this._realData.includes) {
+            this._realData.includes = {};
+        }
+        const includesRealData = this._realData.includes;
+        for (const [includeKey, includeArray] of Object.entries(data.includes)) {
+            if (!includesRealData[includeKey]) {
+                includesRealData[includeKey] = [];
+            }
+            includesRealData[includeKey] = [
+                ...includesRealData[includeKey],
+                ...includeArray,
+            ];
+        }
+    }
+    getNextQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.next_token,
+        };
+    }
+    getPreviousQueryParams(maxResults) {
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.previous_token,
+        };
+    }
+    getPageLengthFromRequest(result) {
+        var _a, _b;
+        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+    }
+    isFetchLastOver(result) {
+        var _a;
+        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !result.data.meta.next_token;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        var _a;
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
+    }
+    get meta() {
+        return this._realData.meta;
+    }
+    get includes() {
+        var _a;
+        return (_a = this._realData.includes) !== null && _a !== void 0 ? _a : {};
+    }
+}
+class UserBlockingUsersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/blocking';
+    }
+}
+exports.UserBlockingUsersV2Paginator = UserBlockingUsersV2Paginator;
+class UserMutingUsersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/muting';
+    }
+}
+exports.UserMutingUsersV2Paginator = UserMutingUsersV2Paginator;
+class UserFollowersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/followers';
+    }
+}
+exports.UserFollowersV2Paginator = UserFollowersV2Paginator;
+class UserFollowingV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/following';
+    }
+}
+exports.UserFollowingV2Paginator = UserFollowingV2Paginator;
+
+
+/***/ }),
+
+/***/ 6273:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiV2Settings = void 0;
+exports.TwitterApiV2Settings = {
+    debug: false,
+    deprecationWarnings: true,
+};
+
+
+/***/ }),
+
+/***/ 9362:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TweetStream = void 0;
+const events_1 = __nccwpck_require__(8614);
+const request_handler_helper_1 = __importDefault(__nccwpck_require__(3768));
+const types_1 = __nccwpck_require__(1638);
+const TweetStreamEventCombiner_1 = __importDefault(__nccwpck_require__(1132));
+const TweetStreamParser_1 = __importStar(__nccwpck_require__(7467));
+// In seconds
+const basicRetriesAttempt = [5, 15, 30, 60, 90, 120, 180, 300, 600, 900];
+// Default retry function
+const basicReconnectRetry = tryOccurence => tryOccurence > basicRetriesAttempt.length
+    ? 901000
+    : basicRetriesAttempt[tryOccurence - 1] * 1000;
+class TweetStream extends events_1.EventEmitter {
+    constructor(requestData, req, res) {
+        super();
+        this.requestData = requestData;
+        this.autoReconnect = false;
+        this.autoReconnectRetries = 5;
+        // 2 minutes without any Twitter signal
+        this.keepAliveTimeoutMs = 1000 * 120;
+        this.nextRetryTimeout = basicReconnectRetry;
+        this.parser = new TweetStreamParser_1.default();
+        this.connectionProcessRunning = false;
+        this.onKeepAliveTimeout = this.onKeepAliveTimeout.bind(this);
+        this.initEventsFromParser();
+        if (req && res) {
+            this.req = req;
+            this.res = res;
+            this.initEventsFromRequest();
+        }
+    }
+    on(event, handler) {
+        return super.on(event, handler);
+    }
+    initEventsFromRequest() {
+        if (!this.req || !this.res) {
+            throw new Error('TweetStream error: You cannot init TweetStream without a request and response object.');
+        }
+        const errorHandler = (err) => {
+            this.emit(types_1.ETwitterStreamEvent.ConnectionError, err);
+            this.emit(types_1.ETwitterStreamEvent.Error, {
+                type: types_1.ETwitterStreamEvent.ConnectionError,
+                error: err,
+                message: 'Connection lost or closed by Twitter.',
             });
-        }, () => {
-            abortController.abort();
-        }, options || {});
+            this.onConnectionError();
+        };
+        this.req.on('error', errorHandler);
+        this.res.on('error', errorHandler);
+        // Usually, connection should not be closed by Twitter!
+        this.res.on('close', () => errorHandler(new Error('Connection closed by Twitter.')));
+        this.res.on('data', (chunk) => {
+            this.resetKeepAliveTimeout();
+            if (chunk.toString() === '\r\n') {
+                return this.emit(types_1.ETwitterStreamEvent.DataKeepAlive);
+            }
+            this.parser.push(chunk.toString());
+        });
+        // Starts the keep alive timeout
+        this.resetKeepAliveTimeout();
+    }
+    initEventsFromParser() {
+        const payloadIsError = this.requestData.payloadIsError;
+        this.parser.on(TweetStreamParser_1.EStreamParserEvent.ParsedData, (eventData) => {
+            if (payloadIsError && payloadIsError(eventData)) {
+                this.emit(types_1.ETwitterStreamEvent.DataError, eventData);
+                this.emit(types_1.ETwitterStreamEvent.Error, {
+                    type: types_1.ETwitterStreamEvent.DataError,
+                    error: eventData,
+                    message: 'Twitter sent a payload that is detected as an error payload.',
+                });
+            }
+            else {
+                this.emit(types_1.ETwitterStreamEvent.Data, eventData);
+            }
+        });
+        this.parser.on(TweetStreamParser_1.EStreamParserEvent.ParseError, (error) => {
+            this.emit(types_1.ETwitterStreamEvent.TweetParseError, error);
+            this.emit(types_1.ETwitterStreamEvent.Error, {
+                type: types_1.ETwitterStreamEvent.TweetParseError,
+                error,
+                message: 'Failed to parse stream data.',
+            });
+        });
+    }
+    resetKeepAliveTimeout() {
+        this.unbindKeepAliveTimeout();
+        if (this.keepAliveTimeoutMs !== Infinity) {
+            this.keepAliveTimeout = setTimeout(this.onKeepAliveTimeout, this.keepAliveTimeoutMs);
+        }
+    }
+    onKeepAliveTimeout() {
+        this.emit(types_1.ETwitterStreamEvent.ConnectionLost);
+        this.onConnectionError();
+    }
+    unbindTimeouts() {
+        this.unbindRetryTimeout();
+        this.unbindKeepAliveTimeout();
+    }
+    unbindKeepAliveTimeout() {
+        if (this.keepAliveTimeout) {
+            clearTimeout(this.keepAliveTimeout);
+            this.keepAliveTimeout = undefined;
+        }
+    }
+    unbindRetryTimeout() {
+        if (this.retryTimeout) {
+            clearTimeout(this.retryTimeout);
+            this.retryTimeout = undefined;
+        }
+    }
+    closeWithoutEmit() {
+        this.unbindTimeouts();
+        if (this.res) {
+            this.res.removeAllListeners();
+            // Close response silentely
+            this.res.destroy();
+        }
+        if (this.req) {
+            this.req.removeAllListeners();
+            // Close connection silentely
+            this.req.destroy();
+        }
+    }
+    /** Terminate connection to Twitter. */
+    close() {
+        this.emit(types_1.ETwitterStreamEvent.ConnectionClosed);
+        this.closeWithoutEmit();
+    }
+    /** Unbind all listeners, and close connection. */
+    destroy() {
+        this.removeAllListeners();
+        this.close();
+    }
+    /**
+     * Make a new request that creates a new `TweetStream` instance with
+     * the same parameters, and bind current listeners to new stream.
+     */
+    async clone() {
+        const newRequest = new request_handler_helper_1.default(this.requestData);
+        const newStream = await newRequest.makeRequestAsStream();
+        // Clone attached listeners
+        const listenerNames = this.eventNames();
+        for (const listener of listenerNames) {
+            const callbacks = this.listeners(listener);
+            for (const callback of callbacks) {
+                newStream.on(listener, callback);
+            }
+        }
+        return newStream;
+    }
+    /** Start initial stream connection, setup options on current instance and returns itself. */
+    async connect(options = {}) {
+        if (typeof options.autoReconnect !== 'undefined') {
+            this.autoReconnect = options.autoReconnect;
+        }
+        if (typeof options.autoReconnectRetries !== 'undefined') {
+            this.autoReconnectRetries = options.autoReconnectRetries === 'unlimited'
+                ? Infinity
+                : options.autoReconnectRetries;
+        }
+        if (typeof options.keepAliveTimeout !== 'undefined') {
+            this.keepAliveTimeoutMs = options.keepAliveTimeout === 'disable'
+                ? Infinity
+                : options.keepAliveTimeout;
+        }
+        if (typeof options.nextRetryTimeout !== 'undefined') {
+            this.nextRetryTimeout = options.nextRetryTimeout;
+        }
+        // Make the connection
+        this.unbindTimeouts();
+        try {
+            await this.reconnect();
+        }
+        catch (e) {
+            this.emit(types_1.ETwitterStreamEvent.ConnectError, 0);
+            this.emit(types_1.ETwitterStreamEvent.Error, {
+                type: types_1.ETwitterStreamEvent.ConnectError,
+                error: e,
+                message: 'Connect error - Initial connection just failed.',
+            });
+            // Only make a reconnection attempt if autoReconnect is true!
+            // Otherwise, let error be propagated
+            if (this.autoReconnect) {
+                this.makeAutoReconnectRetry(0, e);
+            }
+            else {
+                throw e;
+            }
+        }
+        return this;
+    }
+    /** Make a new request to (re)connect to Twitter. */
+    async reconnect() {
+        if (this.connectionProcessRunning) {
+            throw new Error('Connection process is already running.');
+        }
+        this.connectionProcessRunning = true;
+        try {
+            let initialConnection = true;
+            if (this.req) {
+                initialConnection = false;
+                this.closeWithoutEmit();
+            }
+            const { req, res } = await new request_handler_helper_1.default(this.requestData).makeRequestAndResolveWhenReady();
+            this.req = req;
+            this.res = res;
+            this.emit(initialConnection ? types_1.ETwitterStreamEvent.Connected : types_1.ETwitterStreamEvent.Reconnected);
+            this.parser.reset();
+            this.initEventsFromRequest();
+        }
+        finally {
+            this.connectionProcessRunning = false;
+        }
+    }
+    async onConnectionError(retryOccurence = 0) {
+        this.unbindTimeouts();
+        // Close the request if necessary
+        this.closeWithoutEmit();
+        // Terminate stream by events if necessary (no auto-reconnect or retries exceeded)
+        if (!this.autoReconnect) {
+            this.emit(types_1.ETwitterStreamEvent.ConnectionClosed);
+            return;
+        }
+        if (retryOccurence >= this.autoReconnectRetries) {
+            this.emit(types_1.ETwitterStreamEvent.ReconnectLimitExceeded);
+            this.emit(types_1.ETwitterStreamEvent.ConnectionClosed);
+            return;
+        }
+        // If all other conditions fails, do a reconnect attempt
+        try {
+            this.emit(types_1.ETwitterStreamEvent.ReconnectAttempt, retryOccurence);
+            await this.reconnect();
+        }
+        catch (e) {
+            this.emit(types_1.ETwitterStreamEvent.ReconnectError, retryOccurence);
+            this.emit(types_1.ETwitterStreamEvent.Error, {
+                type: types_1.ETwitterStreamEvent.ReconnectError,
+                error: e,
+                message: `Reconnect error - ${retryOccurence + 1} attempts made yet.`,
+            });
+            this.makeAutoReconnectRetry(retryOccurence, e);
+        }
+    }
+    makeAutoReconnectRetry(retryOccurence, error) {
+        const nextRetry = this.nextRetryTimeout(retryOccurence + 1, error);
+        this.retryTimeout = setTimeout(() => {
+            this.onConnectionError(retryOccurence + 1);
+        }, nextRetry);
+    }
+    async *[Symbol.asyncIterator]() {
+        const eventCombiner = new TweetStreamEventCombiner_1.default(this);
+        try {
+            while (true) {
+                if (!this.req || this.req.aborted) {
+                    throw new Error('Connection closed');
+                }
+                if (eventCombiner.hasStack()) {
+                    yield* eventCombiner.popStack();
+                }
+                const { type, payload } = await eventCombiner.nextEvent();
+                if (type === 'error') {
+                    throw payload;
+                }
+            }
+        }
+        finally {
+            eventCombiner.destroy();
+        }
     }
 }
-exports.default = Twitter;
-module.exports = Twitter;
+exports.TweetStream = TweetStream;
+exports.default = TweetStream;
 
 
 /***/ }),
 
-/***/ 877:
-/***/ ((module) => {
+/***/ 1132:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
-module.exports = eval("require")("encoding");
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TweetStreamEventCombiner = void 0;
+const events_1 = __nccwpck_require__(8614);
+const types_1 = __nccwpck_require__(1638);
+class TweetStreamEventCombiner extends events_1.EventEmitter {
+    constructor(stream) {
+        super();
+        this.stream = stream;
+        this.stack = [];
+        this.onStreamData = this.onStreamData.bind(this);
+        this.onStreamError = this.onStreamError.bind(this);
+        this.onceNewEvent = this.once.bind(this, 'event');
+        // Init events from stream
+        stream.on(types_1.ETwitterStreamEvent.Data, this.onStreamData);
+        // Ignore reconnect errors: Don't close event combiner until connection error/closed
+        stream.on(types_1.ETwitterStreamEvent.ConnectionError, this.onStreamError);
+        stream.on(types_1.ETwitterStreamEvent.TweetParseError, this.onStreamError);
+        stream.on(types_1.ETwitterStreamEvent.ConnectionClosed, this.onStreamError);
+    }
+    /** Returns a new `Promise` that will `resolve` on next event (`data` or any sort of error). */
+    nextEvent() {
+        return new Promise(this.onceNewEvent);
+    }
+    /** Returns `true` if there's something in the stack. */
+    hasStack() {
+        return this.stack.length > 0;
+    }
+    /** Returns stacked data events, and clean the stack. */
+    popStack() {
+        const stack = this.stack;
+        this.stack = [];
+        return stack;
+    }
+    /** Cleanup all the listeners attached on stream. */
+    destroy() {
+        this.removeAllListeners();
+        this.stream.off(types_1.ETwitterStreamEvent.Data, this.onStreamData);
+        this.stream.off(types_1.ETwitterStreamEvent.ConnectionError, this.onStreamError);
+        this.stream.off(types_1.ETwitterStreamEvent.TweetParseError, this.onStreamError);
+        this.stream.off(types_1.ETwitterStreamEvent.ConnectionClosed, this.onStreamError);
+    }
+    emitEvent(type, payload) {
+        this.emit('event', { type, payload });
+    }
+    onStreamError(payload) {
+        this.emitEvent('error', payload);
+    }
+    onStreamData(payload) {
+        this.stack.push(payload);
+        this.emitEvent('data', payload);
+    }
+}
+exports.TweetStreamEventCombiner = TweetStreamEventCombiner;
+exports.default = TweetStreamEventCombiner;
 
 
 /***/ }),
 
-/***/ 357:
+/***/ 7467:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EStreamParserEvent = void 0;
+const events_1 = __nccwpck_require__(8614);
+class TweetStreamParser extends events_1.EventEmitter {
+    constructor() {
+        super(...arguments);
+        this.currentMessage = '';
+    }
+    // Code partially belongs to twitter-stream-api for this
+    // https://github.com/trygve-lie/twitter-stream-api/blob/master/lib/parser.js
+    push(chunk) {
+        this.currentMessage += chunk;
+        chunk = this.currentMessage;
+        const size = chunk.length;
+        let start = 0;
+        let offset = 0;
+        while (offset < size) {
+            // Take [offset, offset+1] inside a new string
+            if (chunk.slice(offset, offset + 2) === '\r\n') {
+                // If chunk contains \r\n after current offset,
+                // parse [start, ..., offset] as a tweet
+                const piece = chunk.slice(start, offset);
+                start = offset += 2;
+                // If empty object
+                if (!piece.length) {
+                    continue;
+                }
+                try {
+                    const payload = JSON.parse(piece);
+                    if (payload) {
+                        this.emit(EStreamParserEvent.ParsedData, payload);
+                        continue;
+                    }
+                }
+                catch (error) {
+                    this.emit(EStreamParserEvent.ParseError, error);
+                }
+            }
+            offset++;
+        }
+        this.currentMessage = chunk.slice(start, size);
+    }
+    /** Reset the currently stored message (f.e. on connection reset) */
+    reset() {
+        this.currentMessage = '';
+    }
+}
+exports.default = TweetStreamParser;
+var EStreamParserEvent;
+(function (EStreamParserEvent) {
+    EStreamParserEvent["ParsedData"] = "parsed data";
+    EStreamParserEvent["ParseError"] = "parse error";
+})(EStreamParserEvent = exports.EStreamParserEvent || (exports.EStreamParserEvent = {}));
+
+
+/***/ }),
+
+/***/ 8294:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 948:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ETwitterStreamEvent = void 0;
+var ETwitterStreamEvent;
+(function (ETwitterStreamEvent) {
+    ETwitterStreamEvent["Connected"] = "connected";
+    ETwitterStreamEvent["ConnectError"] = "connect error";
+    ETwitterStreamEvent["ConnectionError"] = "connection error";
+    ETwitterStreamEvent["ConnectionClosed"] = "connection closed";
+    ETwitterStreamEvent["ConnectionLost"] = "connection lost";
+    ETwitterStreamEvent["ReconnectAttempt"] = "reconnect attempt";
+    ETwitterStreamEvent["Reconnected"] = "reconnected";
+    ETwitterStreamEvent["ReconnectError"] = "reconnect error";
+    ETwitterStreamEvent["ReconnectLimitExceeded"] = "reconnect limit exceeded";
+    ETwitterStreamEvent["DataKeepAlive"] = "data keep-alive";
+    ETwitterStreamEvent["Data"] = "data event content";
+    ETwitterStreamEvent["DataError"] = "data twitter error";
+    ETwitterStreamEvent["TweetParseError"] = "data tweet parse error";
+    ETwitterStreamEvent["Error"] = "stream error";
+})(ETwitterStreamEvent = exports.ETwitterStreamEvent || (exports.ETwitterStreamEvent = {}));
+
+
+/***/ }),
+
+/***/ 3549:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EApiV2ErrorCode = exports.EApiV1ErrorCode = exports.ApiResponseError = exports.ApiRequestError = exports.ETwitterApiError = void 0;
+var ETwitterApiError;
+(function (ETwitterApiError) {
+    ETwitterApiError["Request"] = "request";
+    ETwitterApiError["Response"] = "response";
+})(ETwitterApiError = exports.ETwitterApiError || (exports.ETwitterApiError = {}));
+/* ERRORS INSTANCES */
+class ApiError extends Error {
+    constructor() {
+        super(...arguments);
+        this.error = true;
+    }
+}
+class ApiRequestError extends ApiError {
+    constructor(message, options) {
+        super(message);
+        this.type = ETwitterApiError.Request;
+        Error.captureStackTrace(this, this.constructor);
+        // Do not show on Node stack trace
+        Object.defineProperty(this, '_options', { value: options });
+    }
+    get request() {
+        return this._options.request;
+    }
+    get requestError() {
+        return this._options.requestError;
+    }
+    toJSON() {
+        return {
+            type: this.type,
+            error: this.requestError,
+        };
+    }
+}
+exports.ApiRequestError = ApiRequestError;
+class ApiResponseError extends ApiError {
+    constructor(message, options) {
+        super(message);
+        this.type = ETwitterApiError.Response;
+        Error.captureStackTrace(this, this.constructor);
+        // Do not show on Node stack trace
+        Object.defineProperty(this, '_options', { value: options });
+        this.code = options.code;
+        this.headers = options.headers;
+        this.rateLimit = options.rateLimit;
+        this.data = options.data;
+    }
+    get request() {
+        return this._options.request;
+    }
+    get response() {
+        return this._options.response;
+    }
+    /** Check for presence of one of given v1/v2 error codes. */
+    hasErrorCode(...codes) {
+        const errors = this.errors;
+        // No errors
+        if (!(errors === null || errors === void 0 ? void 0 : errors.length)) {
+            return false;
+        }
+        // v1 errors
+        if ('code' in errors[0]) {
+            const v1errors = errors;
+            return v1errors.some(error => codes.includes(error.code));
+        }
+        // v2 error
+        const v2error = this.data;
+        return codes.includes(v2error.type);
+    }
+    get errors() {
+        var _a;
+        return (_a = this.data) === null || _a === void 0 ? void 0 : _a.errors;
+    }
+    get rateLimitError() {
+        return this.code === 420 || this.code === 429;
+    }
+    get isAuthError() {
+        if (this.code === 401) {
+            return true;
+        }
+        return this.hasErrorCode(EApiV1ErrorCode.AuthTimestampInvalid, EApiV1ErrorCode.AuthenticationFail, EApiV1ErrorCode.BadAuthenticationData, EApiV1ErrorCode.InvalidOrExpiredToken);
+    }
+    toJSON() {
+        return {
+            type: this.type,
+            code: this.code,
+            error: this.data,
+            rateLimit: this.rateLimit,
+            headers: this.headers,
+        };
+    }
+}
+exports.ApiResponseError = ApiResponseError;
+var EApiV1ErrorCode;
+(function (EApiV1ErrorCode) {
+    // Location errors
+    EApiV1ErrorCode[EApiV1ErrorCode["InvalidCoordinates"] = 3] = "InvalidCoordinates";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoLocationFound"] = 13] = "NoLocationFound";
+    // Authentification failures
+    EApiV1ErrorCode[EApiV1ErrorCode["AuthenticationFail"] = 32] = "AuthenticationFail";
+    EApiV1ErrorCode[EApiV1ErrorCode["InvalidOrExpiredToken"] = 89] = "InvalidOrExpiredToken";
+    EApiV1ErrorCode[EApiV1ErrorCode["UnableToVerifyCredentials"] = 99] = "UnableToVerifyCredentials";
+    EApiV1ErrorCode[EApiV1ErrorCode["AuthTimestampInvalid"] = 135] = "AuthTimestampInvalid";
+    EApiV1ErrorCode[EApiV1ErrorCode["BadAuthenticationData"] = 215] = "BadAuthenticationData";
+    // Resources not found or visible
+    EApiV1ErrorCode[EApiV1ErrorCode["NoUserMatch"] = 17] = "NoUserMatch";
+    EApiV1ErrorCode[EApiV1ErrorCode["UserNotFound"] = 50] = "UserNotFound";
+    EApiV1ErrorCode[EApiV1ErrorCode["ResourceNotFound"] = 34] = "ResourceNotFound";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetNotFound"] = 144] = "TweetNotFound";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetNotVisible"] = 179] = "TweetNotVisible";
+    EApiV1ErrorCode[EApiV1ErrorCode["NotAllowedResource"] = 220] = "NotAllowedResource";
+    EApiV1ErrorCode[EApiV1ErrorCode["MediaIdNotFound"] = 325] = "MediaIdNotFound";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetNoLongerAvailable"] = 421] = "TweetNoLongerAvailable";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetViolatedRules"] = 422] = "TweetViolatedRules";
+    // Account errors
+    EApiV1ErrorCode[EApiV1ErrorCode["TargetUserSuspended"] = 63] = "TargetUserSuspended";
+    EApiV1ErrorCode[EApiV1ErrorCode["YouAreSuspended"] = 64] = "YouAreSuspended";
+    EApiV1ErrorCode[EApiV1ErrorCode["AccountUpdateFailed"] = 120] = "AccountUpdateFailed";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoSelfSpamReport"] = 36] = "NoSelfSpamReport";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoSelfMute"] = 271] = "NoSelfMute";
+    EApiV1ErrorCode[EApiV1ErrorCode["AccountLocked"] = 326] = "AccountLocked";
+    // Application live errors / Twitter errors
+    EApiV1ErrorCode[EApiV1ErrorCode["RateLimitExceeded"] = 88] = "RateLimitExceeded";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoDMRightForApp"] = 93] = "NoDMRightForApp";
+    EApiV1ErrorCode[EApiV1ErrorCode["OverCapacity"] = 130] = "OverCapacity";
+    EApiV1ErrorCode[EApiV1ErrorCode["InternalError"] = 131] = "InternalError";
+    EApiV1ErrorCode[EApiV1ErrorCode["TooManyFollowings"] = 161] = "TooManyFollowings";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetLimitExceeded"] = 185] = "TweetLimitExceeded";
+    EApiV1ErrorCode[EApiV1ErrorCode["DuplicatedTweet"] = 187] = "DuplicatedTweet";
+    EApiV1ErrorCode[EApiV1ErrorCode["TooManySpamReports"] = 205] = "TooManySpamReports";
+    EApiV1ErrorCode[EApiV1ErrorCode["RequestLooksLikeSpam"] = 226] = "RequestLooksLikeSpam";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoWriteRightForApp"] = 261] = "NoWriteRightForApp";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetActionsDisabled"] = 425] = "TweetActionsDisabled";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetRepliesRestricted"] = 433] = "TweetRepliesRestricted";
+    // Invalid request parameters
+    EApiV1ErrorCode[EApiV1ErrorCode["NamedParameterMissing"] = 38] = "NamedParameterMissing";
+    EApiV1ErrorCode[EApiV1ErrorCode["InvalidAttachmentUrl"] = 44] = "InvalidAttachmentUrl";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetTextTooLong"] = 186] = "TweetTextTooLong";
+    EApiV1ErrorCode[EApiV1ErrorCode["MissingUrlParameter"] = 195] = "MissingUrlParameter";
+    EApiV1ErrorCode[EApiV1ErrorCode["NoMultipleGifs"] = 323] = "NoMultipleGifs";
+    EApiV1ErrorCode[EApiV1ErrorCode["InvalidMediaIds"] = 324] = "InvalidMediaIds";
+    EApiV1ErrorCode[EApiV1ErrorCode["InvalidUrl"] = 407] = "InvalidUrl";
+    EApiV1ErrorCode[EApiV1ErrorCode["TooManyTweetAttachments"] = 386] = "TooManyTweetAttachments";
+    // Already sent/deleted item
+    EApiV1ErrorCode[EApiV1ErrorCode["StatusAlreadyFavorited"] = 139] = "StatusAlreadyFavorited";
+    EApiV1ErrorCode[EApiV1ErrorCode["FollowRequestAlreadySent"] = 160] = "FollowRequestAlreadySent";
+    EApiV1ErrorCode[EApiV1ErrorCode["CannotUnmuteANonMutedAccount"] = 272] = "CannotUnmuteANonMutedAccount";
+    EApiV1ErrorCode[EApiV1ErrorCode["TweetAlreadyRetweeted"] = 327] = "TweetAlreadyRetweeted";
+    EApiV1ErrorCode[EApiV1ErrorCode["ReplyToDeletedTweet"] = 385] = "ReplyToDeletedTweet";
+    // DM Errors
+    EApiV1ErrorCode[EApiV1ErrorCode["DMReceiverNotFollowingYou"] = 150] = "DMReceiverNotFollowingYou";
+    EApiV1ErrorCode[EApiV1ErrorCode["UnableToSendDM"] = 151] = "UnableToSendDM";
+    EApiV1ErrorCode[EApiV1ErrorCode["MustAllowDMFromAnyone"] = 214] = "MustAllowDMFromAnyone";
+    EApiV1ErrorCode[EApiV1ErrorCode["CannotSendDMToThisUser"] = 349] = "CannotSendDMToThisUser";
+    EApiV1ErrorCode[EApiV1ErrorCode["DMTextTooLong"] = 354] = "DMTextTooLong";
+    // Appication misconfiguration
+    EApiV1ErrorCode[EApiV1ErrorCode["SubscriptionAlreadyExists"] = 355] = "SubscriptionAlreadyExists";
+    EApiV1ErrorCode[EApiV1ErrorCode["CallbackUrlNotApproved"] = 415] = "CallbackUrlNotApproved";
+    EApiV1ErrorCode[EApiV1ErrorCode["SuspendedApplication"] = 416] = "SuspendedApplication";
+    EApiV1ErrorCode[EApiV1ErrorCode["OobOauthIsNotAllowed"] = 417] = "OobOauthIsNotAllowed";
+})(EApiV1ErrorCode = exports.EApiV1ErrorCode || (exports.EApiV1ErrorCode = {}));
+var EApiV2ErrorCode;
+(function (EApiV2ErrorCode) {
+    // Request errors
+    EApiV2ErrorCode["InvalidRequest"] = "https://api.twitter.com/2/problems/invalid-request";
+    EApiV2ErrorCode["ClientForbidden"] = "https://api.twitter.com/2/problems/client-forbidden";
+    EApiV2ErrorCode["UnsupportedAuthentication"] = "https://api.twitter.com/2/problems/unsupported-authentication";
+    // Stream rules errors
+    EApiV2ErrorCode["InvalidRules"] = "https://api.twitter.com/2/problems/invalid-rules";
+    EApiV2ErrorCode["TooManyRules"] = "https://api.twitter.com/2/problems/rule-cap";
+    EApiV2ErrorCode["DuplicatedRules"] = "https://api.twitter.com/2/problems/duplicate-rules";
+    // Twitter errors
+    EApiV2ErrorCode["RateLimitExceeded"] = "https://api.twitter.com/2/problems/usage-capped";
+    EApiV2ErrorCode["ConnectionError"] = "https://api.twitter.com/2/problems/streaming-connection";
+    EApiV2ErrorCode["ClientDisconnected"] = "https://api.twitter.com/2/problems/client-disconnected";
+    EApiV2ErrorCode["TwitterDisconnectedYou"] = "https://api.twitter.com/2/problems/operational-disconnect";
+    // Resource errors
+    EApiV2ErrorCode["ResourceNotFound"] = "https://api.twitter.com/2/problems/resource-not-found";
+    EApiV2ErrorCode["ResourceUnauthorized"] = "https://api.twitter.com/2/problems/not-authorized-for-resource";
+    EApiV2ErrorCode["DisallowedResource"] = "https://api.twitter.com/2/problems/disallowed-resource";
+})(EApiV2ErrorCode = exports.EApiV2ErrorCode || (exports.EApiV2ErrorCode = {}));
+
+
+/***/ }),
+
+/***/ 1638:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(5401), exports);
+__exportStar(__nccwpck_require__(7109), exports);
+__exportStar(__nccwpck_require__(3549), exports);
+__exportStar(__nccwpck_require__(6296), exports);
+__exportStar(__nccwpck_require__(948), exports);
+__exportStar(__nccwpck_require__(8294), exports);
+
+
+/***/ }),
+
+/***/ 6296:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 9740:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 6430:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EDirectMessageEventTypeV1 = void 0;
+// Creation of DMs
+var EDirectMessageEventTypeV1;
+(function (EDirectMessageEventTypeV1) {
+    EDirectMessageEventTypeV1["Create"] = "message_create";
+    EDirectMessageEventTypeV1["WelcomeCreate"] = "welcome_message";
+})(EDirectMessageEventTypeV1 = exports.EDirectMessageEventTypeV1 || (exports.EDirectMessageEventTypeV1 = {}));
+
+
+/***/ }),
+
+/***/ 1575:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 712:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 5401:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(2362), exports);
+__exportStar(__nccwpck_require__(3863), exports);
+__exportStar(__nccwpck_require__(1575), exports);
+__exportStar(__nccwpck_require__(9045), exports);
+__exportStar(__nccwpck_require__(9740), exports);
+__exportStar(__nccwpck_require__(712), exports);
+__exportStar(__nccwpck_require__(9622), exports);
+__exportStar(__nccwpck_require__(6430), exports);
+__exportStar(__nccwpck_require__(3268), exports);
+
+
+/***/ }),
+
+/***/ 3268:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 2362:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 9622:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 3863:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 9045:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 7109:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(3026), exports);
+__exportStar(__nccwpck_require__(7295), exports);
+__exportStar(__nccwpck_require__(5894), exports);
+__exportStar(__nccwpck_require__(4292), exports);
+__exportStar(__nccwpck_require__(7323), exports);
+__exportStar(__nccwpck_require__(970), exports);
+
+
+/***/ }),
+
+/***/ 970:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 7323:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 3026:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+// ---------------
+// -- Streaming --
+// ---------------
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 5894:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 7295:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 4292:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+
+
+/***/ }),
+
+/***/ 7030:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiv1 = void 0;
+const globals_1 = __nccwpck_require__(3444);
+const dm_paginator_v1_1 = __nccwpck_require__(823);
+const types_1 = __nccwpck_require__(1638);
+const client_v1_write_1 = __importDefault(__nccwpck_require__(6685));
+/**
+ * Twitter v1.1 API client with read/write/DMs rights.
+ */
+class TwitterApiv1 extends client_v1_write_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V1_1_PREFIX;
+    }
+    /**
+     * Get a client with read/write rights.
+     */
+    get readWrite() {
+        return this;
+    }
+    /* Direct messages */
+    // Part: Sending and receiving events
+    /**
+     * Publishes a new message_create event resulting in a Direct Message sent to a specified user from the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/sending-and-receiving/api-reference/new-event
+     */
+    sendDm({ recipient_id, custom_profile_id, ...params }) {
+        const args = {
+            event: {
+                type: types_1.EDirectMessageEventTypeV1.Create,
+                [types_1.EDirectMessageEventTypeV1.Create]: {
+                    target: { recipient_id },
+                    message_data: params,
+                },
+            },
+        };
+        if (custom_profile_id) {
+            args.event[types_1.EDirectMessageEventTypeV1.Create].custom_profile_id = custom_profile_id;
+        }
+        return this.post('direct_messages/events/new.json', args, {
+            forceBodyMode: 'json',
+        });
+    }
+    /**
+     * Returns a single Direct Message event by the given id.
+     *
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/sending-and-receiving/api-reference/get-event
+     */
+    getDmEvent(id) {
+        return this.get('direct_messages/events/show.json', { id });
+    }
+    /**
+     * Deletes the direct message specified in the required ID parameter.
+     * The authenticating user must be the recipient of the specified direct message.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/sending-and-receiving/api-reference/delete-message-event
+     */
+    deleteDm(id) {
+        return this.delete('direct_messages/events/destroy.json', { id });
+    }
+    /**
+     * Returns all Direct Message events (both sent and received) within the last 30 days.
+     * Sorted in reverse-chronological order.
+     *
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/sending-and-receiving/api-reference/list-events
+     */
+    async listDmEvents(args = {}) {
+        const queryParams = { ...args };
+        const initialRq = await this.get('direct_messages/events/list.json', queryParams, { fullResponse: true });
+        return new dm_paginator_v1_1.DmEventsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    // Part: Welcome messages (events)
+    /**
+     * Creates a new Welcome Message that will be stored and sent in the future from the authenticating user in defined circumstances.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/new-welcome-message
+     */
+    newWelcomeDm(name, data) {
+        const args = {
+            [types_1.EDirectMessageEventTypeV1.WelcomeCreate]: {
+                name,
+                message_data: data,
+            },
+        };
+        return this.post('direct_messages/welcome_messages/new.json', args, {
+            forceBodyMode: 'json',
+        });
+    }
+    /**
+     * Returns a Welcome Message by the given id.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/get-welcome-message
+     */
+    getWelcomeDm(id) {
+        return this.get('direct_messages/welcome_messages/show.json', { id });
+    }
+    /**
+     * Deletes a Welcome Message by the given id.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/delete-welcome-message
+     */
+    deleteWelcomeDm(id) {
+        return this.delete('direct_messages/welcome_messages/destroy.json', { id });
+    }
+    /**
+     * Updates a Welcome Message by the given ID.
+     * Updates to the welcome_message object are atomic.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/update-welcome-message
+     */
+    updateWelcomeDm(id, data) {
+        const args = { message_data: data };
+        return this.put('direct_messages/welcome_messages/update.json', args, {
+            forceBodyMode: 'json',
+            query: { id },
+        });
+    }
+    /**
+     * Returns all Direct Message events (both sent and received) within the last 30 days.
+     * Sorted in reverse-chronological order.
+     *
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/sending-and-receiving/api-reference/list-events
+     */
+    async listWelcomeDms(args = {}) {
+        const queryParams = { ...args };
+        const initialRq = await this.get('direct_messages/welcome_messages/list.json', queryParams, { fullResponse: true });
+        return new dm_paginator_v1_1.WelcomeDmV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    // Part: Welcome message (rules)
+    /**
+     * Creates a new Welcome Message Rule that determines which Welcome Message will be shown in a given conversation.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/new-welcome-message-rule
+     */
+    newWelcomeDmRule(welcomeMessageId) {
+        return this.post('direct_messages/welcome_messages/rules/new.json', {
+            welcome_message_rule: { welcome_message_id: welcomeMessageId },
+        }, {
+            forceBodyMode: 'json',
+        });
+    }
+    /**
+     * Returns a Welcome Message Rule by the given id.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/get-welcome-message-rule
+     */
+    getWelcomeDmRule(id) {
+        return this.get('direct_messages/welcome_messages/rules/show.json', { id });
+    }
+    /**
+     * Deletes a Welcome Message Rule by the given id.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/delete-welcome-message-rule
+     */
+    deleteWelcomeDmRule(id) {
+        return this.delete('direct_messages/welcome_messages/rules/destroy.json', { id });
+    }
+    /**
+     * Retrieves all welcome DM rules for this account.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/welcome-messages/api-reference/list-welcome-message-rules
+     */
+    async listWelcomeDmRules(args = {}) {
+        const queryParams = { ...args };
+        return this.get('direct_messages/welcome_messages/rules/list.json', queryParams);
+    }
+    /**
+     * Set the current showed welcome message for logged account ; wrapper for Welcome DM rules.
+     * Test if a rule already exists, delete if any, then create a rule for current message ID.
+     *
+     * If you don't have already a welcome message, create it with `.newWelcomeMessage`.
+     */
+    async setWelcomeDm(welcomeMessageId, deleteAssociatedWelcomeDmWhenDeletingRule = true) {
+        var _a;
+        const existingRules = await this.listWelcomeDmRules();
+        if ((_a = existingRules.welcome_message_rules) === null || _a === void 0 ? void 0 : _a.length) {
+            for (const rule of existingRules.welcome_message_rules) {
+                await this.deleteWelcomeDmRule(rule.id);
+                if (deleteAssociatedWelcomeDmWhenDeletingRule) {
+                    await this.deleteWelcomeDm(rule.welcome_message_id);
+                }
+            }
+        }
+        return this.newWelcomeDmRule(welcomeMessageId);
+    }
+    // Part: Read indicator
+    /**
+     * Marks a message as read in the recipient’s Direct Message conversation view with the sender.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/typing-indicator-and-read-receipts/api-reference/new-read-receipt
+     */
+    markDmAsRead(lastEventId, recipientId) {
+        return this.post('direct_messages/mark_read.json', {
+            last_read_event_id: lastEventId,
+            recipient_id: recipientId,
+        }, { forceBodyMode: 'url' });
+    }
+    /**
+     * Displays a visual typing indicator in the recipient’s Direct Message conversation view with the sender.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/typing-indicator-and-read-receipts/api-reference/new-typing-indicator
+     */
+    indicateDmTyping(recipientId) {
+        return this.post('direct_messages/indicate_typing.json', {
+            recipient_id: recipientId,
+        }, { forceBodyMode: 'url' });
+    }
+}
+exports.TwitterApiv1 = TwitterApiv1;
+exports.default = TwitterApiv1;
+
+
+/***/ }),
+
+/***/ 4273:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const client_subclient_1 = __importDefault(__nccwpck_require__(3810));
+const globals_1 = __nccwpck_require__(3444);
+const helpers_1 = __nccwpck_require__(1120);
+const client_v1_1 = __importDefault(__nccwpck_require__(7030));
+const tweet_paginator_v1_1 = __nccwpck_require__(9848);
+const mutes_paginator_v1_1 = __nccwpck_require__(7277);
+const user_paginator_v1_1 = __nccwpck_require__(8985);
+const list_paginator_v1_1 = __nccwpck_require__(5631);
+/**
+ * Base Twitter v1 client with only read right.
+ */
+class TwitterApiv1ReadOnly extends client_subclient_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V1_1_PREFIX;
+    }
+    /* Tweets */
+    /**
+     * Returns a single Tweet, specified by the id parameter. The Tweet's author will also be embedded within the Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-show-id
+     */
+    singleTweet(tweetId, options = {}) {
+        return this.get('statuses/show.json', { tweet_mode: 'extended', id: tweetId, ...options });
+    }
+    tweets(ids, options = {}) {
+        return this.post('statuses/lookup.json', { tweet_mode: 'extended', id: ids, ...options });
+    }
+    /**
+     * Returns a single Tweet, specified by either a Tweet web URL or the Tweet ID, in an oEmbed-compatible format.
+     * The returned HTML snippet will be automatically recognized as an Embedded Tweet when Twitter's widget JavaScript is included on the page.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-statuses-oembed
+     */
+    oembedTweet(tweetId, options = {}) {
+        return this.get('oembed', {
+            url: `https://twitter.com/i/statuses/${tweetId}`,
+            ...options,
+        }, { prefix: 'https://publish.twitter.com/' });
+    }
+    /* Tweets timelines */
+    /**
+     * Returns a collection of the most recent Tweets and Retweets posted by the authenticating user and the users they follow.
+     * The home timeline is central to how most users interact with the Twitter service.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-home_timeline
+     */
+    async homeTimeline(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('statuses/home_timeline.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.HomeTimelineV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns the 20 most recent mentions (Tweets containing a users's @screen_name) for the authenticating user.
+     * The timeline returned is the equivalent of the one seen when you view your mentions on twitter.com.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-mentions_timeline
+     */
+    async mentionTimeline(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('statuses/mentions_timeline.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.MentionTimelineV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns a collection of the most recent Tweets posted by the user indicated by the user_id parameters.
+     * User timelines belonging to protected users may only be requested when the authenticated user either "owns" the timeline or is an approved follower of the owner.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
+     */
+    async userTimeline(userId, options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            user_id: userId,
+            ...options,
+        };
+        const initialRq = await this.get('statuses/user_timeline.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.UserTimelineV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns a collection of the most recent Tweets posted by the user indicated by the screen_name parameters.
+     * User timelines belonging to protected users may only be requested when the authenticated user either "owns" the timeline or is an approved follower of the owner.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/api-reference/get-statuses-user_timeline
+     */
+    async userTimelineByUsername(username, options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            screen_name: username,
+            ...options,
+        };
+        const initialRq = await this.get('statuses/user_timeline.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.UserTimelineV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /* Users */
+    /**
+     * Returns a variety of information about the user specified by the required user_id or screen_name parameter.
+     * The author's most recent Tweet will be returned inline when possible.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-show
+     */
+    user(user) {
+        return this.get('users/show.json', { tweet_mode: 'extended', ...user });
+    }
+    /**
+     * Returns fully-hydrated user objects for up to 100 users per request,
+     * as specified by comma-separated values passed to the user_id and/or screen_name parameters.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-lookup
+     */
+    users(query) {
+        return this.get('users/lookup.json', { tweet_mode: 'extended', ...query });
+    }
+    /**
+     * Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful;
+     * returns a 401 status code and an error message if not.
+     * Use this method to test if supplied user credentials are valid.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials
+     */
+    verifyCredentials(options = {}) {
+        return this.get('account/verify_credentials.json', options);
+    }
+    /**
+     * Returns an array of user objects the authenticating user has muted.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/mute-block-report-users/api-reference/get-mutes-users-list
+     */
+    async listMutedUsers(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('mutes/users/list.json', queryParams, { fullResponse: true });
+        return new mutes_paginator_v1_1.MuteUserListV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns an array of numeric user ids the authenticating user has muted.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/mute-block-report-users/api-reference/get-mutes-users-ids
+     */
+    async listMutedUserIds(options = {}) {
+        const queryParams = {
+            stringify_ids: true,
+            ...options,
+        };
+        const initialRq = await this.get('mutes/users/ids.json', queryParams, { fullResponse: true });
+        return new mutes_paginator_v1_1.MuteUserIdsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Provides a simple, relevance-based search interface to public user accounts on Twitter.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-users-search
+     */
+    async searchUsers(query, options = {}) {
+        const queryParams = {
+            q: query,
+            tweet_mode: 'extended',
+            page: 1,
+            ...options,
+        };
+        const initialRq = await this.get('users/search.json', queryParams, { fullResponse: true });
+        return new user_paginator_v1_1.UserSearchV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /* Friendship API */
+    /**
+     * Returns detailed information about the relationship between two arbitrary users.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friendships-show
+     */
+    friendship(sources) {
+        return this.get('friendships/show.json', sources);
+    }
+    /**
+     * Returns the relationships of the authenticating user to the comma-separated list of up to 100 screen_names or user_ids provided.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friendships-lookup
+     */
+    friendships(friendships) {
+        return this.get('friendships/lookup.json', friendships);
+    }
+    /**
+     * Returns a collection of user_ids that the currently authenticated user does not want to receive retweets from.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friendships-no_retweets-ids
+     */
+    friendshipsNoRetweets() {
+        return this.get('friendships/no_retweets/ids.json', { stringify_ids: true });
+    }
+    /**
+     * Returns a collection of numeric IDs for every user who has a pending request to follow the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friendships-incoming
+     */
+    async friendshipsIncoming(options = {}) {
+        const queryParams = {
+            stringify_ids: true,
+            ...options,
+        };
+        const initialRq = await this.get('friendships/incoming.json', queryParams, { fullResponse: true });
+        return new user_paginator_v1_1.FriendshipsIncomingV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns a collection of numeric IDs for every protected user for whom the authenticating user has a pending follow request.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friendships-outgoing
+     */
+    async friendshipsOutgoing(options = {}) {
+        const queryParams = {
+            stringify_ids: true,
+            ...options,
+        };
+        const initialRq = await this.get('friendships/outgoing.json', queryParams, { fullResponse: true });
+        return new user_paginator_v1_1.FriendshipsOutgoingV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /* Account/user API */
+    /**
+     * Get current account settings for authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-settings
+     */
+    accountSettings() {
+        return this.get('account/settings.json');
+    }
+    /**
+     * Returns a map of the available size variations of the specified user's profile banner.
+     * If the user has not uploaded a profile banner, a HTTP 404 will be served instead.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-users-profile_banner
+     */
+    userProfileBannerSizes(params) {
+        return this.get('users/profile_banner.json', params);
+    }
+    /* Lists */
+    /**
+     * Returns the specified list. Private lists will only be shown if the authenticated user owns the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-show
+     */
+    list(options) {
+        return this.get('lists/show.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Returns all lists the authenticating or specified user subscribes to, including their own.
+     * If no user is given, the authenticating user is used.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-list
+     */
+    lists(options = {}) {
+        return this.get('lists/list.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Returns the members of the specified list. Private list members will only be shown if the authenticated user owns the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-members
+     */
+    async listMembers(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/members.json', queryParams, { fullResponse: true });
+        return new list_paginator_v1_1.ListMembersV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Check if the specified user is a member of the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-members-show
+     */
+    listGetMember(options) {
+        return this.get('lists/members/show.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Returns the lists the specified user has been added to.
+     * If user_id or screen_name are not provided, the memberships for the authenticating user are returned.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-memberships
+     */
+    async listMemberships(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/memberships.json', queryParams, { fullResponse: true });
+        return new list_paginator_v1_1.ListMembershipsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns the lists owned by the specified Twitter user. Private lists will only be shown if the authenticated user is also the owner of the lists.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-ownerships
+     */
+    async listOwnerships(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/ownerships.json', queryParams, { fullResponse: true });
+        return new list_paginator_v1_1.ListOwnershipsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns a timeline of tweets authored by members of the specified list. Retweets are included by default.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-statuses
+     */
+    async listStatuses(options) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/statuses.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.ListTimelineV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns the subscribers of the specified list. Private list subscribers will only be shown if the authenticated user owns the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-subscribers
+     */
+    async listSubscribers(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/subscribers.json', queryParams, { fullResponse: true });
+        return new list_paginator_v1_1.ListSubscribersV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Check if the specified user is a subscriber of the specified list. Returns the user if they are a subscriber.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-subscribers-show
+     */
+    listGetSubscriber(options) {
+        return this.get('lists/subscribers/show.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Obtain a collection of the lists the specified user is subscribed to, 20 lists per page by default.
+     * Does not include the user's own lists.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/get-lists-subscriptions
+     */
+    async listSubscriptions(options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            ...options,
+        };
+        const initialRq = await this.get('lists/subscriptions.json', queryParams, { fullResponse: true });
+        return new list_paginator_v1_1.ListSubscriptionsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /* Media upload API */
+    /**
+     * The STATUS command (this method) is used to periodically poll for updates of media processing operation.
+     * After the STATUS command response returns succeeded, you can move on to the next step which is usually create Tweet with media_id.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/get-media-upload-status
+     */
+    mediaInfo(mediaId) {
+        return this.get('media/upload.json', {
+            command: 'STATUS',
+            media_id: mediaId,
+        }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX });
+    }
+    filterStream({ autoConnect, ...params } = {}) {
+        const parameters = {};
+        for (const [key, value] of Object.entries(params)) {
+            if (key === 'follow' || key === 'track') {
+                parameters[key] = value.toString();
+            }
+            else if (key === 'locations') {
+                const locations = value;
+                parameters.locations = helpers_1.arrayWrap(locations).map(loc => `${loc.lng},${loc.lat}`).join(',');
+            }
+            else {
+                parameters[key] = value;
+            }
+        }
+        const streamClient = this.stream;
+        return streamClient.postStream('statuses/filter.json', parameters, { autoConnect });
+    }
+    sampleStream({ autoConnect, ...params } = {}) {
+        const streamClient = this.stream;
+        return streamClient.getStream('statuses/sample.json', params, { autoConnect });
+    }
+    /**
+     * Create a client that is prefixed with `https//stream.twitter.com` instead of classic API URL.
+     */
+    get stream() {
+        const copiedClient = new client_v1_1.default(this);
+        copiedClient.setPrefix(globals_1.API_V1_1_STREAM_PREFIX);
+        return copiedClient;
+    }
+    /* Trends API */
+    /**
+     * Returns the top 50 trending topics for a specific id, if trending information is available for it.
+     * Note: The id parameter for this endpoint is the "where on earth identifier" or WOEID, which is a legacy identifier created by Yahoo and has been deprecated.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/trends/trends-for-location/api-reference/get-trends-place
+     */
+    trendsByPlace(woeId, options = {}) {
+        return this.get('trends/place.json', { id: woeId, ...options });
+    }
+    /**
+     * Returns the locations that Twitter has trending topic information for.
+     * The response is an array of "locations" that encode the location's WOEID
+     * and some other human-readable information such as a canonical name and country the location belongs in.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/trends/locations-with-trending-topics/api-reference/get-trends-available
+     */
+    trendsAvailable() {
+        return this.get('trends/available.json');
+    }
+    /**
+     * Returns the locations that Twitter has trending topic information for, closest to a specified location.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/trends/locations-with-trending-topics/api-reference/get-trends-closest
+     */
+    trendsClosest(lat, long) {
+        return this.get('trends/closest.json', { lat, long });
+    }
+    /* Geo API */
+    /**
+     * Returns all the information about a known place.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/geo/place-information/api-reference/get-geo-id-place_id
+     */
+    geoPlace(placeId) {
+        return this.get('geo/id/:place_id.json', undefined, { params: { place_id: placeId } });
+    }
+    /**
+     * Search for places that can be attached to a Tweet via POST statuses/update.
+     * This request will return a list of all the valid places that can be used as the place_id when updating a status.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/geo/places-near-location/api-reference/get-geo-search
+     */
+    geoSearch(options) {
+        return this.get('geo/search.json', options);
+    }
+    /**
+     * Given a latitude and a longitude, searches for up to 20 places that can be used as a place_id when updating a status.
+     * This request is an informative call and will deliver generalized results about geography.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/geo/places-near-location/api-reference/get-geo-reverse_geocode
+     */
+    geoReverseGeoCode(options) {
+        return this.get('geo/reverse_geocode.json', options);
+    }
+    /* Developer utilities */
+    /**
+     * Returns the current rate limits for methods belonging to the specified resource families.
+     * Each API resource belongs to a "resource family" which is indicated in its method documentation.
+     * The method's resource family can be determined from the first component of the path after the resource version.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/developer-utilities/rate-limit-status/api-reference/get-application-rate_limit_status
+     */
+    rateLimitStatuses(...resources) {
+        return this.get('application/rate_limit_status.json', { resources });
+    }
+    /**
+     * Returns the list of languages supported by Twitter along with the language code supported by Twitter.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/developer-utilities/supported-languages/api-reference/get-help-languages
+     */
+    supportedLanguages() {
+        return this.get('help/languages.json');
+    }
+}
+exports.default = TwitterApiv1ReadOnly;
+
+
+/***/ }),
+
+/***/ 6685:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const globals_1 = __nccwpck_require__(3444);
+const client_v1_read_1 = __importDefault(__nccwpck_require__(4273));
+const fs = __importStar(__nccwpck_require__(5747));
+const media_helpers_v1_1 = __nccwpck_require__(8738);
+const helpers_1 = __nccwpck_require__(1120);
+const UPLOAD_ENDPOINT = 'media/upload.json';
+/**
+ * Base Twitter v1 client with read/write rights.
+ */
+class TwitterApiv1ReadWrite extends client_v1_read_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V1_1_PREFIX;
+    }
+    /**
+     * Get a client with only read rights.
+     */
+    get readOnly() {
+        return this;
+    }
+    /* Tweet API */
+    /**
+     * Post a new tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
+     */
+    tweet(status, payload = {}) {
+        const queryParams = {
+            status,
+            tweet_mode: 'extended',
+            ...payload,
+        };
+        return this.post('statuses/update.json', queryParams);
+    }
+    /**
+     * Post a series of tweets.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
+     */
+    async tweetThread(tweets) {
+        const postedTweets = [];
+        for (const tweet of tweets) {
+            // Retrieve the last sent tweet
+            const lastTweet = postedTweets.length ? postedTweets[postedTweets.length - 1] : null;
+            // Build the tweet query params
+            const queryParams = { ...(typeof tweet === 'string' ? ({ status: tweet }) : tweet) };
+            // Reply to an existing tweet if needed
+            const inReplyToId = lastTweet ? lastTweet.id_str : queryParams.in_reply_to_status_id;
+            const status = queryParams.status;
+            if (inReplyToId) {
+                postedTweets.push(await this.reply(status, inReplyToId, queryParams));
+            }
+            else {
+                postedTweets.push(await this.tweet(status, queryParams));
+            }
+        }
+        return postedTweets;
+    }
+    /**
+     * Reply to an existing tweet. Shortcut to `.tweet` with tweaked parameters.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
+     */
+    reply(status, in_reply_to_status_id, payload = {}) {
+        return this.tweet(status, {
+            auto_populate_reply_metadata: true,
+            in_reply_to_status_id,
+            ...payload,
+        });
+    }
+    /**
+     * Delete an existing tweet belonging to you.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-destroy-id
+     */
+    deleteTweet(tweetId) {
+        return this.post('statuses/destroy/:id.json', { tweet_mode: 'extended' }, { params: { id: tweetId } });
+    }
+    /* User API */
+    /**
+     * Report the specified user as a spam account to Twitter.
+     * Additionally, optionally performs the equivalent of POST blocks/create on behalf of the authenticated user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/mute-block-report-users/api-reference/post-users-report_spam
+     */
+    reportUserAsSpam(options) {
+        return this.post('users/report_spam.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Turn on/off Retweets and device notifications from the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/post-friendships-update
+     */
+    updateFriendship(options) {
+        return this.post('friendships/update.json', options);
+    }
+    /* Account API */
+    /**
+     * Update current account settings for authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/get-account-settings
+     */
+    updateAccountSettings(options) {
+        return this.post('account/settings.json', options);
+    }
+    /**
+     * Sets some values that users are able to set under the "Account" tab of their settings page.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/post-account-update_profile
+     */
+    updateAccountProfile(options) {
+        return this.post('account/update_profile.json', options);
+    }
+    /**
+     * Uploads a profile banner on behalf of the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/post-account-update_profile_banner
+     */
+    async updateAccountProfileBanner(file, options = {}) {
+        const queryParams = {
+            banner: await media_helpers_v1_1.readFileIntoBuffer(file),
+            ...options,
+        };
+        return this.post('account/update_profile_banner.json', queryParams, { forceBodyMode: 'form-data' });
+    }
+    /**
+     * Updates the authenticating user's profile image.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/post-account-update_profile_image
+     */
+    async updateAccountProfileImage(file, options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            image: await media_helpers_v1_1.readFileIntoBuffer(file),
+            ...options,
+        };
+        return this.post('account/update_profile_image.json', queryParams, { forceBodyMode: 'form-data' });
+    }
+    /**
+     * Removes the uploaded profile banner for the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/manage-account-settings/api-reference/post-account-remove_profile_banner
+     */
+    removeAccountProfileBanner() {
+        return this.post('account/remove_profile_banner.json');
+    }
+    /* Lists */
+    /**
+     * Creates a new list for the authenticated user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-create
+     */
+    createList(options) {
+        return this.post('lists/create.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Updates the specified list. The authenticated user must own the list to be able to update it.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-update
+     */
+    updateList(options) {
+        return this.post('lists/update.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Deletes the specified list. The authenticated user must own the list to be able to destroy it.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-destroy
+     */
+    removeList(options) {
+        return this.post('lists/destroy.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Adds multiple members to a list, by specifying a comma-separated list of member ids or screen names.
+     * If you add a single `user_id` or `screen_name`, it will target `lists/members/create.json`, otherwise
+     * it will target `lists/members/create_all.json`.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-members-create_all
+     */
+    addListMembers(options) {
+        const hasMultiple = (options.user_id && helpers_1.hasMultipleItems(options.user_id)) || (options.screen_name && helpers_1.hasMultipleItems(options.screen_name));
+        const endpoint = hasMultiple ? 'lists/members/create_all.json' : 'lists/members/create.json';
+        return this.post(endpoint, options);
+    }
+    /**
+     * Removes multiple members to a list, by specifying a comma-separated list of member ids or screen names.
+     * If you add a single `user_id` or `screen_name`, it will target `lists/members/destroy.json`, otherwise
+     * it will target `lists/members/destroy_all.json`.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-members-destroy_all
+     */
+    removeListMembers(options) {
+        const hasMultiple = (options.user_id && helpers_1.hasMultipleItems(options.user_id)) || (options.screen_name && helpers_1.hasMultipleItems(options.screen_name));
+        const endpoint = hasMultiple ? 'lists/members/destroy_all.json' : 'lists/members/destroy.json';
+        return this.post(endpoint, options);
+    }
+    /**
+     * Subscribes the authenticated user to the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-subscribers-create
+     */
+    subscribeToList(options) {
+        return this.post('lists/subscribers/create.json', { tweet_mode: 'extended', ...options });
+    }
+    /**
+     * Unsubscribes the authenticated user of the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-subscribers-destroy
+     */
+    unsubscribeOfList(options) {
+        return this.post('lists/subscribers/destroy.json', { tweet_mode: 'extended', ...options });
+    }
+    /* Media upload API */
+    /**
+     * This endpoint can be used to provide additional information about the uploaded media_id.
+     * This feature is currently only supported for images and GIFs.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-metadata-create
+     */
+    createMediaMetadata(mediaId, metadata) {
+        return this.post('media/metadata/create.json', { media_id: mediaId, ...metadata }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX, forceBodyMode: 'json' });
+    }
+    /**
+     * Use this endpoint to associate uploaded subtitles to an uploaded video. You can associate subtitles to video before or after Tweeting.
+     * **To obtain subtitle media ID, you must upload each subtitle file separately using `.uploadMedia()` method.**
+     *
+     * https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-subtitles-create
+     */
+    createMediaSubtitles(mediaId, subtitles) {
+        return this.post('media/subtitles/create.json', { media_id: mediaId, media_category: 'TweetVideo', subtitle_info: { subtitles } }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX, forceBodyMode: 'json' });
+    }
+    /**
+     * Use this endpoint to dissociate subtitles from a video and delete the subtitles. You can dissociate subtitles from a video before or after Tweeting.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/media/upload-media/api-reference/post-media-subtitles-delete
+     */
+    deleteMediaSubtitles(mediaId, ...languages) {
+        return this.post('media/subtitles/delete.json', {
+            media_id: mediaId,
+            media_category: 'TweetVideo',
+            subtitle_info: { subtitles: languages.map(lang => ({ language_code: lang })) },
+        }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX, forceBodyMode: 'json' });
+    }
+    /**
+     * Upload a media (JPG/PNG/GIF/MP4/WEBP) or subtitle (SRT) to Twitter and return the media_id to use in tweet/DM send.
+     *
+     * @param file If `string`, filename is supposed.
+     * A `Buffer` is a raw file.
+     * `fs.promises.FileHandle` or `number` are file pointers.
+     *
+     * @param options.type File type (Enum 'jpg' | 'longmp4' | 'mp4' | 'png' | 'gif' | 'srt' | 'webp').
+     * If filename is given, it could be guessed with file extension, otherwise this parameter is mandatory.
+     * If type is not part of the enum, it will be used as mime type.
+     *
+     * Type `longmp4` is **required** is you try to upload a video higher than 140 seconds.
+     *
+     * @param options.chunkLength Maximum chunk length sent to Twitter. Default goes to 1 MB.
+     *
+     * @param options.additionalOwners Other user IDs allowed to use the returned media_id. Default goes to none.
+     *
+     * @param options.maxConcurrentUploads Maximum uploaded chunks in the same time. Default goes to 3.
+     *
+     * @param options.target Target type `tweet` or `dm`. Defaults to `tweet`.
+     * You must specify it if you send a media to use in DMs.
+     */
+    async uploadMedia(file, options = {}) {
+        var _a;
+        const chunkLength = (_a = options.chunkLength) !== null && _a !== void 0 ? _a : (1024 * 1024);
+        const { fileHandle, mediaCategory, fileSize, mimeType } = await this.getUploadMediaRequirements(file, options);
+        // Get the file handle (if not buffer)
+        try {
+            // Finally! We can send INIT message.
+            const mediaData = await this.post(UPLOAD_ENDPOINT, {
+                command: 'INIT',
+                total_bytes: fileSize,
+                media_type: mimeType,
+                media_category: mediaCategory,
+                additional_owners: options.additionalOwners,
+                shared: options.shared ? true : undefined,
+            }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX });
+            // Upload the media chunk by chunk
+            await this.mediaChunkedUpload(fileHandle, chunkLength, mediaData.media_id_string, options.maxConcurrentUploads);
+            // Finalize media
+            const fullMediaData = await this.post(UPLOAD_ENDPOINT, {
+                command: 'FINALIZE',
+                media_id: mediaData.media_id_string,
+            }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX });
+            if (fullMediaData.processing_info && fullMediaData.processing_info.state !== 'succeeded') {
+                // Must wait if video is still computed
+                await this.awaitForMediaProcessingCompletion(fullMediaData);
+            }
+            // Video is ready, return media_id
+            return fullMediaData.media_id_string;
+        }
+        finally {
+            // Close file if any
+            if (typeof file === 'number') {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                fs.close(file, () => { });
+            }
+            else if (typeof fileHandle === 'object' && !(fileHandle instanceof Buffer)) {
+                fileHandle.close();
+            }
+        }
+    }
+    async awaitForMediaProcessingCompletion(fullMediaData) {
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            fullMediaData = await this.mediaInfo(fullMediaData.media_id_string);
+            if (!fullMediaData.processing_info || fullMediaData.processing_info.state === 'succeeded') {
+                // Ok, completed!
+                return;
+            }
+            if (fullMediaData.processing_info.state === 'failed') {
+                throw new Error('Failed to process the media.');
+            }
+            if (fullMediaData.processing_info.check_after_secs) {
+                // Await for given seconds
+                await media_helpers_v1_1.sleepSecs(fullMediaData.processing_info.check_after_secs);
+            }
+            else {
+                // No info; Await for 5 seconds
+                await media_helpers_v1_1.sleepSecs(5);
+            }
+        }
+    }
+    async getUploadMediaRequirements(file, { type, target } = {}) {
+        // Get the file handle (if not buffer)
+        let fileHandle;
+        try {
+            fileHandle = await media_helpers_v1_1.getFileHandle(file);
+            // Get the mimetype
+            const mimeType = media_helpers_v1_1.getMimeType(file, type);
+            // Get the media category
+            let mediaCategory;
+            // If explicit longmp4 OR explicit MIME type and not DM target
+            if (type === 'longmp4' || (type === 'video/mp4' && target !== 'dm')) {
+                mediaCategory = 'amplify_video';
+            }
+            else {
+                mediaCategory = media_helpers_v1_1.getMediaCategoryByMime(mimeType, target !== null && target !== void 0 ? target : 'tweet');
+            }
+            return {
+                fileHandle,
+                mediaCategory,
+                fileSize: await media_helpers_v1_1.getFileSizeFromFileHandle(fileHandle),
+                mimeType,
+            };
+        }
+        catch (e) {
+            // Close file if any
+            if (typeof file === 'number') {
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
+                fs.close(file, () => { });
+            }
+            else if (typeof fileHandle === 'object' && !(fileHandle instanceof Buffer)) {
+                fileHandle.close();
+            }
+            throw e;
+        }
+    }
+    async mediaChunkedUpload(fileHandle, chunkLength, mediaId, maxConcurrentUploads = 3) {
+        // Send chunk by chunk
+        let chunkIndex = 0;
+        if (maxConcurrentUploads < 1) {
+            throw new RangeError('Bad maxConcurrentUploads parameter.');
+        }
+        // Creating a buffer for doing file stuff (if we don't have one)
+        const buffer = fileHandle instanceof Buffer ? undefined : Buffer.alloc(chunkLength);
+        // Sliced/filled buffer returned for each part
+        let readBuffer;
+        // Needed to know when we should stop reading the file
+        let nread;
+        // Needed to use the buffer object (file handles always "remembers" file position)
+        let offset = 0;
+        [readBuffer, nread] = await media_helpers_v1_1.readNextPartOf(fileHandle, chunkLength, offset, buffer);
+        offset += nread;
+        // Handle max concurrent uploads
+        const currentUploads = new Set();
+        // Read buffer until file is completely read
+        while (nread) {
+            const mediaBufferPart = readBuffer.slice(0, nread);
+            // Sent part if part has something inside
+            if (mediaBufferPart.length) {
+                const request = this.post(UPLOAD_ENDPOINT, {
+                    command: 'APPEND',
+                    media_id: mediaId,
+                    segment_index: chunkIndex,
+                    media: mediaBufferPart,
+                }, { prefix: globals_1.API_V1_1_UPLOAD_PREFIX });
+                currentUploads.add(request);
+                request.then(() => {
+                    currentUploads.delete(request);
+                });
+                chunkIndex++;
+            }
+            if (currentUploads.size >= maxConcurrentUploads) {
+                // Await for first promise to be finished
+                await Promise.race(currentUploads);
+            }
+            [readBuffer, nread] = await media_helpers_v1_1.readNextPartOf(fileHandle, chunkLength, offset, buffer);
+            offset += nread;
+        }
+        await Promise.all([...currentUploads]);
+    }
+}
+exports.default = TwitterApiv1ReadWrite;
+
+
+/***/ }),
+
+/***/ 8738:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.readNextPartOf = exports.sleepSecs = exports.getMediaCategoryByMime = exports.getMimeType = exports.getFileSizeFromFileHandle = exports.getFileHandle = exports.readFileIntoBuffer = void 0;
+const fs = __importStar(__nccwpck_require__(5747));
+async function readFileIntoBuffer(file) {
+    const handle = await getFileHandle(file);
+    if (typeof handle === 'number') {
+        return new Promise((resolve, reject) => {
+            fs.readFile(handle, (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data);
+            });
+        });
+    }
+    else if (handle instanceof Buffer) {
+        return handle;
+    }
+    else {
+        return handle.readFile();
+    }
+}
+exports.readFileIntoBuffer = readFileIntoBuffer;
+function getFileHandle(file) {
+    if (typeof file === 'string') {
+        return fs.promises.open(file, 'r');
+    }
+    else if (typeof file === 'number') {
+        return file;
+    }
+    else if (typeof file === 'object' && !(file instanceof Buffer)) {
+        return file;
+    }
+    else if (!(file instanceof Buffer)) {
+        throw new Error('Given file is not valid, please check its type.');
+    }
+    else {
+        return file;
+    }
+}
+exports.getFileHandle = getFileHandle;
+async function getFileSizeFromFileHandle(fileHandle) {
+    // Get the file size
+    if (typeof fileHandle === 'number') {
+        const stats = await new Promise((resolve, reject) => {
+            fs.fstat(fileHandle, (err, stats) => {
+                if (err)
+                    reject(err);
+                resolve(stats);
+            });
+        });
+        return stats.size;
+    }
+    else if (fileHandle instanceof Buffer) {
+        return fileHandle.length;
+    }
+    else {
+        return (await fileHandle.stat()).size;
+    }
+}
+exports.getFileSizeFromFileHandle = getFileSizeFromFileHandle;
+function getMimeType(file, type) {
+    if (typeof file === 'string' && !type) {
+        return getMimeByName(file);
+    }
+    else if (typeof type === 'string') {
+        return getMimeByType(type);
+    }
+    throw new Error('You must specify type if file is a file handle or Buffer.');
+}
+exports.getMimeType = getMimeType;
+function getMimeByName(name) {
+    if (name.endsWith('.jpeg') || name.endsWith('.jpg'))
+        return 'image/jpeg';
+    if (name.endsWith('.png'))
+        return 'image/png';
+    if (name.endsWith('.webp'))
+        return 'image/webp';
+    if (name.endsWith('.gif'))
+        return 'image/gif';
+    if (name.endsWith('.mpeg4') || name.endsWith('.mp4'))
+        return 'video/mp4';
+    if (name.endsWith('.srt'))
+        return 'text/plain';
+    return 'image/jpeg';
+}
+function getMimeByType(type) {
+    if (type === 'gif')
+        return 'image/gif';
+    if (type === 'jpg')
+        return 'image/jpeg';
+    if (type === 'png')
+        return 'image/png';
+    if (type === 'webp')
+        return 'image/webp';
+    if (type === 'srt')
+        return 'text/plain';
+    if (type === 'mp4' || type === 'longmp4')
+        return 'video/mp4';
+    return type;
+}
+function getMediaCategoryByMime(name, target) {
+    if (name === 'video/mp4')
+        return target === 'tweet' ? 'TweetVideo' : 'DmVideo';
+    if (name === 'image/gif')
+        return target === 'tweet' ? 'TweetGif' : 'DmGif';
+    if (name === 'text/plain')
+        return 'Subtitles';
+    else
+        return target === 'tweet' ? 'TweetImage' : 'DmImage';
+}
+exports.getMediaCategoryByMime = getMediaCategoryByMime;
+function sleepSecs(seconds) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}
+exports.sleepSecs = sleepSecs;
+async function readNextPartOf(file, chunkLength, bufferOffset = 0, buffer) {
+    if (file instanceof Buffer) {
+        const rt = file.slice(bufferOffset, bufferOffset + chunkLength);
+        return [rt, rt.length];
+    }
+    if (!buffer) {
+        throw new Error('Well, we will need a buffer to store file content.');
+    }
+    let bytesRead;
+    if (typeof file === 'number') {
+        bytesRead = await new Promise((resolve, reject) => {
+            fs.read(file, buffer, 0, chunkLength, bufferOffset, (err, nread) => {
+                if (err)
+                    reject(err);
+                resolve(nread);
+            });
+        });
+    }
+    else {
+        const res = await file.read(buffer, 0, chunkLength, bufferOffset);
+        bytesRead = res.bytesRead;
+    }
+    return [buffer, bytesRead];
+}
+exports.readNextPartOf = readNextPartOf;
+
+
+/***/ }),
+
+/***/ 1204:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiv2Labs = void 0;
+const globals_1 = __nccwpck_require__(3444);
+const client_v2_labs_write_1 = __importDefault(__nccwpck_require__(8191));
+/**
+ * Twitter v2 labs client with all rights (read/write/DMs)
+ */
+class TwitterApiv2Labs extends client_v2_labs_write_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_LABS_PREFIX;
+    }
+    /**
+     * Get a client with read/write rights.
+     */
+    get readWrite() {
+        return this;
+    }
+}
+exports.TwitterApiv2Labs = TwitterApiv2Labs;
+exports.default = TwitterApiv2Labs;
+
+
+/***/ }),
+
+/***/ 5248:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const client_subclient_1 = __importDefault(__nccwpck_require__(3810));
+const globals_1 = __nccwpck_require__(3444);
+/**
+ * Base Twitter v2 labs client with only read right.
+ */
+class TwitterApiv2LabsReadOnly extends client_subclient_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_LABS_PREFIX;
+    }
+}
+exports.default = TwitterApiv2LabsReadOnly;
+
+
+/***/ }),
+
+/***/ 8191:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const globals_1 = __nccwpck_require__(3444);
+const client_v2_labs_read_1 = __importDefault(__nccwpck_require__(5248));
+/**
+ * Base Twitter v2 labs client with read/write rights.
+ */
+class TwitterApiv2LabsReadWrite extends client_v2_labs_read_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_LABS_PREFIX;
+    }
+    /**
+     * Get a client with only read rights.
+     */
+    get readOnly() {
+        return this;
+    }
+}
+exports.default = TwitterApiv2LabsReadWrite;
+
+
+/***/ }),
+
+/***/ 4692:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiv2 = void 0;
+const globals_1 = __nccwpck_require__(3444);
+const client_v2_write_1 = __importDefault(__nccwpck_require__(5587));
+const client_v2_labs_1 = __importDefault(__nccwpck_require__(1204));
+/**
+ * Twitter v2 client with all rights (read/write/DMs)
+ */
+class TwitterApiv2 extends client_v2_write_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_PREFIX;
+    }
+    /* Sub-clients */
+    /**
+     * Get a client with read/write rights.
+     */
+    get readWrite() {
+        return this;
+    }
+    /**
+     * Get a client for v2 labs endpoints.
+     */
+    get labs() {
+        if (this._labs)
+            return this._labs;
+        return this._labs = new client_v2_labs_1.default(this);
+    }
+}
+exports.TwitterApiv2 = TwitterApiv2;
+exports.default = TwitterApiv2;
+
+
+/***/ }),
+
+/***/ 7318:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const client_subclient_1 = __importDefault(__nccwpck_require__(3810));
+const globals_1 = __nccwpck_require__(3444);
+const paginators_1 = __nccwpck_require__(5814);
+const client_v2_labs_read_1 = __importDefault(__nccwpck_require__(5248));
+const user_paginator_v2_1 = __nccwpck_require__(2178);
+const helpers_1 = __nccwpck_require__(1120);
+/**
+ * Base Twitter v2 client with only read right.
+ */
+class TwitterApiv2ReadOnly extends client_subclient_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_PREFIX;
+    }
+    /* Sub-clients */
+    /**
+     * Get a client for v2 labs endpoints.
+     */
+    get labs() {
+        if (this._labs)
+            return this._labs;
+        return this._labs = new client_v2_labs_read_1.default(this);
+    }
+    /* Tweets */
+    /**
+     * The recent search endpoint returns Tweets from the last seven days that match a search query.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent
+     */
+    async search(query, options = {}) {
+        const queryParams = { ...options, query };
+        const initialRq = await this.get('tweets/search/recent', queryParams, { fullResponse: true });
+        return new paginators_1.TweetSearchRecentV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * The full-archive search endpoint returns the complete history of public Tweets matching a search query;
+     * since the first Tweet was created March 26, 2006.
+     *
+     * This endpoint is only available to those users who have been approved for the Academic Research product track.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-all
+     */
+    async searchAll(query, options = {}) {
+        const queryParams = { ...options, query };
+        const initialRq = await this.get('tweets/search/all', queryParams, { fullResponse: true });
+        return new paginators_1.TweetSearchAllV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns a variety of information about a single Tweet specified by the requested ID.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets-id
+     *
+     * OAuth2 scope: `users.read`, `tweet.read`
+     */
+    singleTweet(tweetId, options = {}) {
+        return this.get('tweets/:id', options, { params: { id: tweetId } });
+    }
+    /**
+     * Returns a variety of information about tweets specified by list of IDs.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/lookup/api-reference/get-tweets
+     *
+     * OAuth2 scope: `users.read`, `tweet.read`
+     */
+    tweets(tweetIds, options = {}) {
+        return this.get('tweets', { ids: tweetIds, ...options });
+    }
+    /**
+     * The recent Tweet counts endpoint returns count of Tweets from the last seven days that match a search query.
+     * OAuth2 Bearer auth only.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/counts/api-reference/get-tweets-counts-recent
+     */
+    tweetCountRecent(query, options = {}) {
+        return this.get('tweets/counts/recent', { query, ...options });
+    }
+    /**
+     * This endpoint is only available to those users who have been approved for the Academic Research product track.
+     * The full-archive search endpoint returns the complete history of public Tweets matching a search query;
+     * since the first Tweet was created March 26, 2006.
+     * OAuth2 Bearer auth only.
+     * **This endpoint has pagination, yet it is not supported by bundled paginators. Use `next_token` to fetch next page.**
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/counts/api-reference/get-tweets-counts-all
+     */
+    tweetCountAll(query, options = {}) {
+        return this.get('tweets/counts/all', { query, ...options });
+    }
+    /**
+     * Allows you to get information about who has Retweeted a Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by
+     */
+    tweetRetweetedBy(tweetId, options = {}) {
+        return this.get('tweets/:id/retweeted_by', options, { params: { id: tweetId } });
+    }
+    /**
+     * Allows you to get information about who has Liked a Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users
+     */
+    tweetLikedBy(tweetId, options = {}) {
+        return this.get('tweets/:id/liking_users', options, { params: { id: tweetId } });
+    }
+    /**
+     * Returns Tweets composed by a single user, specified by the requested user ID.
+     * By default, the most recent ten Tweets are returned per request.
+     * Using pagination, the most recent 3,200 Tweets can be retrieved.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets
+     */
+    async userTimeline(userId, options = {}) {
+        const initialRq = await this.get('users/:id/tweets', options, {
+            fullResponse: true,
+            params: { id: userId },
+        });
+        return new paginators_1.TweetUserTimelineV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: options,
+            sharedParams: { id: userId },
+        });
+    }
+    /**
+     * Returns Tweets mentioning a single user specified by the requested user ID.
+     * By default, the most recent ten Tweets are returned per request.
+     * Using pagination, up to the most recent 800 Tweets can be retrieved.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-mentions
+     */
+    async userMentionTimeline(userId, options = {}) {
+        const initialRq = await this.get('users/:id/mentions', options, {
+            fullResponse: true,
+            params: { id: userId },
+        });
+        return new paginators_1.TweetUserMentionTimelineV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: options,
+            sharedParams: { id: userId },
+        });
+    }
+    /* Users */
+    /**
+     * Returns a variety of information about a single user specified by the requested ID.
+     * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-id
+     */
+    user(userId, options = {}) {
+        return this.get('users/:id', options, { params: { id: userId } });
+    }
+    /**
+     * Returns a variety of information about one or more users specified by the requested IDs.
+     * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users
+     */
+    users(userIds, options = {}) {
+        const ids = Array.isArray(userIds) ? userIds.join(',') : userIds;
+        return this.get('users', { ...options, ids });
+    }
+    /**
+     * Returns a variety of information about a single user specified by their username.
+     * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by-username-username
+     */
+    userByUsername(username, options = {}) {
+        return this.get('users/by/username/:username', options, { params: { username } });
+    }
+    /**
+     * Returns a variety of information about one or more users specified by their usernames.
+     * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-by
+     *
+     * OAuth2 scope: `users.read`, `tweet.read`
+     */
+    usersByUsernames(usernames, options = {}) {
+        usernames = Array.isArray(usernames) ? usernames.join(',') : usernames;
+        return this.get('users/by', { ...options, usernames });
+    }
+    async followers(userId, options = {}) {
+        const { asPaginator, ...parameters } = options;
+        const params = { id: userId };
+        if (!asPaginator) {
+            return this.get('users/:id/followers', parameters, { params });
+        }
+        const initialRq = await this.get('users/:id/followers', parameters, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserFollowersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: parameters,
+            sharedParams: params,
+        });
+    }
+    async following(userId, options = {}) {
+        const { asPaginator, ...parameters } = options;
+        const params = { id: userId };
+        if (!asPaginator) {
+            return this.get('users/:id/following', parameters, { params });
+        }
+        const initialRq = await this.get('users/:id/following', parameters, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserFollowingV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: parameters,
+            sharedParams: params,
+        });
+    }
+    /**
+     * Allows you to get information about a user’s liked Tweets.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-users-id-liked_tweets
+     */
+    async userLikedTweets(userId, options = {}) {
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/liked_tweets', options, { fullResponse: true, params });
+        return new paginators_1.TweetV2UserLikedTweetsPaginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns a list of users who are blocked by the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/blocks/api-reference/get-users-blocking
+     */
+    async userBlockingUsers(userId, options = {}) {
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/blocking', options, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserBlockingUsersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns a list of users who are muted by the authenticating user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/mutes/api-reference/get-users-muting
+     */
+    async userMutingUsers(options = {}) {
+        const { id_str: userId } = await this.getCurrentUserObject();
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/muting', options, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserMutingUsersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /* Spaces */
+    /**
+     * Get a single space by ID.
+     * https://developer.twitter.com/en/docs/twitter-api/spaces/lookup/api-reference/get-spaces-id
+     *
+     * OAuth2 scopes: `tweet.read`, `users.read`, `space.read`.
+     */
+    space(spaceId, options = {}) {
+        return this.get('spaces/:id', options, { params: { id: spaceId } });
+    }
+    /**
+     * Get spaces using their IDs.
+     * https://developer.twitter.com/en/docs/twitter-api/spaces/lookup/api-reference/get-spaces
+     *
+     * OAuth2 scopes: `tweet.read`, `users.read`, `space.read`.
+     */
+    spaces(spaceIds, options = {}) {
+        return this.get('spaces', { ids: spaceIds, ...options });
+    }
+    /**
+     * Get spaces using their creator user ID(s). (no pagination available)
+     * https://developer.twitter.com/en/docs/twitter-api/spaces/lookup/api-reference/get-spaces-by-creator-ids
+     *
+     * OAuth2 scopes: `tweet.read`, `users.read`, `space.read`.
+     */
+    spacesByCreators(creatorIds, options = {}) {
+        return this.get('spaces/by/creator_ids', { user_ids: creatorIds, ...options });
+    }
+    /**
+     * Search through spaces using multiple params. (no pagination available)
+     * https://developer.twitter.com/en/docs/twitter-api/spaces/search/api-reference/get-spaces-search
+     */
+    searchSpaces(options) {
+        return this.get('spaces/search', options);
+    }
+    searchStream({ autoConnect, ...options } = {}) {
+        return this.getStream('tweets/search/stream', options, { payloadIsError: helpers_1.isTweetStreamV2ErrorPayload, autoConnect });
+    }
+    /**
+     * Return a list of rules currently active on the streaming endpoint, either as a list or individually.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/api-reference/get-tweets-search-stream-rules
+     */
+    streamRules(options = {}) {
+        return this.get('tweets/search/stream/rules', options);
+    }
+    updateStreamRules(options, query = {}) {
+        return this.post('tweets/search/stream/rules', options, { query });
+    }
+    sampleStream({ autoConnect, ...options } = {}) {
+        return this.getStream('tweets/sample/stream', options, { payloadIsError: helpers_1.isTweetStreamV2ErrorPayload, autoConnect });
+    }
+    /* Batch compliance */
+    /**
+     * Returns a list of recent compliance jobs.
+     * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-compliance/api-reference/get-compliance-jobs
+     */
+    complianceJobs(options) {
+        return this.get('compliance/jobs', options);
+    }
+    /**
+     * Get a single compliance job with the specified ID.
+     * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-compliance/api-reference/get-compliance-jobs-id
+     */
+    complianceJob(jobId) {
+        return this.get('compliance/jobs/:id', undefined, { params: { id: jobId } });
+    }
+    /**
+     * Creates a new compliance job for Tweet IDs or user IDs, send your file, await result and parse it into an array.
+     * You can run one batch job at a time. Returns the created job, but **not the job result!**.
+     *
+     * You can obtain the result (**after job is completed**) with `.complianceJobResult`.
+     * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-compliance/api-reference/post-compliance-jobs
+     */
+    async sendComplianceJob(jobParams) {
+        const job = await this.post('compliance/jobs', { type: jobParams.type, name: jobParams.name });
+        // Send the IDs
+        const rawIdsBody = jobParams.ids instanceof Buffer ? jobParams.ids : Buffer.from(jobParams.ids.join('\n'));
+        // Upload the IDs
+        await this.put(job.data.upload_url, rawIdsBody, {
+            forceBodyMode: 'raw',
+            enableAuth: false,
+            headers: { 'Content-Type': 'text/plain' },
+            prefix: '',
+        });
+        return job;
+    }
+    /**
+     * Get the result of a running or completed job, obtained through `.complianceJob`, `.complianceJobs` or `.sendComplianceJob`.
+     * If job is still running (`in_progress`), it will await until job is completed. **This could be quite long!**
+     * https://developer.twitter.com/en/docs/twitter-api/compliance/batch-compliance/api-reference/post-compliance-jobs
+     */
+    async complianceJobResult(job) {
+        let runningJob = job;
+        while (runningJob.status !== 'complete') {
+            if (runningJob.status === 'expired' || runningJob.status === 'failed') {
+                throw new Error('Job failed to be completed.');
+            }
+            await new Promise(resolve => setTimeout(resolve, 3500));
+            runningJob = (await this.complianceJob(job.id)).data;
+        }
+        // Download and parse result
+        const result = await this.get(job.download_url, undefined, {
+            enableAuth: false,
+            prefix: '',
+        });
+        return result
+            .trim()
+            .split('\n')
+            .filter(line => line)
+            .map(line => JSON.parse(line));
+    }
+}
+exports.default = TwitterApiv2ReadOnly;
+
+
+/***/ }),
+
+/***/ 5587:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const globals_1 = __nccwpck_require__(3444);
+const client_v2_read_1 = __importDefault(__nccwpck_require__(7318));
+const client_v2_labs_write_1 = __importDefault(__nccwpck_require__(8191));
+/**
+ * Base Twitter v2 client with read/write rights.
+ */
+class TwitterApiv2ReadWrite extends client_v2_read_1.default {
+    constructor() {
+        super(...arguments);
+        this._prefix = globals_1.API_V2_PREFIX;
+    }
+    /* Sub-clients */
+    /**
+     * Get a client with only read rights.
+     */
+    get readOnly() {
+        return this;
+    }
+    /**
+     * Get a client for v2 labs endpoints.
+     */
+    get labs() {
+        if (this._labs)
+            return this._labs;
+        return this._labs = new client_v2_labs_write_1.default(this);
+    }
+    /* Tweets */
+    /**
+     * Hides or unhides a reply to a Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/hide-replies/api-reference/put-tweets-id-hidden
+     */
+    hideReply(tweetId, makeHidden) {
+        return this.put('tweets/:id/hidden', { hidden: makeHidden }, { params: { id: tweetId } });
+    }
+    /**
+     * Causes the user ID identified in the path parameter to Like the target Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/post-users-user_id-likes
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    like(loggedUserId, targetTweetId) {
+        return this.post('users/:id/likes', { tweet_id: targetTweetId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Allows a user or authenticated user ID to unlike a Tweet.
+     * The request succeeds with no action when the user sends a request to a user they're not liking the Tweet or have already unliked the Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/delete-users-id-likes-tweet_id
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    unlike(loggedUserId, targetTweetId) {
+        return this.delete('users/:id/likes/:tweet_id', undefined, {
+            params: { id: loggedUserId, tweet_id: targetTweetId },
+        });
+    }
+    /**
+     * Causes the user ID identified in the path parameter to Retweet the target Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/post-users-id-retweets
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    retweet(loggedUserId, targetTweetId) {
+        return this.post('users/:id/retweets', { tweet_id: targetTweetId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Allows a user or authenticated user ID to remove the Retweet of a Tweet.
+     * The request succeeds with no action when the user sends a request to a user they're not Retweeting the Tweet or have already removed the Retweet of.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/delete-users-id-retweets-tweet_id
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    unretweet(loggedUserId, targetTweetId) {
+        return this.delete('users/:id/retweets/:tweet_id', undefined, {
+            params: { id: loggedUserId, tweet_id: targetTweetId },
+        });
+    }
+    /* Users */
+    /**
+     * Allows a user ID to follow another user.
+     * If the target user does not have public Tweets, this endpoint will send a follow request.
+     * https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/post-users-source_user_id-following
+     *
+     * OAuth2 scope: `account.follows.write`
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    follow(loggedUserId, targetUserId) {
+        return this.post('users/:id/following', { target_user_id: targetUserId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Allows a user ID to unfollow another user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/delete-users-source_id-following
+     *
+     * OAuth2 scope: `account.follows.write`
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    unfollow(loggedUserId, targetUserId) {
+        return this.delete('users/:source_user_id/following/:target_user_id', undefined, {
+            params: { source_user_id: loggedUserId, target_user_id: targetUserId },
+        });
+    }
+    /**
+     * Causes the user (in the path) to block the target user.
+     * The user (in the path) must match the user context authorizing the request.
+     * https://developer.twitter.com/en/docs/twitter-api/users/blocks/api-reference/post-users-user_id-blocking
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    block(loggedUserId, targetUserId) {
+        return this.post('users/:id/blocking', { target_user_id: targetUserId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Allows a user or authenticated user ID to unblock another user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/blocks/api-reference/delete-users-user_id-blocking
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    unblock(loggedUserId, targetUserId) {
+        return this.delete('users/:source_user_id/blocking/:target_user_id', undefined, {
+            params: { source_user_id: loggedUserId, target_user_id: targetUserId },
+        });
+    }
+    /**
+     * Allows an authenticated user ID to mute the target user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/mutes/api-reference/post-users-user_id-muting
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    mute(loggedUserId, targetUserId) {
+        return this.post('users/:id/muting', { target_user_id: targetUserId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Allows an authenticated user ID to unmute the target user.
+     * The request succeeds with no action when the user sends a request to a user they're not muting or have already unmuted.
+     * https://developer.twitter.com/en/docs/twitter-api/users/mutes/api-reference/delete-users-user_id-muting
+     *
+     * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
+     */
+    unmute(loggedUserId, targetUserId) {
+        return this.delete('users/:source_user_id/muting/:target_user_id', undefined, {
+            params: { source_user_id: loggedUserId, target_user_id: targetUserId },
+        });
+    }
+    /* Lists */
+    /**
+     * Creates a new list for the authenticated user.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/post-lists
+     */
+    createList(options) {
+        return this.post('lists', options);
+    }
+    /**
+     * Updates the specified list. The authenticated user must own the list to be able to update it.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/put-lists-id
+     */
+    updateList(listId, options = {}) {
+        return this.put('lists/:id', options, { params: { id: listId } });
+    }
+    /**
+     * Deletes the specified list. The authenticated user must own the list to be able to destroy it.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/delete-lists-id
+     */
+    removeList(listId) {
+        return this.delete('lists/:id', undefined, { params: { id: listId } });
+    }
+    /**
+     * Adds a member to a list.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/post-lists-id-members
+     */
+    addListMember(listId, userId) {
+        return this.post('lists/:id/members', { user_id: userId }, { params: { id: listId } });
+    }
+    /**
+     * Remember a member to a list.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/delete-lists-id-members-user_id
+     */
+    removeListMember(listId, userId) {
+        return this.delete('lists/:id/members/:user_id', undefined, { params: { id: listId, user_id: userId } });
+    }
+    /**
+     * Subscribes the authenticated user to the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/post-users-id-followed-lists
+     */
+    subscribeToList(loggedUserId, listId) {
+        return this.post('users/:id/followed_lists', { list_id: listId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Unsubscribes the authenticated user to the specified list.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/delete-users-id-followed-lists-list_id
+     */
+    unsubscribeOfList(loggedUserId, listId) {
+        return this.delete('users/:id/followed_lists/:list_id', undefined, { params: { id: loggedUserId, list_id: listId } });
+    }
+    /**
+     * Enables the authenticated user to pin a List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/post-users-id-pinned-lists
+     */
+    pinList(loggedUserId, listId) {
+        return this.post('users/:id/pinned_lists', { list_id: listId }, { params: { id: loggedUserId } });
+    }
+    /**
+     * Enables the authenticated user to unpin a List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/manage-lists/api-reference/delete-users-id-pinned-lists-list_id
+     */
+    unpinList(loggedUserId, listId) {
+        return this.delete('users/:id/pinned_lists/:list_id', undefined, { params: { id: loggedUserId, list_id: listId } });
+    }
+}
+exports.default = TwitterApiv2ReadWrite;
+
+
+/***/ }),
+
+/***/ 2357:
 /***/ ((module) => {
 
 "use strict";
@@ -5275,7 +6996,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 417:
+/***/ 6417:
 /***/ ((module) => {
 
 "use strict";
@@ -5283,7 +7004,7 @@ module.exports = require("crypto");
 
 /***/ }),
 
-/***/ 614:
+/***/ 8614:
 /***/ ((module) => {
 
 "use strict";
@@ -5291,7 +7012,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 747:
+/***/ 5747:
 /***/ ((module) => {
 
 "use strict";
@@ -5299,7 +7020,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 605:
+/***/ 8605:
 /***/ ((module) => {
 
 "use strict";
@@ -5307,7 +7028,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 211:
+/***/ 7211:
 /***/ ((module) => {
 
 "use strict";
@@ -5315,7 +7036,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 631:
+/***/ 1631:
 /***/ ((module) => {
 
 "use strict";
@@ -5323,7 +7044,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 87:
+/***/ 2087:
 /***/ ((module) => {
 
 "use strict";
@@ -5331,7 +7052,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 622:
+/***/ 5622:
 /***/ ((module) => {
 
 "use strict";
@@ -5339,23 +7060,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 413:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("stream");
-
-/***/ }),
-
-/***/ 304:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("string_decoder");
-
-/***/ }),
-
-/***/ 16:
+/***/ 4016:
 /***/ ((module) => {
 
 "use strict";
@@ -5363,27 +7068,11 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 835:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("url");
-
-/***/ }),
-
-/***/ 669:
+/***/ 1669:
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("util");
-
-/***/ }),
-
-/***/ 761:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("zlib");
 
 /***/ })
 
@@ -5431,8 +7120,8 @@ var __webpack_exports__ = {};
 "use strict";
 
 
-const core = __nccwpck_require__(186)
-const Twitter = __nccwpck_require__(651)
+const core = __nccwpck_require__(2186)
+const { TwitterApi } = __nccwpck_require__(9360)
 
 // most @actions toolkit packages have async methods
 async function run () {
@@ -5449,17 +7138,17 @@ async function run () {
     const accessToken = getEnv('TWITTER_ACCESS_TOKEN', { mandatory: false })
     const accessTokenSecret = getEnv('TWITTER_ACCESS_TOKEN_SECRET', { mandatory: false })
 
-    const client = new Twitter({
-      consumer_key: consumerKey,
-      consumer_secret: consumerSecret,
-      access_token_key: accessToken,
-      access_token_secret: accessTokenSecret
+    const client = new TwitterApi({
+      appKey: consumerKey,
+      appSecret: consumerSecret,
+      accessToken: accessToken,
+      accessSecret: accessTokenSecret
     })
 
-    const { data } = await client.post('tweets', {
+    const response = await client.v2.post('tweets', {
       text: tweet
     })
-    console.log(data)
+    console.log(response)
   } catch (error) {
     core.setFailed(error.message)
   }

@@ -1,7 +1,7 @@
 'use strict'
 
 const core = require('@actions/core')
-const Twitter = require('twitter-v2')
+const { TwitterApi } = require('twitter-api-v2')
 
 // most @actions toolkit packages have async methods
 async function run () {
@@ -18,17 +18,17 @@ async function run () {
     const accessToken = getEnv('TWITTER_ACCESS_TOKEN', { mandatory: false })
     const accessTokenSecret = getEnv('TWITTER_ACCESS_TOKEN_SECRET', { mandatory: false })
 
-    const client = new Twitter({
-      consumer_key: consumerKey,
-      consumer_secret: consumerSecret,
-      access_token_key: accessToken,
-      access_token_secret: accessTokenSecret
+    const client = new TwitterApi({
+      appKey: consumerKey,
+      appSecret: consumerSecret,
+      accessToken: accessToken,
+      accessSecret: accessTokenSecret
     })
 
-    const { data } = await client.post('tweets', {
+    const response = await client.v2.post('tweets', {
       text: tweet
     })
-    console.log(data)
+    console.log(response)
   } catch (error) {
     core.setFailed(error.message)
   }
