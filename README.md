@@ -12,10 +12,12 @@ To allow GitHub Actions to send tweets programmatically, you'll need to:
 
 ## Secret Configuration
 
-- `TWITTER_CONSUMER_API_KEY`
-- `TWITTER_CONSUMER_API_SECRET`
-- `TWITTER_ACCESS_TOKEN`
-- `TWITTER_ACCESS_TOKEN_SECRET`
+This configuration lets you to tweet using your Twitter account.
+
+- `TWITTER_CONSUMER_API_KEY`: the application consumer key.
+- `TWITTER_CONSUMER_API_SECRET`: the application consumer secret.
+- `TWITTER_ACCESS_TOKEN`: your user access token, generated from the developer console.
+- `TWITTER_ACCESS_TOKEN_SECRET`: your user access token secret, generated from the developer console.
 
 ## Usage
 
