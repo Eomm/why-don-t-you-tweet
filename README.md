@@ -59,6 +59,9 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
 ```
 
+This workflow is ready to use within the [`releasify`](https://github.com/fastify/releasify) CLI!
+Give it a try!
+
 ## Development this Action
 
 Read the [developer documentation](https://github.com/actions/javascript-action#package-for-distribution).
