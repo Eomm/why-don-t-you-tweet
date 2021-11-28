@@ -3,6 +3,7 @@ description: 'Tweet your GitHub Actions results'
 inputs:
   tweet-message:
     description: The tweet message to post to twitter.
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'
