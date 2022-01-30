@@ -6,9 +6,9 @@
   "scripts": {
     "lint:fix": "standard --fix",
     "lint": "standard",
-    "prepare": "ncc build index.js -o dist --source-map --license licenses.txt",
-    "test": "tap test/*.test.js",
-    "all": "npm run lint && npm run prepare && npm run test"
+    "prepare": "husky install",
+    "build": "ncc build index.js -o dist --license licenses.txt",
+    "test": "npm run lint && tap test/*.test.js"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,8 @@
   },
   "devDependencies": {
     "@vercel/ncc": "^0.31.1",
-    "tap": "^15.0.0",
-    "standard": "^16.0.4"
+    "husky": "^7.0.4",
+    "standard": "^16.0.4",
+    "tap": "^15.0.0"
   }
 }
