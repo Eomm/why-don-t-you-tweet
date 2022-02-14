@@ -38,7 +38,7 @@
     ]
   },
   "devDependencies": {
-    "@vercel/ncc": "^0.33.1",
+    "@vercel/ncc": "^0.33.3",
     "husky": "^7.0.4",
     "standard": "^16.0.4",
     "tap": "^15.1.6"
