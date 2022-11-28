@@ -1,6 +1,6 @@
 {
   "name": "why-don-t-you-tweet",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Tweet your GitHub events!",
   "main": "index.js",
   "scripts": {
