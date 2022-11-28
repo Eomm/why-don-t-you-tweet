@@ -27,7 +27,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.issue = exports.issueCommand = void 0;
-const os = __importStar(__nccwpck_require__(2087));
+const os = __importStar(__nccwpck_require__(2037));
 const utils_1 = __nccwpck_require__(5278);
 /**
  * Commands
@@ -138,8 +138,8 @@ exports.getIDToken = exports.getState = exports.saveState = exports.group = expo
 const command_1 = __nccwpck_require__(7351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(5278);
-const os = __importStar(__nccwpck_require__(2087));
-const path = __importStar(__nccwpck_require__(5622));
+const os = __importStar(__nccwpck_require__(2037));
+const path = __importStar(__nccwpck_require__(1017));
 const oidc_utils_1 = __nccwpck_require__(8041);
 /**
  * The code to exit an action
@@ -169,13 +169,9 @@ function exportVariable(name, val) {
     process.env[name] = convertedVal;
     const filePath = process.env['GITHUB_ENV'] || '';
     if (filePath) {
-        const delimiter = '_GitHubActionsFileCommandDelimeter_';
-        const commandValue = `${name}<<${delimiter}${os.EOL}${convertedVal}${os.EOL}${delimiter}`;
-        file_command_1.issueCommand('ENV', commandValue);
+        return file_command_1.issueFileCommand('ENV', file_command_1.prepareKeyValueMessage(name, val));
     }
-    else {
-        command_1.issueCommand('set-env', { name }, convertedVal);
-    }
+    command_1.issueCommand('set-env', { name }, convertedVal);
 }
 exports.exportVariable = exportVariable;
 /**
@@ -193,7 +189,7 @@ exports.setSecret = setSecret;
 function addPath(inputPath) {
     const filePath = process.env['GITHUB_PATH'] || '';
     if (filePath) {
-        file_command_1.issueCommand('PATH', inputPath);
+        file_command_1.issueFileCommand('PATH', inputPath);
     }
     else {
         command_1.issueCommand('add-path', {}, inputPath);
@@ -233,7 +229,10 @@ function getMultilineInput(name, options) {
     const inputs = getInput(name, options)
         .split('\n')
         .filter(x => x !== '');
-    return inputs;
+    if (options && options.trimWhitespace === false) {
+        return inputs;
+    }
+    return inputs.map(input => input.trim());
 }
 exports.getMultilineInput = getMultilineInput;
 /**
@@ -266,8 +265,12 @@ exports.getBooleanInput = getBooleanInput;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setOutput(name, value) {
+    const filePath = process.env['GITHUB_OUTPUT'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('OUTPUT', file_command_1.prepareKeyValueMessage(name, value));
+    }
     process.stdout.write(os.EOL);
-    command_1.issueCommand('set-output', { name }, value);
+    command_1.issueCommand('set-output', { name }, utils_1.toCommandValue(value));
 }
 exports.setOutput = setOutput;
 /**
@@ -396,7 +399,11 @@ exports.group = group;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
+    const filePath = process.env['GITHUB_STATE'] || '';
+    if (filePath) {
+        return file_command_1.issueFileCommand('STATE', file_command_1.prepareKeyValueMessage(name, value));
+    }
+    command_1.issueCommand('save-state', { name }, utils_1.toCommandValue(value));
 }
 exports.saveState = saveState;
 /**
@@ -415,6 +422,23 @@ function getIDToken(aud) {
     });
 }
 exports.getIDToken = getIDToken;
+/**
+ * Summary exports
+ */
+var summary_1 = __nccwpck_require__(1327);
+Object.defineProperty(exports, "summary", ({ enumerable: true, get: function () { return summary_1.summary; } }));
+/**
+ * @deprecated use core.summary
+ */
+var summary_2 = __nccwpck_require__(1327);
+Object.defineProperty(exports, "markdownSummary", ({ enumerable: true, get: function () { return summary_2.markdownSummary; } }));
+/**
+ * Path exports
+ */
+var path_utils_1 = __nccwpck_require__(2981);
+Object.defineProperty(exports, "toPosixPath", ({ enumerable: true, get: function () { return path_utils_1.toPosixPath; } }));
+Object.defineProperty(exports, "toWin32Path", ({ enumerable: true, get: function () { return path_utils_1.toWin32Path; } }));
+Object.defineProperty(exports, "toPlatformPath", ({ enumerable: true, get: function () { return path_utils_1.toPlatformPath; } }));
 //# sourceMappingURL=core.js.map
 
 /***/ }),
@@ -445,13 +469,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.issueCommand = void 0;
+exports.prepareKeyValueMessage = exports.issueFileCommand = void 0;
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar(__nccwpck_require__(5747));
-const os = __importStar(__nccwpck_require__(2087));
+const fs = __importStar(__nccwpck_require__(7147));
+const os = __importStar(__nccwpck_require__(2037));
+const uuid_1 = __nccwpck_require__(8974);
 const utils_1 = __nccwpck_require__(5278);
-function issueCommand(command, message) {
+function issueFileCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
         throw new Error(`Unable to find environment variable for file command ${command}`);
@@ -463,7 +488,22 @@ function issueCommand(command, message) {
         encoding: 'utf8'
     });
 }
-exports.issueCommand = issueCommand;
+exports.issueFileCommand = issueFileCommand;
+function prepareKeyValueMessage(key, value) {
+    const delimiter = `ghadelimiter_${uuid_1.v4()}`;
+    const convertedValue = utils_1.toCommandValue(value);
+    // These should realistically never happen, but just in case someone finds a
+    // way to exploit uuid generation let's not allow keys or values that contain
+    // the delimiter.
+    if (key.includes(delimiter)) {
+        throw new Error(`Unexpected input: name should not contain the delimiter "${delimiter}"`);
+    }
+    if (convertedValue.includes(delimiter)) {
+        throw new Error(`Unexpected input: value should not contain the delimiter "${delimiter}"`);
+    }
+    return `${key}<<${delimiter}${os.EOL}${convertedValue}${os.EOL}${delimiter}`;
+}
+exports.prepareKeyValueMessage = prepareKeyValueMessage;
 //# sourceMappingURL=file-command.js.map
 
 /***/ }),
@@ -484,8 +524,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OidcClient = void 0;
-const http_client_1 = __nccwpck_require__(9925);
-const auth_1 = __nccwpck_require__(3702);
+const http_client_1 = __nccwpck_require__(6255);
+const auth_1 = __nccwpck_require__(5526);
 const core_1 = __nccwpck_require__(2186);
 class OidcClient {
     static createHttpClient(allowRetry = true, maxRetry = 10) {
@@ -552,6 +592,361 @@ exports.OidcClient = OidcClient;
 
 /***/ }),
 
+/***/ 2981:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = void 0;
+const path = __importStar(__nccwpck_require__(1017));
+/**
+ * toPosixPath converts the given path to the posix form. On Windows, \\ will be
+ * replaced with /.
+ *
+ * @param pth. Path to transform.
+ * @return string Posix path.
+ */
+function toPosixPath(pth) {
+    return pth.replace(/[\\]/g, '/');
+}
+exports.toPosixPath = toPosixPath;
+/**
+ * toWin32Path converts the given path to the win32 form. On Linux, / will be
+ * replaced with \\.
+ *
+ * @param pth. Path to transform.
+ * @return string Win32 path.
+ */
+function toWin32Path(pth) {
+    return pth.replace(/[/]/g, '\\');
+}
+exports.toWin32Path = toWin32Path;
+/**
+ * toPlatformPath converts the given path to a platform-specific path. It does
+ * this by replacing instances of / and \ with the platform-specific path
+ * separator.
+ *
+ * @param pth The path to platformize.
+ * @return string The platform-specific path.
+ */
+function toPlatformPath(pth) {
+    return pth.replace(/[/\\]/g, path.sep);
+}
+exports.toPlatformPath = toPlatformPath;
+//# sourceMappingURL=path-utils.js.map
+
+/***/ }),
+
+/***/ 1327:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.summary = exports.markdownSummary = exports.SUMMARY_DOCS_URL = exports.SUMMARY_ENV_VAR = void 0;
+const os_1 = __nccwpck_require__(2037);
+const fs_1 = __nccwpck_require__(7147);
+const { access, appendFile, writeFile } = fs_1.promises;
+exports.SUMMARY_ENV_VAR = 'GITHUB_STEP_SUMMARY';
+exports.SUMMARY_DOCS_URL = 'https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary';
+class Summary {
+    constructor() {
+        this._buffer = '';
+    }
+    /**
+     * Finds the summary file path from the environment, rejects if env var is not found or file does not exist
+     * Also checks r/w permissions.
+     *
+     * @returns step summary file path
+     */
+    filePath() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this._filePath) {
+                return this._filePath;
+            }
+            const pathFromEnv = process.env[exports.SUMMARY_ENV_VAR];
+            if (!pathFromEnv) {
+                throw new Error(`Unable to find environment variable for $${exports.SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);
+            }
+            try {
+                yield access(pathFromEnv, fs_1.constants.R_OK | fs_1.constants.W_OK);
+            }
+            catch (_a) {
+                throw new Error(`Unable to access summary file: '${pathFromEnv}'. Check if the file has correct read/write permissions.`);
+            }
+            this._filePath = pathFromEnv;
+            return this._filePath;
+        });
+    }
+    /**
+     * Wraps content in an HTML tag, adding any HTML attributes
+     *
+     * @param {string} tag HTML tag to wrap
+     * @param {string | null} content content within the tag
+     * @param {[attribute: string]: string} attrs key-value list of HTML attributes to add
+     *
+     * @returns {string} content wrapped in HTML element
+     */
+    wrap(tag, content, attrs = {}) {
+        const htmlAttrs = Object.entries(attrs)
+            .map(([key, value]) => ` ${key}="${value}"`)
+            .join('');
+        if (!content) {
+            return `<${tag}${htmlAttrs}>`;
+        }
+        return `<${tag}${htmlAttrs}>${content}</${tag}>`;
+    }
+    /**
+     * Writes text in the buffer to the summary buffer file and empties buffer. Will append by default.
+     *
+     * @param {SummaryWriteOptions} [options] (optional) options for write operation
+     *
+     * @returns {Promise<Summary>} summary instance
+     */
+    write(options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const overwrite = !!(options === null || options === void 0 ? void 0 : options.overwrite);
+            const filePath = yield this.filePath();
+            const writeFunc = overwrite ? writeFile : appendFile;
+            yield writeFunc(filePath, this._buffer, { encoding: 'utf8' });
+            return this.emptyBuffer();
+        });
+    }
+    /**
+     * Clears the summary buffer and wipes the summary file
+     *
+     * @returns {Summary} summary instance
+     */
+    clear() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.emptyBuffer().write({ overwrite: true });
+        });
+    }
+    /**
+     * Returns the current summary buffer as a string
+     *
+     * @returns {string} string of summary buffer
+     */
+    stringify() {
+        return this._buffer;
+    }
+    /**
+     * If the summary buffer is empty
+     *
+     * @returns {boolen} true if the buffer is empty
+     */
+    isEmptyBuffer() {
+        return this._buffer.length === 0;
+    }
+    /**
+     * Resets the summary buffer without writing to summary file
+     *
+     * @returns {Summary} summary instance
+     */
+    emptyBuffer() {
+        this._buffer = '';
+        return this;
+    }
+    /**
+     * Adds raw text to the summary buffer
+     *
+     * @param {string} text content to add
+     * @param {boolean} [addEOL=false] (optional) append an EOL to the raw text (default: false)
+     *
+     * @returns {Summary} summary instance
+     */
+    addRaw(text, addEOL = false) {
+        this._buffer += text;
+        return addEOL ? this.addEOL() : this;
+    }
+    /**
+     * Adds the operating system-specific end-of-line marker to the buffer
+     *
+     * @returns {Summary} summary instance
+     */
+    addEOL() {
+        return this.addRaw(os_1.EOL);
+    }
+    /**
+     * Adds an HTML codeblock to the summary buffer
+     *
+     * @param {string} code content to render within fenced code block
+     * @param {string} lang (optional) language to syntax highlight code
+     *
+     * @returns {Summary} summary instance
+     */
+    addCodeBlock(code, lang) {
+        const attrs = Object.assign({}, (lang && { lang }));
+        const element = this.wrap('pre', this.wrap('code', code), attrs);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML list to the summary buffer
+     *
+     * @param {string[]} items list of items to render
+     * @param {boolean} [ordered=false] (optional) if the rendered list should be ordered or not (default: false)
+     *
+     * @returns {Summary} summary instance
+     */
+    addList(items, ordered = false) {
+        const tag = ordered ? 'ol' : 'ul';
+        const listItems = items.map(item => this.wrap('li', item)).join('');
+        const element = this.wrap(tag, listItems);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML table to the summary buffer
+     *
+     * @param {SummaryTableCell[]} rows table rows
+     *
+     * @returns {Summary} summary instance
+     */
+    addTable(rows) {
+        const tableBody = rows
+            .map(row => {
+            const cells = row
+                .map(cell => {
+                if (typeof cell === 'string') {
+                    return this.wrap('td', cell);
+                }
+                const { header, data, colspan, rowspan } = cell;
+                const tag = header ? 'th' : 'td';
+                const attrs = Object.assign(Object.assign({}, (colspan && { colspan })), (rowspan && { rowspan }));
+                return this.wrap(tag, data, attrs);
+            })
+                .join('');
+            return this.wrap('tr', cells);
+        })
+            .join('');
+        const element = this.wrap('table', tableBody);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds a collapsable HTML details element to the summary buffer
+     *
+     * @param {string} label text for the closed state
+     * @param {string} content collapsable content
+     *
+     * @returns {Summary} summary instance
+     */
+    addDetails(label, content) {
+        const element = this.wrap('details', this.wrap('summary', label) + content);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML image tag to the summary buffer
+     *
+     * @param {string} src path to the image you to embed
+     * @param {string} alt text description of the image
+     * @param {SummaryImageOptions} options (optional) addition image attributes
+     *
+     * @returns {Summary} summary instance
+     */
+    addImage(src, alt, options) {
+        const { width, height } = options || {};
+        const attrs = Object.assign(Object.assign({}, (width && { width })), (height && { height }));
+        const element = this.wrap('img', null, Object.assign({ src, alt }, attrs));
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML section heading element
+     *
+     * @param {string} text heading text
+     * @param {number | string} [level=1] (optional) the heading level, default: 1
+     *
+     * @returns {Summary} summary instance
+     */
+    addHeading(text, level) {
+        const tag = `h${level}`;
+        const allowedTag = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tag)
+            ? tag
+            : 'h1';
+        const element = this.wrap(allowedTag, text);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML thematic break (<hr>) to the summary buffer
+     *
+     * @returns {Summary} summary instance
+     */
+    addSeparator() {
+        const element = this.wrap('hr', null);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML line break (<br>) to the summary buffer
+     *
+     * @returns {Summary} summary instance
+     */
+    addBreak() {
+        const element = this.wrap('br', null);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML blockquote to the summary buffer
+     *
+     * @param {string} text quote text
+     * @param {string} cite (optional) citation url
+     *
+     * @returns {Summary} summary instance
+     */
+    addQuote(text, cite) {
+        const attrs = Object.assign({}, (cite && { cite }));
+        const element = this.wrap('blockquote', text, attrs);
+        return this.addRaw(element).addEOL();
+    }
+    /**
+     * Adds an HTML anchor tag to the summary buffer
+     *
+     * @param {string} text link text/content
+     * @param {string} href hyperlink
+     *
+     * @returns {Summary} summary instance
+     */
+    addLink(text, href) {
+        const element = this.wrap('a', text, { href });
+        return this.addRaw(element).addEOL();
+    }
+}
+const _summary = new Summary();
+/**
+ * @deprecated use `core.summary`
+ */
+exports.markdownSummary = _summary;
+exports.summary = _summary;
+//# sourceMappingURL=summary.js.map
+
+/***/ }),
+
 /***/ 5278:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -599,28 +994,687 @@ exports.toCommandProperties = toCommandProperties;
 
 /***/ }),
 
-/***/ 3702:
+/***/ 8974:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+Object.defineProperty(exports, "v1", ({
+  enumerable: true,
+  get: function () {
+    return _v.default;
+  }
+}));
+Object.defineProperty(exports, "v3", ({
+  enumerable: true,
+  get: function () {
+    return _v2.default;
+  }
+}));
+Object.defineProperty(exports, "v4", ({
+  enumerable: true,
+  get: function () {
+    return _v3.default;
+  }
+}));
+Object.defineProperty(exports, "v5", ({
+  enumerable: true,
+  get: function () {
+    return _v4.default;
+  }
+}));
+Object.defineProperty(exports, "NIL", ({
+  enumerable: true,
+  get: function () {
+    return _nil.default;
+  }
+}));
+Object.defineProperty(exports, "version", ({
+  enumerable: true,
+  get: function () {
+    return _version.default;
+  }
+}));
+Object.defineProperty(exports, "validate", ({
+  enumerable: true,
+  get: function () {
+    return _validate.default;
+  }
+}));
+Object.defineProperty(exports, "stringify", ({
+  enumerable: true,
+  get: function () {
+    return _stringify.default;
+  }
+}));
+Object.defineProperty(exports, "parse", ({
+  enumerable: true,
+  get: function () {
+    return _parse.default;
+  }
+}));
+
+var _v = _interopRequireDefault(__nccwpck_require__(1595));
+
+var _v2 = _interopRequireDefault(__nccwpck_require__(6993));
+
+var _v3 = _interopRequireDefault(__nccwpck_require__(1472));
+
+var _v4 = _interopRequireDefault(__nccwpck_require__(6217));
+
+var _nil = _interopRequireDefault(__nccwpck_require__(2381));
+
+var _version = _interopRequireDefault(__nccwpck_require__(427));
+
+var _validate = _interopRequireDefault(__nccwpck_require__(2609));
+
+var _stringify = _interopRequireDefault(__nccwpck_require__(1458));
+
+var _parse = _interopRequireDefault(__nccwpck_require__(6385));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+
+/***/ 5842:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function md5(bytes) {
+  if (Array.isArray(bytes)) {
+    bytes = Buffer.from(bytes);
+  } else if (typeof bytes === 'string') {
+    bytes = Buffer.from(bytes, 'utf8');
+  }
+
+  return _crypto.default.createHash('md5').update(bytes).digest();
+}
+
+var _default = md5;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 2381:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _default = '00000000-0000-0000-0000-000000000000';
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 6385:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _validate = _interopRequireDefault(__nccwpck_require__(2609));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function parse(uuid) {
+  if (!(0, _validate.default)(uuid)) {
+    throw TypeError('Invalid UUID');
+  }
+
+  let v;
+  const arr = new Uint8Array(16); // Parse ########-....-....-....-............
+
+  arr[0] = (v = parseInt(uuid.slice(0, 8), 16)) >>> 24;
+  arr[1] = v >>> 16 & 0xff;
+  arr[2] = v >>> 8 & 0xff;
+  arr[3] = v & 0xff; // Parse ........-####-....-....-............
+
+  arr[4] = (v = parseInt(uuid.slice(9, 13), 16)) >>> 8;
+  arr[5] = v & 0xff; // Parse ........-....-####-....-............
+
+  arr[6] = (v = parseInt(uuid.slice(14, 18), 16)) >>> 8;
+  arr[7] = v & 0xff; // Parse ........-....-....-####-............
+
+  arr[8] = (v = parseInt(uuid.slice(19, 23), 16)) >>> 8;
+  arr[9] = v & 0xff; // Parse ........-....-....-....-############
+  // (Use "/" to avoid 32-bit truncation when bit-shifting high-order bytes)
+
+  arr[10] = (v = parseInt(uuid.slice(24, 36), 16)) / 0x10000000000 & 0xff;
+  arr[11] = v / 0x100000000 & 0xff;
+  arr[12] = v >>> 24 & 0xff;
+  arr[13] = v >>> 16 & 0xff;
+  arr[14] = v >>> 8 & 0xff;
+  arr[15] = v & 0xff;
+  return arr;
+}
+
+var _default = parse;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 6230:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 9784:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = rng;
+
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const rnds8Pool = new Uint8Array(256); // # of random values to pre-allocate
+
+let poolPtr = rnds8Pool.length;
+
+function rng() {
+  if (poolPtr > rnds8Pool.length - 16) {
+    _crypto.default.randomFillSync(rnds8Pool);
+
+    poolPtr = 0;
+  }
+
+  return rnds8Pool.slice(poolPtr, poolPtr += 16);
+}
+
+/***/ }),
+
+/***/ 8844:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _crypto = _interopRequireDefault(__nccwpck_require__(6113));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function sha1(bytes) {
+  if (Array.isArray(bytes)) {
+    bytes = Buffer.from(bytes);
+  } else if (typeof bytes === 'string') {
+    bytes = Buffer.from(bytes, 'utf8');
+  }
+
+  return _crypto.default.createHash('sha1').update(bytes).digest();
+}
+
+var _default = sha1;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 1458:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _validate = _interopRequireDefault(__nccwpck_require__(2609));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Convert array of 16 byte values to UUID string format of the form:
+ * XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+ */
+const byteToHex = [];
+
+for (let i = 0; i < 256; ++i) {
+  byteToHex.push((i + 0x100).toString(16).substr(1));
+}
+
+function stringify(arr, offset = 0) {
+  // Note: Be careful editing this code!  It's been tuned for performance
+  // and works in ways you may not expect. See https://github.com/uuidjs/uuid/pull/434
+  const uuid = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase(); // Consistency check for valid UUID.  If this throws, it's likely due to one
+  // of the following:
+  // - One or more input array values don't map to a hex octet (leading to
+  // "undefined" in the uuid)
+  // - Invalid input values for the RFC `version` or `variant` fields
+
+  if (!(0, _validate.default)(uuid)) {
+    throw TypeError('Stringified UUID is invalid');
+  }
+
+  return uuid;
+}
+
+var _default = stringify;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 1595:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _rng = _interopRequireDefault(__nccwpck_require__(9784));
+
+var _stringify = _interopRequireDefault(__nccwpck_require__(1458));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// **`v1()` - Generate time-based UUID**
+//
+// Inspired by https://github.com/LiosK/UUID.js
+// and http://docs.python.org/library/uuid.html
+let _nodeId;
+
+let _clockseq; // Previous uuid creation time
+
+
+let _lastMSecs = 0;
+let _lastNSecs = 0; // See https://github.com/uuidjs/uuid for API details
+
+function v1(options, buf, offset) {
+  let i = buf && offset || 0;
+  const b = buf || new Array(16);
+  options = options || {};
+  let node = options.node || _nodeId;
+  let clockseq = options.clockseq !== undefined ? options.clockseq : _clockseq; // node and clockseq need to be initialized to random values if they're not
+  // specified.  We do this lazily to minimize issues related to insufficient
+  // system entropy.  See #189
+
+  if (node == null || clockseq == null) {
+    const seedBytes = options.random || (options.rng || _rng.default)();
+
+    if (node == null) {
+      // Per 4.5, create and 48-bit node id, (47 random bits + multicast bit = 1)
+      node = _nodeId = [seedBytes[0] | 0x01, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+    }
+
+    if (clockseq == null) {
+      // Per 4.2.2, randomize (14 bit) clockseq
+      clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 0x3fff;
+    }
+  } // UUID timestamps are 100 nano-second units since the Gregorian epoch,
+  // (1582-10-15 00:00).  JSNumbers aren't precise enough for this, so
+  // time is handled internally as 'msecs' (integer milliseconds) and 'nsecs'
+  // (100-nanoseconds offset from msecs) since unix epoch, 1970-01-01 00:00.
+
+
+  let msecs = options.msecs !== undefined ? options.msecs : Date.now(); // Per 4.2.1.2, use count of uuid's generated during the current clock
+  // cycle to simulate higher resolution clock
+
+  let nsecs = options.nsecs !== undefined ? options.nsecs : _lastNSecs + 1; // Time since last uuid creation (in msecs)
+
+  const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 10000; // Per 4.2.1.2, Bump clockseq on clock regression
+
+  if (dt < 0 && options.clockseq === undefined) {
+    clockseq = clockseq + 1 & 0x3fff;
+  } // Reset nsecs if clock regresses (new clockseq) or we've moved onto a new
+  // time interval
+
+
+  if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === undefined) {
+    nsecs = 0;
+  } // Per 4.2.1.2 Throw error if too many uuids are requested
+
+
+  if (nsecs >= 10000) {
+    throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+  }
+
+  _lastMSecs = msecs;
+  _lastNSecs = nsecs;
+  _clockseq = clockseq; // Per 4.1.4 - Convert from unix epoch to Gregorian epoch
+
+  msecs += 12219292800000; // `time_low`
+
+  const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+  b[i++] = tl >>> 24 & 0xff;
+  b[i++] = tl >>> 16 & 0xff;
+  b[i++] = tl >>> 8 & 0xff;
+  b[i++] = tl & 0xff; // `time_mid`
+
+  const tmh = msecs / 0x100000000 * 10000 & 0xfffffff;
+  b[i++] = tmh >>> 8 & 0xff;
+  b[i++] = tmh & 0xff; // `time_high_and_version`
+
+  b[i++] = tmh >>> 24 & 0xf | 0x10; // include version
+
+  b[i++] = tmh >>> 16 & 0xff; // `clock_seq_hi_and_reserved` (Per 4.2.2 - include variant)
+
+  b[i++] = clockseq >>> 8 | 0x80; // `clock_seq_low`
+
+  b[i++] = clockseq & 0xff; // `node`
+
+  for (let n = 0; n < 6; ++n) {
+    b[i + n] = node[n];
+  }
+
+  return buf || (0, _stringify.default)(b);
+}
+
+var _default = v1;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 6993:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _v = _interopRequireDefault(__nccwpck_require__(5920));
+
+var _md = _interopRequireDefault(__nccwpck_require__(5842));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const v3 = (0, _v.default)('v3', 0x30, _md.default);
+var _default = v3;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 5920:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = _default;
+exports.URL = exports.DNS = void 0;
+
+var _stringify = _interopRequireDefault(__nccwpck_require__(1458));
+
+var _parse = _interopRequireDefault(__nccwpck_require__(6385));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function stringToBytes(str) {
+  str = unescape(encodeURIComponent(str)); // UTF8 escape
+
+  const bytes = [];
+
+  for (let i = 0; i < str.length; ++i) {
+    bytes.push(str.charCodeAt(i));
+  }
+
+  return bytes;
+}
+
+const DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
+exports.DNS = DNS;
+const URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+exports.URL = URL;
+
+function _default(name, version, hashfunc) {
+  function generateUUID(value, namespace, buf, offset) {
+    if (typeof value === 'string') {
+      value = stringToBytes(value);
+    }
+
+    if (typeof namespace === 'string') {
+      namespace = (0, _parse.default)(namespace);
+    }
+
+    if (namespace.length !== 16) {
+      throw TypeError('Namespace must be array-like (16 iterable integer values, 0-255)');
+    } // Compute hash of namespace and value, Per 4.3
+    // Future: Use spread syntax when supported on all platforms, e.g. `bytes =
+    // hashfunc([...namespace, ... value])`
+
+
+    let bytes = new Uint8Array(16 + value.length);
+    bytes.set(namespace);
+    bytes.set(value, namespace.length);
+    bytes = hashfunc(bytes);
+    bytes[6] = bytes[6] & 0x0f | version;
+    bytes[8] = bytes[8] & 0x3f | 0x80;
+
+    if (buf) {
+      offset = offset || 0;
+
+      for (let i = 0; i < 16; ++i) {
+        buf[offset + i] = bytes[i];
+      }
+
+      return buf;
+    }
+
+    return (0, _stringify.default)(bytes);
+  } // Function#name is not settable on some platforms (#270)
+
+
+  try {
+    generateUUID.name = name; // eslint-disable-next-line no-empty
+  } catch (err) {} // For CommonJS default export support
+
+
+  generateUUID.DNS = DNS;
+  generateUUID.URL = URL;
+  return generateUUID;
+}
+
+/***/ }),
+
+/***/ 1472:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _rng = _interopRequireDefault(__nccwpck_require__(9784));
+
+var _stringify = _interopRequireDefault(__nccwpck_require__(1458));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function v4(options, buf, offset) {
+  options = options || {};
+
+  const rnds = options.random || (options.rng || _rng.default)(); // Per 4.4, set bits for version and `clock_seq_hi_and_reserved`
+
+
+  rnds[6] = rnds[6] & 0x0f | 0x40;
+  rnds[8] = rnds[8] & 0x3f | 0x80; // Copy bytes to buffer, if provided
+
+  if (buf) {
+    offset = offset || 0;
+
+    for (let i = 0; i < 16; ++i) {
+      buf[offset + i] = rnds[i];
+    }
+
+    return buf;
+  }
+
+  return (0, _stringify.default)(rnds);
+}
+
+var _default = v4;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 6217:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _v = _interopRequireDefault(__nccwpck_require__(5920));
+
+var _sha = _interopRequireDefault(__nccwpck_require__(8844));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const v5 = (0, _v.default)('v5', 0x50, _sha.default);
+var _default = v5;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 2609:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _regex = _interopRequireDefault(__nccwpck_require__(6230));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function validate(uuid) {
+  return typeof uuid === 'string' && _regex.default.test(uuid);
+}
+
+var _default = validate;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 427:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+exports["default"] = void 0;
+
+var _validate = _interopRequireDefault(__nccwpck_require__(2609));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function version(uuid) {
+  if (!(0, _validate.default)(uuid)) {
+    throw TypeError('Invalid UUID');
+  }
+
+  return parseInt(uuid.substr(14, 1), 16);
+}
+
+var _default = version;
+exports["default"] = _default;
+
+/***/ }),
+
+/***/ 5526:
+/***/ (function(__unused_webpack_module, exports) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PersonalAccessTokenCredentialHandler = exports.BearerCredentialHandler = exports.BasicCredentialHandler = void 0;
 class BasicCredentialHandler {
     constructor(username, password) {
         this.username = username;
         this.password = password;
     }
     prepareRequest(options) {
-        options.headers['Authorization'] =
-            'Basic ' +
-                Buffer.from(this.username + ':' + this.password).toString('base64');
+        if (!options.headers) {
+            throw Error('The request has no headers');
+        }
+        options.headers['Authorization'] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString('base64')}`;
     }
     // This handler cannot handle 401
-    canHandleAuthentication(response) {
+    canHandleAuthentication() {
         return false;
     }
-    handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+    handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('not implemented');
+        });
     }
 }
 exports.BasicCredentialHandler = BasicCredentialHandler;
@@ -631,14 +1685,19 @@ class BearerCredentialHandler {
     // currently implements pre-authorization
     // TODO: support preAuth = false where it hooks on 401
     prepareRequest(options) {
-        options.headers['Authorization'] = 'Bearer ' + this.token;
+        if (!options.headers) {
+            throw Error('The request has no headers');
+        }
+        options.headers['Authorization'] = `Bearer ${this.token}`;
     }
     // This handler cannot handle 401
-    canHandleAuthentication(response) {
+    canHandleAuthentication() {
         return false;
     }
-    handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+    handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('not implemented');
+        });
     }
 }
 exports.BearerCredentialHandler = BearerCredentialHandler;
@@ -649,32 +1708,66 @@ class PersonalAccessTokenCredentialHandler {
     // currently implements pre-authorization
     // TODO: support preAuth = false where it hooks on 401
     prepareRequest(options) {
-        options.headers['Authorization'] =
-            'Basic ' + Buffer.from('PAT:' + this.token).toString('base64');
+        if (!options.headers) {
+            throw Error('The request has no headers');
+        }
+        options.headers['Authorization'] = `Basic ${Buffer.from(`PAT:${this.token}`).toString('base64')}`;
     }
     // This handler cannot handle 401
-    canHandleAuthentication(response) {
+    canHandleAuthentication() {
         return false;
     }
-    handleAuthentication(httpClient, requestInfo, objs) {
-        return null;
+    handleAuthentication() {
+        return __awaiter(this, void 0, void 0, function* () {
+            throw new Error('not implemented');
+        });
     }
 }
 exports.PersonalAccessTokenCredentialHandler = PersonalAccessTokenCredentialHandler;
-
+//# sourceMappingURL=auth.js.map
 
 /***/ }),
 
-/***/ 9925:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ 6255:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const http = __nccwpck_require__(8605);
-const https = __nccwpck_require__(7211);
-const pm = __nccwpck_require__(6443);
-let tunnel;
+exports.HttpClient = exports.isHttps = exports.HttpClientResponse = exports.HttpClientError = exports.getProxyUrl = exports.MediaTypes = exports.Headers = exports.HttpCodes = void 0;
+const http = __importStar(__nccwpck_require__(3685));
+const https = __importStar(__nccwpck_require__(5687));
+const pm = __importStar(__nccwpck_require__(9835));
+const tunnel = __importStar(__nccwpck_require__(4294));
 var HttpCodes;
 (function (HttpCodes) {
     HttpCodes[HttpCodes["OK"] = 200] = "OK";
@@ -719,7 +1812,7 @@ var MediaTypes;
  * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
  */
 function getProxyUrl(serverUrl) {
-    let proxyUrl = pm.getProxyUrl(new URL(serverUrl));
+    const proxyUrl = pm.getProxyUrl(new URL(serverUrl));
     return proxyUrl ? proxyUrl.href : '';
 }
 exports.getProxyUrl = getProxyUrl;
@@ -752,20 +1845,22 @@ class HttpClientResponse {
         this.message = message;
     }
     readBody() {
-        return new Promise(async (resolve, reject) => {
-            let output = Buffer.alloc(0);
-            this.message.on('data', (chunk) => {
-                output = Buffer.concat([output, chunk]);
-            });
-            this.message.on('end', () => {
-                resolve(output.toString());
-            });
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
+                let output = Buffer.alloc(0);
+                this.message.on('data', (chunk) => {
+                    output = Buffer.concat([output, chunk]);
+                });
+                this.message.on('end', () => {
+                    resolve(output.toString());
+                });
+            }));
         });
     }
 }
 exports.HttpClientResponse = HttpClientResponse;
 function isHttps(requestUrl) {
-    let parsedUrl = new URL(requestUrl);
+    const parsedUrl = new URL(requestUrl);
     return parsedUrl.protocol === 'https:';
 }
 exports.isHttps = isHttps;
@@ -808,141 +1903,169 @@ class HttpClient {
         }
     }
     options(requestUrl, additionalHeaders) {
-        return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
+        });
     }
     get(requestUrl, additionalHeaders) {
-        return this.request('GET', requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('GET', requestUrl, null, additionalHeaders || {});
+        });
     }
     del(requestUrl, additionalHeaders) {
-        return this.request('DELETE', requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('DELETE', requestUrl, null, additionalHeaders || {});
+        });
     }
     post(requestUrl, data, additionalHeaders) {
-        return this.request('POST', requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('POST', requestUrl, data, additionalHeaders || {});
+        });
     }
     patch(requestUrl, data, additionalHeaders) {
-        return this.request('PATCH', requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('PATCH', requestUrl, data, additionalHeaders || {});
+        });
     }
     put(requestUrl, data, additionalHeaders) {
-        return this.request('PUT', requestUrl, data, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('PUT', requestUrl, data, additionalHeaders || {});
+        });
     }
     head(requestUrl, additionalHeaders) {
-        return this.request('HEAD', requestUrl, null, additionalHeaders || {});
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request('HEAD', requestUrl, null, additionalHeaders || {});
+        });
     }
     sendStream(verb, requestUrl, stream, additionalHeaders) {
-        return this.request(verb, requestUrl, stream, additionalHeaders);
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.request(verb, requestUrl, stream, additionalHeaders);
+        });
     }
     /**
      * Gets a typed object from an endpoint
      * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
      */
-    async getJson(requestUrl, additionalHeaders = {}) {
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        let res = await this.get(requestUrl, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+    getJson(requestUrl, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+            const res = yield this.get(requestUrl, additionalHeaders);
+            return this._processResponse(res, this.requestOptions);
+        });
     }
-    async postJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.post(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+    postJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = JSON.stringify(obj, null, 2);
+            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+            const res = yield this.post(requestUrl, data, additionalHeaders);
+            return this._processResponse(res, this.requestOptions);
+        });
     }
-    async putJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.put(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+    putJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = JSON.stringify(obj, null, 2);
+            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+            const res = yield this.put(requestUrl, data, additionalHeaders);
+            return this._processResponse(res, this.requestOptions);
+        });
     }
-    async patchJson(requestUrl, obj, additionalHeaders = {}) {
-        let data = JSON.stringify(obj, null, 2);
-        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
-        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
-        let res = await this.patch(requestUrl, data, additionalHeaders);
-        return this._processResponse(res, this.requestOptions);
+    patchJson(requestUrl, obj, additionalHeaders = {}) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = JSON.stringify(obj, null, 2);
+            additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
+            additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
+            const res = yield this.patch(requestUrl, data, additionalHeaders);
+            return this._processResponse(res, this.requestOptions);
+        });
     }
     /**
      * Makes a raw http request.
      * All other methods such as get, post, patch, and request ultimately call this.
      * Prefer get, del, post and patch
      */
-    async request(verb, requestUrl, data, headers) {
-        if (this._disposed) {
-            throw new Error('Client has already been disposed.');
-        }
-        let parsedUrl = new URL(requestUrl);
-        let info = this._prepareRequest(verb, parsedUrl, headers);
-        // Only perform retries on reads since writes may not be idempotent.
-        let maxTries = this._allowRetries && RetryableHttpVerbs.indexOf(verb) != -1
-            ? this._maxRetries + 1
-            : 1;
-        let numTries = 0;
-        let response;
-        while (numTries < maxTries) {
-            response = await this.requestRaw(info, data);
-            // Check if it's an authentication challenge
-            if (response &&
-                response.message &&
-                response.message.statusCode === HttpCodes.Unauthorized) {
-                let authenticationHandler;
-                for (let i = 0; i < this.handlers.length; i++) {
-                    if (this.handlers[i].canHandleAuthentication(response)) {
-                        authenticationHandler = this.handlers[i];
-                        break;
-                    }
-                }
-                if (authenticationHandler) {
-                    return authenticationHandler.handleAuthentication(this, info, data);
-                }
-                else {
-                    // We have received an unauthorized response but have no handlers to handle it.
-                    // Let the response return to the caller.
-                    return response;
-                }
+    request(verb, requestUrl, data, headers) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this._disposed) {
+                throw new Error('Client has already been disposed.');
             }
-            let redirectsRemaining = this._maxRedirects;
-            while (HttpRedirectCodes.indexOf(response.message.statusCode) != -1 &&
-                this._allowRedirects &&
-                redirectsRemaining > 0) {
-                const redirectUrl = response.message.headers['location'];
-                if (!redirectUrl) {
-                    // if there's no location to redirect to, we won't
-                    break;
-                }
-                let parsedRedirectUrl = new URL(redirectUrl);
-                if (parsedUrl.protocol == 'https:' &&
-                    parsedUrl.protocol != parsedRedirectUrl.protocol &&
-                    !this._allowRedirectDowngrade) {
-                    throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');
-                }
-                // we need to finish reading the response before reassigning response
-                // which will leak the open socket.
-                await response.readBody();
-                // strip authorization header if redirected to a different hostname
-                if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
-                    for (let header in headers) {
-                        // header names are case insensitive
-                        if (header.toLowerCase() === 'authorization') {
-                            delete headers[header];
+            const parsedUrl = new URL(requestUrl);
+            let info = this._prepareRequest(verb, parsedUrl, headers);
+            // Only perform retries on reads since writes may not be idempotent.
+            const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb)
+                ? this._maxRetries + 1
+                : 1;
+            let numTries = 0;
+            let response;
+            do {
+                response = yield this.requestRaw(info, data);
+                // Check if it's an authentication challenge
+                if (response &&
+                    response.message &&
+                    response.message.statusCode === HttpCodes.Unauthorized) {
+                    let authenticationHandler;
+                    for (const handler of this.handlers) {
+                        if (handler.canHandleAuthentication(response)) {
+                            authenticationHandler = handler;
+                            break;
                         }
                     }
+                    if (authenticationHandler) {
+                        return authenticationHandler.handleAuthentication(this, info, data);
+                    }
+                    else {
+                        // We have received an unauthorized response but have no handlers to handle it.
+                        // Let the response return to the caller.
+                        return response;
+                    }
                 }
-                // let's make the request with the new redirectUrl
-                info = this._prepareRequest(verb, parsedRedirectUrl, headers);
-                response = await this.requestRaw(info, data);
-                redirectsRemaining--;
-            }
-            if (HttpResponseRetryCodes.indexOf(response.message.statusCode) == -1) {
-                // If not a retry code, return immediately instead of retrying
-                return response;
-            }
-            numTries += 1;
-            if (numTries < maxTries) {
-                await response.readBody();
-                await this._performExponentialBackoff(numTries);
-            }
-        }
-        return response;
+                let redirectsRemaining = this._maxRedirects;
+                while (response.message.statusCode &&
+                    HttpRedirectCodes.includes(response.message.statusCode) &&
+                    this._allowRedirects &&
+                    redirectsRemaining > 0) {
+                    const redirectUrl = response.message.headers['location'];
+                    if (!redirectUrl) {
+                        // if there's no location to redirect to, we won't
+                        break;
+                    }
+                    const parsedRedirectUrl = new URL(redirectUrl);
+                    if (parsedUrl.protocol === 'https:' &&
+                        parsedUrl.protocol !== parsedRedirectUrl.protocol &&
+                        !this._allowRedirectDowngrade) {
+                        throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');
+                    }
+                    // we need to finish reading the response before reassigning response
+                    // which will leak the open socket.
+                    yield response.readBody();
+                    // strip authorization header if redirected to a different hostname
+                    if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
+                        for (const header in headers) {
+                            // header names are case insensitive
+                            if (header.toLowerCase() === 'authorization') {
+                                delete headers[header];
+                            }
+                        }
+                    }
+                    // let's make the request with the new redirectUrl
+                    info = this._prepareRequest(verb, parsedRedirectUrl, headers);
+                    response = yield this.requestRaw(info, data);
+                    redirectsRemaining--;
+                }
+                if (!response.message.statusCode ||
+                    !HttpResponseRetryCodes.includes(response.message.statusCode)) {
+                    // If not a retry code, return immediately instead of retrying
+                    return response;
+                }
+                numTries += 1;
+                if (numTries < maxTries) {
+                    yield response.readBody();
+                    yield this._performExponentialBackoff(numTries);
+                }
+            } while (numTries < maxTries);
+            return response;
+        });
     }
     /**
      * Needs to be called if keepAlive is set to true in request options.
@@ -959,14 +2082,22 @@ class HttpClient {
      * @param data
      */
     requestRaw(info, data) {
-        return new Promise((resolve, reject) => {
-            let callbackForResult = function (err, res) {
-                if (err) {
-                    reject(err);
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => {
+                function callbackForResult(err, res) {
+                    if (err) {
+                        reject(err);
+                    }
+                    else if (!res) {
+                        // If `err` is not passed, then `res` must be passed.
+                        reject(new Error('Unknown error'));
+                    }
+                    else {
+                        resolve(res);
+                    }
                 }
-                resolve(res);
-            };
-            this.requestRawWithCallback(info, data, callbackForResult);
+                this.requestRawWithCallback(info, data, callbackForResult);
+            });
         });
     }
     /**
@@ -976,21 +2107,24 @@ class HttpClient {
      * @param onResult
      */
     requestRawWithCallback(info, data, onResult) {
-        let socket;
         if (typeof data === 'string') {
+            if (!info.options.headers) {
+                info.options.headers = {};
+            }
             info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
         }
         let callbackCalled = false;
-        let handleResult = (err, res) => {
+        function handleResult(err, res) {
             if (!callbackCalled) {
                 callbackCalled = true;
                 onResult(err, res);
             }
-        };
-        let req = info.httpModule.request(info.options, (msg) => {
-            let res = new HttpClientResponse(msg);
-            handleResult(null, res);
+        }
+        const req = info.httpModule.request(info.options, (msg) => {
+            const res = new HttpClientResponse(msg);
+            handleResult(undefined, res);
         });
+        let socket;
         req.on('socket', sock => {
             socket = sock;
         });
@@ -999,12 +2133,12 @@ class HttpClient {
             if (socket) {
                 socket.end();
             }
-            handleResult(new Error('Request timeout: ' + info.options.path), null);
+            handleResult(new Error(`Request timeout: ${info.options.path}`));
         });
         req.on('error', function (err) {
             // err has statusCode property
             // res should have headers
-            handleResult(err, null);
+            handleResult(err);
         });
         if (data && typeof data === 'string') {
             req.write(data, 'utf8');
@@ -1025,7 +2159,7 @@ class HttpClient {
      * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
      */
     getAgent(serverUrl) {
-        let parsedUrl = new URL(serverUrl);
+        const parsedUrl = new URL(serverUrl);
         return this._getAgent(parsedUrl);
     }
     _prepareRequest(method, requestUrl, headers) {
@@ -1049,21 +2183,19 @@ class HttpClient {
         info.options.agent = this._getAgent(info.parsedUrl);
         // gives handlers an opportunity to participate
         if (this.handlers) {
-            this.handlers.forEach(handler => {
+            for (const handler of this.handlers) {
                 handler.prepareRequest(info.options);
-            });
+            }
         }
         return info;
     }
     _mergeHeaders(headers) {
-        const lowercaseKeys = obj => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
         if (this.requestOptions && this.requestOptions.headers) {
-            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers));
+            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers || {}));
         }
         return lowercaseKeys(headers || {});
     }
     _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
-        const lowercaseKeys = obj => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
         let clientHeader;
         if (this.requestOptions && this.requestOptions.headers) {
             clientHeader = lowercaseKeys(this.requestOptions.headers)[header];
@@ -1072,8 +2204,8 @@ class HttpClient {
     }
     _getAgent(parsedUrl) {
         let agent;
-        let proxyUrl = pm.getProxyUrl(parsedUrl);
-        let useProxy = proxyUrl && proxyUrl.hostname;
+        const proxyUrl = pm.getProxyUrl(parsedUrl);
+        const useProxy = proxyUrl && proxyUrl.hostname;
         if (this._keepAlive && useProxy) {
             agent = this._proxyAgent;
         }
@@ -1081,29 +2213,22 @@ class HttpClient {
             agent = this._agent;
         }
         // if agent is already assigned use that agent.
-        if (!!agent) {
+        if (agent) {
             return agent;
         }
         const usingSsl = parsedUrl.protocol === 'https:';
         let maxSockets = 100;
-        if (!!this.requestOptions) {
+        if (this.requestOptions) {
             maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
         }
-        if (useProxy) {
-            // If using proxy, need tunnel
-            if (!tunnel) {
-                tunnel = __nccwpck_require__(4294);
-            }
+        // This is `useProxy` again, but we need to check `proxyURl` directly for TypeScripts's flow analysis.
+        if (proxyUrl && proxyUrl.hostname) {
             const agentOptions = {
-                maxSockets: maxSockets,
+                maxSockets,
                 keepAlive: this._keepAlive,
-                proxy: {
-                    ...((proxyUrl.username || proxyUrl.password) && {
-                        proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
-                    }),
-                    host: proxyUrl.hostname,
-                    port: proxyUrl.port
-                }
+                proxy: Object.assign(Object.assign({}, ((proxyUrl.username || proxyUrl.password) && {
+                    proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
+                })), { host: proxyUrl.hostname, port: proxyUrl.port })
             };
             let tunnelAgent;
             const overHttps = proxyUrl.protocol === 'https:';
@@ -1118,7 +2243,7 @@ class HttpClient {
         }
         // if reusing agent across request and tunneling agent isn't assigned create a new agent
         if (this._keepAlive && !agent) {
-            const options = { keepAlive: this._keepAlive, maxSockets: maxSockets };
+            const options = { keepAlive: this._keepAlive, maxSockets };
             agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
             this._agent = agent;
         }
@@ -1137,109 +2262,117 @@ class HttpClient {
         return agent;
     }
     _performExponentialBackoff(retryNumber) {
-        retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
-        const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
-        return new Promise(resolve => setTimeout(() => resolve(), ms));
+        return __awaiter(this, void 0, void 0, function* () {
+            retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
+            const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
+            return new Promise(resolve => setTimeout(() => resolve(), ms));
+        });
     }
-    static dateTimeDeserializer(key, value) {
-        if (typeof value === 'string') {
-            let a = new Date(value);
-            if (!isNaN(a.valueOf())) {
-                return a;
-            }
-        }
-        return value;
-    }
-    async _processResponse(res, options) {
-        return new Promise(async (resolve, reject) => {
-            const statusCode = res.message.statusCode;
-            const response = {
-                statusCode: statusCode,
-                result: null,
-                headers: {}
-            };
-            // not found leads to null obj returned
-            if (statusCode == HttpCodes.NotFound) {
-                resolve(response);
-            }
-            let obj;
-            let contents;
-            // get the result from the body
-            try {
-                contents = await res.readBody();
-                if (contents && contents.length > 0) {
-                    if (options && options.deserializeDates) {
-                        obj = JSON.parse(contents, HttpClient.dateTimeDeserializer);
+    _processResponse(res, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                const statusCode = res.message.statusCode || 0;
+                const response = {
+                    statusCode,
+                    result: null,
+                    headers: {}
+                };
+                // not found leads to null obj returned
+                if (statusCode === HttpCodes.NotFound) {
+                    resolve(response);
+                }
+                // get the result from the body
+                function dateTimeDeserializer(key, value) {
+                    if (typeof value === 'string') {
+                        const a = new Date(value);
+                        if (!isNaN(a.valueOf())) {
+                            return a;
+                        }
+                    }
+                    return value;
+                }
+                let obj;
+                let contents;
+                try {
+                    contents = yield res.readBody();
+                    if (contents && contents.length > 0) {
+                        if (options && options.deserializeDates) {
+                            obj = JSON.parse(contents, dateTimeDeserializer);
+                        }
+                        else {
+                            obj = JSON.parse(contents);
+                        }
+                        response.result = obj;
+                    }
+                    response.headers = res.message.headers;
+                }
+                catch (err) {
+                    // Invalid resource (contents not json);  leaving result obj null
+                }
+                // note that 3xx redirects are handled by the http layer.
+                if (statusCode > 299) {
+                    let msg;
+                    // if exception/error in body, attempt to get better error
+                    if (obj && obj.message) {
+                        msg = obj.message;
+                    }
+                    else if (contents && contents.length > 0) {
+                        // it may be the case that the exception is in the body message as string
+                        msg = contents;
                     }
                     else {
-                        obj = JSON.parse(contents);
+                        msg = `Failed request: (${statusCode})`;
                     }
-                    response.result = obj;
-                }
-                response.headers = res.message.headers;
-            }
-            catch (err) {
-                // Invalid resource (contents not json);  leaving result obj null
-            }
-            // note that 3xx redirects are handled by the http layer.
-            if (statusCode > 299) {
-                let msg;
-                // if exception/error in body, attempt to get better error
-                if (obj && obj.message) {
-                    msg = obj.message;
-                }
-                else if (contents && contents.length > 0) {
-                    // it may be the case that the exception is in the body message as string
-                    msg = contents;
+                    const err = new HttpClientError(msg, statusCode);
+                    err.result = response.result;
+                    reject(err);
                 }
                 else {
-                    msg = 'Failed request: (' + statusCode + ')';
+                    resolve(response);
                 }
-                let err = new HttpClientError(msg, statusCode);
-                err.result = response.result;
-                reject(err);
-            }
-            else {
-                resolve(response);
-            }
+            }));
         });
     }
 }
 exports.HttpClient = HttpClient;
-
+const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
+//# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 6443:
+/***/ 9835:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.checkBypass = exports.getProxyUrl = void 0;
 function getProxyUrl(reqUrl) {
-    let usingSsl = reqUrl.protocol === 'https:';
-    let proxyUrl;
+    const usingSsl = reqUrl.protocol === 'https:';
     if (checkBypass(reqUrl)) {
-        return proxyUrl;
+        return undefined;
     }
-    let proxyVar;
-    if (usingSsl) {
-        proxyVar = process.env['https_proxy'] || process.env['HTTPS_PROXY'];
+    const proxyVar = (() => {
+        if (usingSsl) {
+            return process.env['https_proxy'] || process.env['HTTPS_PROXY'];
+        }
+        else {
+            return process.env['http_proxy'] || process.env['HTTP_PROXY'];
+        }
+    })();
+    if (proxyVar) {
+        return new URL(proxyVar);
     }
     else {
-        proxyVar = process.env['http_proxy'] || process.env['HTTP_PROXY'];
+        return undefined;
     }
-    if (proxyVar) {
-        proxyUrl = new URL(proxyVar);
-    }
-    return proxyUrl;
 }
 exports.getProxyUrl = getProxyUrl;
 function checkBypass(reqUrl) {
     if (!reqUrl.hostname) {
         return false;
     }
-    let noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
+    const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
     if (!noProxy) {
         return false;
     }
@@ -1255,12 +2388,12 @@ function checkBypass(reqUrl) {
         reqPort = 443;
     }
     // Format the request hostname and hostname with port
-    let upperReqHosts = [reqUrl.hostname.toUpperCase()];
+    const upperReqHosts = [reqUrl.hostname.toUpperCase()];
     if (typeof reqPort === 'number') {
         upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
     }
     // Compare request host against noproxy
-    for (let upperNoProxyItem of noProxy
+    for (const upperNoProxyItem of noProxy
         .split(',')
         .map(x => x.trim().toUpperCase())
         .filter(x => x)) {
@@ -1271,7 +2404,7 @@ function checkBypass(reqUrl) {
     return false;
 }
 exports.checkBypass = checkBypass;
-
+//# sourceMappingURL=proxy.js.map
 
 /***/ }),
 
@@ -1289,13 +2422,13 @@ module.exports = __nccwpck_require__(4219);
 "use strict";
 
 
-var net = __nccwpck_require__(1631);
-var tls = __nccwpck_require__(4016);
-var http = __nccwpck_require__(8605);
-var https = __nccwpck_require__(7211);
-var events = __nccwpck_require__(8614);
-var assert = __nccwpck_require__(2357);
-var util = __nccwpck_require__(1669);
+var net = __nccwpck_require__(1808);
+var tls = __nccwpck_require__(4404);
+var http = __nccwpck_require__(3685);
+var https = __nccwpck_require__(5687);
+var events = __nccwpck_require__(2361);
+var assert = __nccwpck_require__(9491);
+var util = __nccwpck_require__(3837);
 
 
 exports.httpOverHttp = httpOverHttp;
@@ -1628,7 +2761,7 @@ class FormDataHelper {
             if (!header.length) {
                 continue;
             }
-            contents += prop + ': ' + helpers_1.arrayWrap(header).join('; ') + FormDataHelper.LINE_BREAK;
+            contents += prop + ': ' + (0, helpers_1.arrayWrap)(header).join('; ') + FormDataHelper.LINE_BREAK;
         }
         return '--' + this.getBoundary() + FormDataHelper.LINE_BREAK + contents + FormDataHelper.LINE_BREAK;
     }
@@ -1653,7 +2786,11 @@ FormDataHelper.DEFAULT_CONTENT_TYPE = 'application/octet-stream';
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -1672,11 +2809,19 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OAuth1Helper = void 0;
-const crypto = __importStar(__nccwpck_require__(6417));
+const crypto = __importStar(__nccwpck_require__(6113));
 class OAuth1Helper {
     constructor(options) {
         this.nonceLength = 32;
         this.consumerKeys = options.consumerKeys;
+    }
+    static percentEncode(str) {
+        return encodeURIComponent(str)
+            .replace(/!/g, '%21')
+            .replace(/\*/g, '%2A')
+            .replace(/'/g, '%27')
+            .replace(/\(/g, '%28')
+            .replace(/\)/g, '%29');
     }
     hash(base, key) {
         return crypto
@@ -1708,7 +2853,7 @@ class OAuth1Helper {
             if (element.key.indexOf('oauth_') !== 0) {
                 continue;
             }
-            header_value += percentEncode(element.key) + '="' + percentEncode(element.value) + '",';
+            header_value += OAuth1Helper.percentEncode(element.key) + '="' + OAuth1Helper.percentEncode(element.value) + '",';
         }
         return {
             // Remove the last ,
@@ -1730,12 +2875,12 @@ class OAuth1Helper {
         return this.hash(this.getBaseString(request, oauthInfo), this.getSigningKey(tokenSecret));
     }
     getSigningKey(tokenSecret) {
-        return percentEncode(this.consumerKeys.secret) + '&' + percentEncode(tokenSecret || '');
+        return OAuth1Helper.percentEncode(this.consumerKeys.secret) + '&' + OAuth1Helper.percentEncode(tokenSecret || '');
     }
     getBaseString(request, oauthInfo) {
         return request.method.toUpperCase() + '&'
-            + percentEncode(this.getBaseUrl(request.url)) + '&'
-            + percentEncode(this.getParameterString(request, oauthInfo));
+            + OAuth1Helper.percentEncode(this.getBaseUrl(request.url)) + '&'
+            + OAuth1Helper.percentEncode(this.getParameterString(request, oauthInfo));
     }
     getParameterString(request, oauthInfo) {
         const baseStringData = sortObject(percentEncodeData(mergeObject(oauthInfo, mergeObject(request.data, deParamUrl(request.url)))));
@@ -1768,7 +2913,7 @@ class OAuth1Helper {
     }
 }
 exports.OAuth1Helper = OAuth1Helper;
-exports.default = OAuth1Helper;
+exports["default"] = OAuth1Helper;
 // Helper functions //
 function mergeObject(obj1, obj2) {
     return {
@@ -1810,26 +2955,18 @@ function deParamUrl(url) {
         return {};
     return deParam(tmp[1]);
 }
-function percentEncode(str) {
-    return encodeURIComponent(str)
-        .replace(/!/g, '%21')
-        .replace(/\*/g, '%2A')
-        .replace(/'/g, '%27')
-        .replace(/\(/g, '%28')
-        .replace(/\)/g, '%29');
-}
 function percentEncodeData(data) {
     const result = {};
     for (const key in data) {
         let value = data[key];
         // check if the value is an array
         if (value && Array.isArray(value)) {
-            value = value.map(v => percentEncode(v));
+            value = value.map(v => OAuth1Helper.percentEncode(v));
         }
         else {
-            value = percentEncode(value);
+            value = OAuth1Helper.percentEncode(value);
         }
-        result[percentEncode(key)] = value;
+        result[OAuth1Helper.percentEncode(key)] = value;
     }
     return result;
 }
@@ -1844,7 +2981,11 @@ function percentEncodeData(data) {
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -1863,7 +3004,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OAuth2Helper = void 0;
-const crypto = __importStar(__nccwpck_require__(6417));
+const crypto = __importStar(__nccwpck_require__(6113));
 class OAuth2Helper {
     static getCodeVerifier() {
         return this.generateRandomString(128);
@@ -1873,6 +3014,10 @@ class OAuth2Helper {
             .createHash('sha256')
             .update(verifier)
             .digest('base64'));
+    }
+    static getAuthHeader(clientId, clientSecret) {
+        const key = encodeURIComponent(clientId) + ':' + encodeURIComponent(clientSecret);
+        return Buffer.from(key).toString('base64');
     }
     static generateRandomString(length) {
         let text = '';
@@ -1896,48 +3041,80 @@ exports.OAuth2Helper = OAuth2Helper;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RequestHandlerHelper = void 0;
-const https_1 = __nccwpck_require__(7211);
+const https_1 = __nccwpck_require__(5687);
 const settings_1 = __nccwpck_require__(6273);
 const TweetStream_1 = __importDefault(__nccwpck_require__(9362));
 const types_1 = __nccwpck_require__(1638);
+const zlib = __importStar(__nccwpck_require__(9796));
 class RequestHandlerHelper {
     constructor(requestData) {
         this.requestData = requestData;
-        this.responseData = '';
+        this.requestErrorHandled = false;
+        this.responseData = [];
     }
+    /* Request helpers */
     get hrefPathname() {
         const url = this.requestData.url;
         return url.hostname + url.pathname;
     }
+    isCompressionDisabled() {
+        return !this.requestData.compression || this.requestData.compression === 'identity';
+    }
     isFormEncodedEndpoint() {
         return this.requestData.url.href.startsWith('https://api.twitter.com/oauth/');
     }
-    getRateLimitFromResponse(res) {
-        let rateLimit = undefined;
-        if (res.headers['x-rate-limit-limit']) {
-            rateLimit = {
-                limit: Number(res.headers['x-rate-limit-limit']),
-                remaining: Number(res.headers['x-rate-limit-remaining']),
-                reset: Number(res.headers['x-rate-limit-reset']),
-            };
-            if (this.requestData.rateLimitSaver) {
-                this.requestData.rateLimitSaver(rateLimit);
-            }
-        }
-        return rateLimit;
-    }
+    /* Error helpers */
     createRequestError(error) {
         if (settings_1.TwitterApiV2Settings.debug) {
-            console.log('Request network error:', error);
+            settings_1.TwitterApiV2Settings.logger.log('Request error:', error);
         }
         return new types_1.ApiRequestError('Request failed.', {
             request: this.req,
             error,
+        });
+    }
+    createPartialResponseError(error, abortClose) {
+        const res = this.res;
+        let message = `Request failed with partial response with HTTP code ${res.statusCode}`;
+        if (abortClose) {
+            message += ' (connection abruptly closed)';
+        }
+        else {
+            message += ' (parse error)';
+        }
+        return new types_1.ApiPartialResponseError(message, {
+            request: this.req,
+            response: this.res,
+            responseError: error,
+            rawContent: Buffer.concat(this.responseData).toString(),
         });
     }
     formatV1Errors(errors) {
@@ -1951,7 +3128,8 @@ class RequestHandlerHelper {
     createResponseError({ res, data, rateLimit, code }) {
         var _a;
         if (settings_1.TwitterApiV2Settings.debug) {
-            console.log('Request failed with code', code, ', data:', data, 'response headers:', res.headers);
+            settings_1.TwitterApiV2Settings.logger.log(`Request failed with code ${code}, data:`, data);
+            settings_1.TwitterApiV2Settings.logger.log('Response headers:', res.headers);
         }
         // Errors formatting.
         let errorString = `Request failed with code ${code}`;
@@ -1973,80 +3151,222 @@ class RequestHandlerHelper {
             rateLimit,
         });
     }
-    getParsedResponse(res) {
-        var _a;
-        let data = this.responseData;
+    /* Response helpers */
+    getResponseDataStream(res) {
+        if (this.isCompressionDisabled()) {
+            return res;
+        }
+        const contentEncoding = (res.headers['content-encoding'] || 'identity').trim().toLowerCase();
+        if (contentEncoding === 'br') {
+            const brotli = zlib.createBrotliDecompress({
+                flush: zlib.constants.BROTLI_OPERATION_FLUSH,
+                finishFlush: zlib.constants.BROTLI_OPERATION_FLUSH,
+            });
+            res.pipe(brotli);
+            return brotli;
+        }
+        if (contentEncoding === 'gzip') {
+            const gunzip = zlib.createGunzip({
+                flush: zlib.constants.Z_SYNC_FLUSH,
+                finishFlush: zlib.constants.Z_SYNC_FLUSH,
+            });
+            res.pipe(gunzip);
+            return gunzip;
+        }
+        if (contentEncoding === 'deflate') {
+            const inflate = zlib.createInflate({
+                flush: zlib.constants.Z_SYNC_FLUSH,
+                finishFlush: zlib.constants.Z_SYNC_FLUSH,
+            });
+            res.pipe(inflate);
+            return inflate;
+        }
+        return res;
+    }
+    detectResponseType(res) {
+        var _a, _b;
         // Auto parse if server responds with JSON body
-        if (data.length && ((_a = res.headers['content-type']) === null || _a === void 0 ? void 0 : _a.includes('application/json'))) {
-            data = JSON.parse(data);
+        if (((_a = res.headers['content-type']) === null || _a === void 0 ? void 0 : _a.includes('application/json')) || ((_b = res.headers['content-type']) === null || _b === void 0 ? void 0 : _b.includes('application/problem+json'))) {
+            return 'json';
         }
         // f-e oauth token endpoints
         else if (this.isFormEncodedEndpoint()) {
-            const response_form_entries = {};
-            for (const [item, value] of new URLSearchParams(data)) {
-                response_form_entries[item] = value;
-            }
-            data = response_form_entries;
+            return 'url';
         }
-        return data;
+        return 'text';
+    }
+    getParsedResponse(res) {
+        const data = this.responseData;
+        const mode = this.requestData.forceParseMode || this.detectResponseType(res);
+        if (mode === 'buffer') {
+            return Buffer.concat(data);
+        }
+        else if (mode === 'text') {
+            return Buffer.concat(data).toString();
+        }
+        else if (mode === 'json') {
+            const asText = Buffer.concat(data).toString();
+            return asText.length ? JSON.parse(asText) : undefined;
+        }
+        else if (mode === 'url') {
+            const asText = Buffer.concat(data).toString();
+            const formEntries = {};
+            for (const [item, value] of new URLSearchParams(asText)) {
+                formEntries[item] = value;
+            }
+            return formEntries;
+        }
+        else {
+            // mode === 'none'
+            return undefined;
+        }
+    }
+    getRateLimitFromResponse(res) {
+        let rateLimit = undefined;
+        if (res.headers['x-rate-limit-limit']) {
+            rateLimit = {
+                limit: Number(res.headers['x-rate-limit-limit']),
+                remaining: Number(res.headers['x-rate-limit-remaining']),
+                reset: Number(res.headers['x-rate-limit-reset']),
+            };
+            if (this.requestData.rateLimitSaver) {
+                this.requestData.rateLimitSaver(rateLimit);
+            }
+        }
+        return rateLimit;
+    }
+    /* Request event handlers */
+    onSocketEventHandler(reject, socket) {
+        socket.on('close', this.onSocketCloseHandler.bind(this, reject));
+    }
+    onSocketCloseHandler(reject) {
+        this.req.removeAllListeners('timeout');
+        const res = this.res;
+        if (res) {
+            // Response ok, res.close/res.end can handle request ending
+            return;
+        }
+        if (!this.requestErrorHandled) {
+            return reject(this.createRequestError(new Error('Socket closed without any information.')));
+        }
+        // else: other situation
     }
     requestErrorHandler(reject, requestError) {
+        var _a, _b;
+        (_b = (_a = this.requestData).requestEventDebugHandler) === null || _b === void 0 ? void 0 : _b.call(_a, 'request-error', { requestError });
+        this.requestErrorHandled = true;
         reject(this.createRequestError(requestError));
     }
-    classicResponseHandler(resolve, reject, res) {
-        // Register the response data
-        res.on('data', chunk => this.responseData += chunk);
-        res.on('end', this.onResponseEndHandler.bind(this, resolve, reject, res));
+    timeoutErrorHandler() {
+        this.requestErrorHandled = true;
+        this.req.destroy(new Error('Request timeout.'));
     }
-    onResponseEndHandler(resolve, reject, res) {
-        const rateLimit = this.getRateLimitFromResponse(res);
-        const data = this.getParsedResponse(res);
+    /* Response event handlers */
+    classicResponseHandler(resolve, reject, res) {
+        this.res = res;
+        const dataStream = this.getResponseDataStream(res);
+        // Register the response data
+        dataStream.on('data', chunk => this.responseData.push(chunk));
+        dataStream.on('end', this.onResponseEndHandler.bind(this, resolve, reject));
+        dataStream.on('close', this.onResponseCloseHandler.bind(this, resolve, reject));
+        // Debug handlers
+        if (this.requestData.requestEventDebugHandler) {
+            this.requestData.requestEventDebugHandler('response', { res });
+            res.on('aborted', error => this.requestData.requestEventDebugHandler('response-aborted', { error }));
+            res.on('error', error => this.requestData.requestEventDebugHandler('response-error', { error }));
+            res.on('close', () => this.requestData.requestEventDebugHandler('response-close', { data: this.responseData }));
+            res.on('end', () => this.requestData.requestEventDebugHandler('response-end'));
+        }
+    }
+    onResponseEndHandler(resolve, reject) {
+        const rateLimit = this.getRateLimitFromResponse(this.res);
+        let data;
+        try {
+            data = this.getParsedResponse(this.res);
+        }
+        catch (e) {
+            reject(this.createPartialResponseError(e, false));
+            return;
+        }
         // Handle bad error codes
-        const code = res.statusCode;
+        const code = this.res.statusCode;
         if (code >= 400) {
-            reject(this.createResponseError({ data, res, rateLimit, code }));
+            reject(this.createResponseError({ data, res: this.res, rateLimit, code }));
+            return;
         }
         if (settings_1.TwitterApiV2Settings.debug) {
-            console.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${res.statusCode}`);
-            console.log('Response body:', data);
+            settings_1.TwitterApiV2Settings.logger.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${this.res.statusCode}`);
+            settings_1.TwitterApiV2Settings.logger.log('Response body:', data);
         }
         resolve({
             data,
-            headers: res.headers,
+            headers: this.res.headers,
             rateLimit,
         });
+    }
+    onResponseCloseHandler(resolve, reject) {
+        const res = this.res;
+        if (res.aborted) {
+            // Try to parse the request (?)
+            try {
+                this.getParsedResponse(this.res);
+                // Ok, try to resolve normally the request
+                return this.onResponseEndHandler(resolve, reject);
+            }
+            catch (e) {
+                // Parse error, just drop with content
+                return reject(this.createPartialResponseError(e, true));
+            }
+        }
+        if (!res.complete) {
+            return reject(this.createPartialResponseError(new Error('Response has been interrupted before response could be parsed.'), true));
+        }
+        // else: end has been called
     }
     streamResponseHandler(resolve, reject, res) {
         const code = res.statusCode;
         if (code < 400) {
             if (settings_1.TwitterApiV2Settings.debug) {
-                console.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${res.statusCode} (starting stream)`);
+                settings_1.TwitterApiV2Settings.logger.log(`[${this.requestData.options.method} ${this.hrefPathname}]: Request succeeds with code ${res.statusCode} (starting stream)`);
             }
+            const dataStream = this.getResponseDataStream(res);
             // HTTP code ok, consume stream
-            resolve({ req: this.req, res, requestData: this.requestData });
+            resolve({ req: this.req, res: dataStream, originalResponse: res, requestData: this.requestData });
         }
         else {
             // Handle response normally, can only rejects
             this.classicResponseHandler(() => undefined, reject, res);
         }
     }
+    /* Wrappers for request lifecycle */
     debugRequest() {
         const url = this.requestData.url;
-        console.log(`[${this.requestData.options.method} ${this.hrefPathname}]`, this.requestData.options);
+        settings_1.TwitterApiV2Settings.logger.log(`[${this.requestData.options.method} ${this.hrefPathname}]`, this.requestData.options);
         if (url.search) {
-            console.log('Request parameters:', [...url.searchParams.entries()].map(([key, value]) => `${key}: ${value}`));
+            settings_1.TwitterApiV2Settings.logger.log('Request parameters:', [...url.searchParams.entries()].map(([key, value]) => `${key}: ${value}`));
         }
         if (this.requestData.body) {
-            console.log('Request body:', this.requestData.body);
+            settings_1.TwitterApiV2Settings.logger.log('Request body:', this.requestData.body);
         }
     }
     buildRequest() {
+        var _a;
+        const url = this.requestData.url;
+        const auth = url.username ? `${url.username}:${url.password}` : undefined;
+        const headers = (_a = this.requestData.options.headers) !== null && _a !== void 0 ? _a : {};
+        if (this.requestData.compression === true || this.requestData.compression === 'brotli') {
+            headers['accept-encoding'] = 'br;q=1.0, gzip;q=0.8, deflate;q=0.5, *;q=0.1';
+        }
+        else if (this.requestData.compression === 'gzip') {
+            headers['accept-encoding'] = 'gzip;q=1, deflate;q=0.5, *;q=0.1';
+        }
+        else if (this.requestData.compression === 'deflate') {
+            headers['accept-encoding'] = 'deflate;q=1, *;q=0.1';
+        }
         if (settings_1.TwitterApiV2Settings.debug) {
             this.debugRequest();
         }
-        const url = this.requestData.url;
-        const auth = url.username ? `${url.username}:${url.password}` : undefined;
-        this.req = https_1.request({
+        this.req = (0, https_1.request)({
             ...this.requestData.options,
             // Define URL params manually, addresses dependencies error https://github.com/PLhery/node-twitter-api-v2/issues/94
             host: url.hostname,
@@ -2054,6 +3374,20 @@ class RequestHandlerHelper {
             path: url.pathname + url.search,
             protocol: url.protocol,
             auth,
+            headers,
+        });
+    }
+    registerRequestEventDebugHandlers(req) {
+        req.on('close', () => this.requestData.requestEventDebugHandler('close'));
+        req.on('abort', () => this.requestData.requestEventDebugHandler('abort'));
+        req.on('socket', socket => {
+            this.requestData.requestEventDebugHandler('socket', { socket });
+            socket.on('error', error => this.requestData.requestEventDebugHandler('socket-error', { socket, error }));
+            socket.on('connect', () => this.requestData.requestEventDebugHandler('socket-connect', { socket }));
+            socket.on('close', withError => this.requestData.requestEventDebugHandler('socket-close', { socket, withError }));
+            socket.on('end', () => this.requestData.requestEventDebugHandler('socket-end', { socket }));
+            socket.on('lookup', (...data) => this.requestData.requestEventDebugHandler('socket-lookup', { socket, data }));
+            socket.on('timeout', () => this.requestData.requestEventDebugHandler('socket-timeout', { socket }));
         });
     }
     makeRequest() {
@@ -2062,7 +3396,15 @@ class RequestHandlerHelper {
             const req = this.req;
             // Handle request errors
             req.on('error', this.requestErrorHandler.bind(this, reject));
+            req.on('socket', this.onSocketEventHandler.bind(this, reject));
             req.on('response', this.classicResponseHandler.bind(this, resolve, reject));
+            if (this.requestData.options.timeout) {
+                req.on('timeout', this.timeoutErrorHandler.bind(this));
+            }
+            // Debug handlers
+            if (this.requestData.requestEventDebugHandler) {
+                this.registerRequestEventDebugHandlers(req);
+            }
             if (this.requestData.body) {
                 req.write(this.requestData.body);
             }
@@ -2070,8 +3412,8 @@ class RequestHandlerHelper {
         });
     }
     async makeRequestAsStream() {
-        const { req, res, requestData } = await this.makeRequestAndResolveWhenReady();
-        return new TweetStream_1.default(requestData, req, res);
+        const { req, res, requestData, originalResponse } = await this.makeRequestAndResolveWhenReady();
+        return new TweetStream_1.default(requestData, { req, res, originalResponse });
     }
     makeRequestAndResolveWhenReady() {
         this.buildRequest();
@@ -2088,7 +3430,7 @@ class RequestHandlerHelper {
     }
 }
 exports.RequestHandlerHelper = RequestHandlerHelper;
-exports.default = RequestHandlerHelper;
+exports["default"] = RequestHandlerHelper;
 
 
 /***/ }),
@@ -2103,37 +3445,89 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ClientRequestMaker = void 0;
+const types_1 = __nccwpck_require__(1638);
 const TweetStream_1 = __importDefault(__nccwpck_require__(9362));
-const helpers_1 = __nccwpck_require__(1120);
+const helpers_1 = __nccwpck_require__(247);
+const helpers_2 = __nccwpck_require__(1120);
 const oauth1_helper_1 = __importDefault(__nccwpck_require__(8291));
 const request_handler_helper_1 = __importDefault(__nccwpck_require__(3768));
 const request_param_helper_1 = __importDefault(__nccwpck_require__(7954));
+const oauth2_helper_1 = __nccwpck_require__(9791);
 class ClientRequestMaker {
-    constructor() {
-        this._rateLimits = {};
+    constructor(settings) {
+        this.rateLimits = {};
+        this.clientSettings = {};
+        if (settings) {
+            this.clientSettings = settings;
+        }
+    }
+    /** @deprecated - Switch to `@twitter-api-v2/plugin-rate-limit` */
+    getRateLimits() {
+        return this.rateLimits;
     }
     saveRateLimit(originalUrl, rateLimit) {
-        this._rateLimits[originalUrl] = rateLimit;
+        this.rateLimits[originalUrl] = rateLimit;
     }
     /** Send a new request and returns a wrapped `Promise<TwitterResponse<T>`. */
-    send(requestParams) {
+    async send(requestParams) {
+        var _a, _b, _c, _d, _e;
+        // Pre-request config hooks
+        if ((_a = this.clientSettings.plugins) === null || _a === void 0 ? void 0 : _a.length) {
+            const possibleResponse = await this.applyPreRequestConfigHooks(requestParams);
+            if (possibleResponse) {
+                return possibleResponse;
+            }
+        }
         const args = this.getHttpRequestArgs(requestParams);
-        const options = { method: args.method, headers: args.headers, timeout: requestParams.timeout };
+        const options = {
+            method: args.method,
+            headers: args.headers,
+            timeout: requestParams.timeout,
+            agent: this.clientSettings.httpAgent,
+        };
         const enableRateLimitSave = requestParams.enableRateLimitSave !== false;
         if (args.body) {
             request_param_helper_1.default.setBodyLengthHeader(options, args.body);
         }
-        return new request_handler_helper_1.default({
+        // Pre-request hooks
+        if ((_b = this.clientSettings.plugins) === null || _b === void 0 ? void 0 : _b.length) {
+            await this.applyPreRequestHooks(requestParams, args, options);
+        }
+        let request = new request_handler_helper_1.default({
             url: args.url,
             options,
             body: args.body,
             rateLimitSaver: enableRateLimitSave ? this.saveRateLimit.bind(this, args.rawUrl) : undefined,
+            requestEventDebugHandler: requestParams.requestEventDebugHandler,
+            compression: (_d = (_c = requestParams.compression) !== null && _c !== void 0 ? _c : this.clientSettings.compression) !== null && _d !== void 0 ? _d : true,
+            forceParseMode: requestParams.forceParseMode,
         })
             .makeRequest();
+        if ((0, helpers_1.hasRequestErrorPlugins)(this)) {
+            request = this.applyResponseErrorHooks(requestParams, args, options, request);
+        }
+        const response = await request;
+        // Post-request hooks
+        if ((_e = this.clientSettings.plugins) === null || _e === void 0 ? void 0 : _e.length) {
+            const responseOverride = await this.applyPostRequestHooks(requestParams, args, options, response);
+            if (responseOverride) {
+                return responseOverride.value;
+            }
+        }
+        return response;
     }
     sendStream(requestParams) {
+        var _a, _b;
+        // Pre-request hooks
+        if (this.clientSettings.plugins) {
+            this.applyPreStreamRequestConfigHooks(requestParams);
+        }
         const args = this.getHttpRequestArgs(requestParams);
-        const options = { method: args.method, headers: args.headers };
+        const options = {
+            method: args.method,
+            headers: args.headers,
+            agent: this.clientSettings.httpAgent,
+        };
         const enableRateLimitSave = requestParams.enableRateLimitSave !== false;
         const enableAutoConnect = requestParams.autoConnect !== false;
         if (args.body) {
@@ -2145,6 +3539,7 @@ class ClientRequestMaker {
             body: args.body,
             rateLimitSaver: enableRateLimitSave ? this.saveRateLimit.bind(this, args.rawUrl) : undefined,
             payloadIsError: requestParams.payloadIsError,
+            compression: (_b = (_a = requestParams.compression) !== null && _a !== void 0 ? _a : this.clientSettings.compression) !== null && _b !== void 0 ? _b : true,
         };
         const stream = new TweetStream_1.default(requestData);
         if (!enableAutoConnect) {
@@ -2153,32 +3548,108 @@ class ClientRequestMaker {
         return stream.connect();
     }
     /* Token helpers */
+    initializeToken(token) {
+        if (typeof token === 'string') {
+            this.bearerToken = token;
+        }
+        else if (typeof token === 'object' && 'appKey' in token) {
+            this.consumerToken = token.appKey;
+            this.consumerSecret = token.appSecret;
+            if (token.accessToken && token.accessSecret) {
+                this.accessToken = token.accessToken;
+                this.accessSecret = token.accessSecret;
+            }
+            this._oauth = this.buildOAuth();
+        }
+        else if (typeof token === 'object' && 'username' in token) {
+            const key = encodeURIComponent(token.username) + ':' + encodeURIComponent(token.password);
+            this.basicToken = Buffer.from(key).toString('base64');
+        }
+        else if (typeof token === 'object' && 'clientId' in token) {
+            this.clientId = token.clientId;
+            this.clientSecret = token.clientSecret;
+        }
+    }
+    getActiveTokens() {
+        if (this.bearerToken) {
+            return {
+                type: 'oauth2',
+                bearerToken: this.bearerToken,
+            };
+        }
+        else if (this.basicToken) {
+            return {
+                type: 'basic',
+                token: this.basicToken,
+            };
+        }
+        else if (this.consumerSecret && this._oauth) {
+            return {
+                type: 'oauth-1.0a',
+                appKey: this.consumerToken,
+                appSecret: this.consumerSecret,
+                accessToken: this.accessToken,
+                accessSecret: this.accessSecret,
+            };
+        }
+        else if (this.clientId) {
+            return {
+                type: 'oauth2-user',
+                clientId: this.clientId,
+            };
+        }
+        return { type: 'none' };
+    }
     buildOAuth() {
-        if (!this._consumerSecret || !this._consumerToken)
+        if (!this.consumerSecret || !this.consumerToken)
             throw new Error('Invalid consumer tokens');
         return new oauth1_helper_1.default({
-            consumerKeys: { key: this._consumerToken, secret: this._consumerSecret },
+            consumerKeys: { key: this.consumerToken, secret: this.consumerSecret },
         });
     }
     getOAuthAccessTokens() {
-        if (!this._accessSecret || !this._accessToken)
+        if (!this.accessSecret || !this.accessToken)
             return;
         return {
-            key: this._accessToken,
-            secret: this._accessSecret,
+            key: this.accessToken,
+            secret: this.accessSecret,
         };
+    }
+    /* Plugin helpers */
+    getPlugins() {
+        var _a;
+        return (_a = this.clientSettings.plugins) !== null && _a !== void 0 ? _a : [];
+    }
+    hasPlugins() {
+        var _a;
+        return !!((_a = this.clientSettings.plugins) === null || _a === void 0 ? void 0 : _a.length);
+    }
+    async applyPluginMethod(method, args) {
+        var _a;
+        let returnValue;
+        for (const plugin of this.getPlugins()) {
+            const value = await ((_a = plugin[method]) === null || _a === void 0 ? void 0 : _a.call(plugin, args));
+            if (value && value instanceof types_1.TwitterApiPluginResponseOverride) {
+                returnValue = value;
+            }
+        }
+        return returnValue;
     }
     /* Request helpers */
     writeAuthHeaders({ headers, bodyInSignature, url, method, query, body }) {
         headers = { ...headers };
-        if (this._bearerToken) {
-            headers.Authorization = 'Bearer ' + this._bearerToken;
+        if (this.bearerToken) {
+            headers.Authorization = 'Bearer ' + this.bearerToken;
         }
-        else if (this._basicToken) {
+        else if (this.basicToken) {
             // Basic auth, to request a bearer token
-            headers.Authorization = 'Basic ' + this._basicToken;
+            headers.Authorization = 'Basic ' + this.basicToken;
         }
-        else if (this._consumerSecret && this._oauth) {
+        else if (this.clientId && this.clientSecret) {
+            // Basic auth with clientId + clientSecret
+            headers.Authorization = 'Basic ' + oauth2_helper_1.OAuth2Helper.getAuthHeader(this.clientId, this.clientSecret);
+        }
+        else if (this.consumerSecret && this._oauth) {
             // Merge query and body
             const data = bodyInSignature ? request_param_helper_1.default.mergeQueryAndBodyForOAuth(query, body) : query;
             const auth = this._oauth.authorize({
@@ -2190,52 +3661,103 @@ class ClientRequestMaker {
         }
         return headers;
     }
-    getHttpRequestArgs({ url, method, query: rawQuery = {}, body: rawBody = {}, headers, forceBodyMode, enableAuth, params, }) {
-        let body = undefined;
-        method = method.toUpperCase();
-        headers = headers !== null && headers !== void 0 ? headers : {};
-        // Add user agent header (Twitter recommands it)
-        if (!headers['x-user-agent']) {
-            headers['x-user-agent'] = 'Node.twitter-api-v2';
-        }
+    getUrlObjectFromUrlString(url) {
         // Add protocol to URL if needed
         if (!url.startsWith('http')) {
             url = 'https://' + url;
         }
         // Convert URL to object that will receive all URL modifications
-        const urlObject = new URL(url);
+        return new URL(url);
+    }
+    getHttpRequestArgs({ url: stringUrl, method, query: rawQuery = {}, body: rawBody = {}, headers, forceBodyMode, enableAuth, params, }) {
+        let body = undefined;
+        method = method.toUpperCase();
+        headers = headers !== null && headers !== void 0 ? headers : {};
+        // Add user agent header (Twitter recommends it)
+        if (!headers['x-user-agent']) {
+            headers['x-user-agent'] = 'Node.twitter-api-v2';
+        }
+        const url = this.getUrlObjectFromUrlString(stringUrl);
         // URL without query string to save as endpoint name
-        const rawUrl = urlObject.origin + urlObject.pathname;
+        const rawUrl = url.origin + url.pathname;
         // Apply URL parameters
         if (params) {
-            request_param_helper_1.default.applyRequestParametersToUrl(urlObject, params);
+            request_param_helper_1.default.applyRequestParametersToUrl(url, params);
         }
-        // Build an URL without anything in QS, and QSP in query
+        // Build a URL without anything in QS, and QSP in query
         const query = request_param_helper_1.default.formatQueryToString(rawQuery);
-        request_param_helper_1.default.moveUrlQueryParamsIntoObject(urlObject, query);
+        request_param_helper_1.default.moveUrlQueryParamsIntoObject(url, query);
         // Delete undefined parameters
         if (!(rawBody instanceof Buffer)) {
-            helpers_1.trimUndefinedProperties(rawBody);
+            (0, helpers_2.trimUndefinedProperties)(rawBody);
         }
         // OAuth signature should not include parameters when using multipart.
-        const bodyType = forceBodyMode !== null && forceBodyMode !== void 0 ? forceBodyMode : request_param_helper_1.default.autoDetectBodyType(urlObject);
+        const bodyType = forceBodyMode !== null && forceBodyMode !== void 0 ? forceBodyMode : request_param_helper_1.default.autoDetectBodyType(url);
         // If undefined or true, enable auth by headers
         if (enableAuth !== false) {
             // OAuth needs body signature only if body is URL encoded.
             const bodyInSignature = ClientRequestMaker.BODY_METHODS.has(method) && bodyType === 'url';
-            headers = this.writeAuthHeaders({ headers, bodyInSignature, method, query, url: urlObject, body: rawBody });
+            headers = this.writeAuthHeaders({ headers, bodyInSignature, method, query, url, body: rawBody });
         }
         if (ClientRequestMaker.BODY_METHODS.has(method)) {
             body = request_param_helper_1.default.constructBodyParams(rawBody, headers, bodyType) || undefined;
         }
-        request_param_helper_1.default.addQueryParamsToUrl(urlObject, query);
+        request_param_helper_1.default.addQueryParamsToUrl(url, query);
         return {
             rawUrl,
-            url: urlObject,
+            url,
             method,
             headers,
             body,
         };
+    }
+    /* Plugin helpers */
+    async applyPreRequestConfigHooks(requestParams) {
+        var _a;
+        const url = this.getUrlObjectFromUrlString(requestParams.url);
+        for (const plugin of this.getPlugins()) {
+            const result = await ((_a = plugin.onBeforeRequestConfig) === null || _a === void 0 ? void 0 : _a.call(plugin, {
+                client: this,
+                url,
+                params: requestParams,
+            }));
+            if (result) {
+                return result;
+            }
+        }
+    }
+    applyPreStreamRequestConfigHooks(requestParams) {
+        var _a;
+        const url = this.getUrlObjectFromUrlString(requestParams.url);
+        for (const plugin of this.getPlugins()) {
+            (_a = plugin.onBeforeStreamRequestConfig) === null || _a === void 0 ? void 0 : _a.call(plugin, {
+                client: this,
+                url,
+                params: requestParams,
+            });
+        }
+    }
+    async applyPreRequestHooks(requestParams, computedParams, requestOptions) {
+        await this.applyPluginMethod('onBeforeRequest', {
+            client: this,
+            url: this.getUrlObjectFromUrlString(requestParams.url),
+            params: requestParams,
+            computedParams,
+            requestOptions,
+        });
+    }
+    async applyPostRequestHooks(requestParams, computedParams, requestOptions, response) {
+        return await this.applyPluginMethod('onAfterRequest', {
+            client: this,
+            url: this.getUrlObjectFromUrlString(requestParams.url),
+            params: requestParams,
+            computedParams,
+            requestOptions,
+            response,
+        });
+    }
+    applyResponseErrorHooks(requestParams, computedParams, requestOptions, promise) {
+        return promise.catch(helpers_1.applyResponseHooks.bind(this, requestParams, computedParams, requestOptions));
     }
 }
 exports.ClientRequestMaker = ClientRequestMaker;
@@ -2245,13 +3767,17 @@ ClientRequestMaker.BODY_METHODS = new Set(['POST', 'PUT', 'PATCH']);
 /***/ }),
 
 /***/ 7954:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.RequestParamHelpers = void 0;
 const form_data_helper_1 = __nccwpck_require__(8274);
+const oauth1_helper_1 = __importDefault(__nccwpck_require__(8291));
 /* Helpers functions that are specific to this class but do not depends on instance */
 class RequestParamHelpers {
     static formatQueryToString(query) {
@@ -2289,12 +3815,13 @@ class RequestParamHelpers {
         return 'url';
     }
     static addQueryParamsToUrl(url, query) {
-        for (const [key, value] of Object.entries(query)) {
-            url.searchParams.append(key, value);
-        }
-        if (url.search) {
-            // URLSearchParams doesnt encode '*', but Twitter wants it encoded.
-            url.search = url.search.replace(/\*/g, '%2A');
+        const queryEntries = Object.entries(query);
+        if (queryEntries.length) {
+            let search = '';
+            for (const [key, value] of queryEntries) {
+                search += (search.length ? '&' : '?') + `${oauth1_helper_1.default.percentEncode(key)}=${oauth1_helper_1.default.percentEncode(value)}`;
+            }
+            url.search = search;
         }
     }
     static constructBodyParams(body, headers, mode) {
@@ -2387,7 +3914,7 @@ RequestParamHelpers.JSON_1_1_ENDPOINTS = new Set([
     'media/metadata/create.json',
     'collections/entries/curate.json',
 ]);
-exports.default = RequestParamHelpers;
+exports["default"] = RequestParamHelpers;
 
 
 /***/ }),
@@ -2399,43 +3926,21 @@ exports.default = RequestParamHelpers;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const request_maker_mixin_1 = __nccwpck_require__(6131);
+const helpers_1 = __nccwpck_require__(1120);
+const globals_1 = __nccwpck_require__(3444);
 /**
  * Base class for Twitter instances
  */
-class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
-    constructor(token) {
-        super();
+class TwitterApiBase {
+    constructor(token, settings = {}) {
         this._currentUser = null;
-        if (typeof token === 'string') {
-            this._bearerToken = token;
+        this._currentUserV2 = null;
+        if (token instanceof TwitterApiBase) {
+            this._requestMaker = token._requestMaker;
         }
-        else if (token instanceof TwitterApiBase) {
-            this._accessToken = token._accessToken;
-            this._accessSecret = token._accessSecret;
-            this._consumerToken = token._consumerToken;
-            this._consumerSecret = token._consumerSecret;
-            this._oauth = token._oauth;
-            this._prefix = token._prefix;
-            this._bearerToken = token._bearerToken;
-            this._basicToken = token._basicToken;
-            this._clientId = token._clientId;
-            this._rateLimits = token._rateLimits;
-        }
-        else if (typeof token === 'object' && 'appKey' in token) {
-            this._consumerToken = token.appKey;
-            this._consumerSecret = token.appSecret;
-            if (token.accessToken && token.accessSecret) {
-                this._accessToken = token.accessToken;
-                this._accessSecret = token.accessSecret;
-            }
-            this._oauth = this.buildOAuth();
-        }
-        else if (typeof token === 'object' && 'username' in token) {
-            const key = encodeURIComponent(token.username) + ':' + encodeURIComponent(token.password);
-            this._basicToken = Buffer.from(key).toString('base64');
-        }
-        else if (typeof token === 'object' && 'clientId' in token) {
-            this._clientId = token.clientId;
+        else {
+            this._requestMaker = new request_maker_mixin_1.ClientRequestMaker(settings);
+            this._requestMaker.initializeToken(token);
         }
     }
     /* Prefix/Token handling */
@@ -2448,31 +3953,18 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         return clone;
     }
     getActiveTokens() {
-        if (this._bearerToken) {
-            return {
-                type: 'oauth2',
-                bearerToken: this._bearerToken,
-            };
-        }
-        else if (this._basicToken) {
-            return {
-                type: 'basic',
-                token: this._basicToken,
-            };
-        }
-        else if (this._consumerSecret && this._oauth) {
-            return {
-                type: 'oauth-1.0a',
-                appKey: this._consumerToken,
-                appSecret: this._consumerSecret,
-                accessToken: this._accessToken,
-                accessSecret: this._accessSecret,
-            };
-        }
-        return { type: 'none' };
+        return this._requestMaker.getActiveTokens();
     }
-    /* Rate limit cache */
+    /* Rate limit cache / Plugins */
+    getPlugins() {
+        return this._requestMaker.getPlugins();
+    }
+    getPluginOfType(type) {
+        return this.getPlugins().find(plugin => plugin instanceof type);
+    }
     /**
+     * @deprecated - Migrate to plugin `@twitter-api-v2/plugin-rate-limit`
+     *
      * Tells if you hit the Twitter rate limit for {endpoint}.
      * (local data only, this should not ask anything to Twitter)
      */
@@ -2484,6 +3976,8 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         return ((_a = this.getLastRateLimitStatus(endpoint)) === null || _a === void 0 ? void 0 : _a.remaining) === 0;
     }
     /**
+     * @deprecated - Migrate to plugin `@twitter-api-v2/plugin-rate-limit`
+     *
      * Tells if you hit the returned Twitter rate limit for {endpoint} has expired.
      * If client has no saved rate limit data for {endpoint}, this will gives you `true`.
      */
@@ -2496,27 +3990,49 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         return (rateLimit.reset * 1000) < Date.now();
     }
     /**
+     * @deprecated - Migrate to plugin `@twitter-api-v2/plugin-rate-limit`
+     *
      * Get the last obtained Twitter rate limit information for {endpoint}.
      * (local data only, this should not ask anything to Twitter)
      */
     getLastRateLimitStatus(endpoint) {
         const endpointWithPrefix = endpoint.match(/^https?:\/\//) ? endpoint : (this._prefix + endpoint);
-        return this._rateLimits[endpointWithPrefix];
+        return this._requestMaker.getRateLimits()[endpointWithPrefix];
     }
     /* Current user cache */
     /** Get cached current user. */
-    async getCurrentUserObject(forceFetch = false) {
+    getCurrentUserObject(forceFetch = false) {
         if (!forceFetch && this._currentUser) {
-            return this._currentUser;
+            if (this._currentUser.value) {
+                return Promise.resolve(this._currentUser.value);
+            }
+            return this._currentUser.promise;
         }
-        const currentUser = await this.get('account/verify_credentials.json', { tweet_mode: 'extended' }, { prefix: 'https://api.twitter.com/1.1/' });
-        this._currentUser = currentUser;
-        return currentUser;
+        this._currentUser = (0, helpers_1.sharedPromise)(() => this.get('account/verify_credentials.json', { tweet_mode: 'extended' }, { prefix: globals_1.API_V1_1_PREFIX }));
+        return this._currentUser.promise;
+    }
+    /**
+     * Get cached current user from v2 API.
+     * This can only be the slimest available `UserV2` object, with only `id`, `name` and `username` properties defined.
+     *
+     * To get a customized `UserV2Result`, use `.v2.me()`
+     *
+     * OAuth2 scopes: `tweet.read` & `users.read`
+     */
+    getCurrentUserV2Object(forceFetch = false) {
+        if (!forceFetch && this._currentUserV2) {
+            if (this._currentUserV2.value) {
+                return Promise.resolve(this._currentUserV2.value);
+            }
+            return this._currentUserV2.promise;
+        }
+        this._currentUserV2 = (0, helpers_1.sharedPromise)(() => this.get('users/me', undefined, { prefix: globals_1.API_V2_PREFIX }));
+        return this._currentUserV2.promise;
     }
     async get(url, query = {}, { fullResponse, prefix = this._prefix, ...rest } = {}) {
         if (prefix)
             url = prefix + url;
-        const resp = await this.send({
+        const resp = await this._requestMaker.send({
             url,
             method: 'GET',
             query,
@@ -2527,7 +4043,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
     async delete(url, query = {}, { fullResponse, prefix = this._prefix, ...rest } = {}) {
         if (prefix)
             url = prefix + url;
-        const resp = await this.send({
+        const resp = await this._requestMaker.send({
             url,
             method: 'DELETE',
             query,
@@ -2538,7 +4054,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
     async post(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
         if (prefix)
             url = prefix + url;
-        const resp = await this.send({
+        const resp = await this._requestMaker.send({
             url,
             method: 'POST',
             body,
@@ -2549,7 +4065,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
     async put(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
         if (prefix)
             url = prefix + url;
-        const resp = await this.send({
+        const resp = await this._requestMaker.send({
             url,
             method: 'PUT',
             body,
@@ -2560,7 +4076,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
     async patch(url, body, { fullResponse, prefix = this._prefix, ...rest } = {}) {
         if (prefix)
             url = prefix + url;
-        const resp = await this.send({
+        const resp = await this._requestMaker.send({
             url,
             method: 'PATCH',
             body,
@@ -2569,7 +4085,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         return fullResponse ? resp : resp.data;
     }
     getStream(url, query, { prefix = this._prefix, ...rest } = {}) {
-        return this.sendStream({
+        return this._requestMaker.sendStream({
             url: prefix ? prefix + url : url,
             method: 'GET',
             query,
@@ -2577,7 +4093,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         });
     }
     postStream(url, body, { prefix = this._prefix, ...rest } = {}) {
-        return this.sendStream({
+        return this._requestMaker.sendStream({
             url: prefix ? prefix + url : url,
             method: 'POST',
             body,
@@ -2585,7 +4101,7 @@ class TwitterApiBase extends request_maker_mixin_1.ClientRequestMaker {
         });
     }
 }
-exports.default = TwitterApiBase;
+exports["default"] = TwitterApiBase;
 
 
 /***/ }),
@@ -2605,23 +4121,13 @@ const client_base_1 = __importDefault(__nccwpck_require__(8726));
  */
 class TwitterApiSubClient extends client_base_1.default {
     constructor(instance) {
-        super();
         if (!(instance instanceof client_base_1.default)) {
-            throw new Error('You must instance TwitterApiv1 instance from existing TwitterApi instance.');
+            throw new Error('You must instance SubTwitterApi instance from existing TwitterApi instance.');
         }
-        const inst = instance;
-        this._bearerToken = inst._bearerToken;
-        this._consumerToken = inst._consumerToken;
-        this._consumerSecret = inst._consumerSecret;
-        this._accessToken = inst._accessToken;
-        this._accessSecret = inst._accessSecret;
-        this._basicToken = inst._basicToken;
-        this._oauth = inst._oauth;
-        this._clientId = inst._clientId;
-        this._rateLimits = inst._rateLimits;
+        super(instance);
     }
 }
-exports.default = TwitterApiSubClient;
+exports["default"] = TwitterApiSubClient;
 
 
 /***/ }),
@@ -2699,7 +4205,7 @@ var readwrite_2 = __nccwpck_require__(489);
 Object.defineProperty(exports, "TwitterApiReadWrite", ({ enumerable: true, get: function () { return __importDefault(readwrite_2).default; } }));
 var readonly_1 = __nccwpck_require__(7344);
 Object.defineProperty(exports, "TwitterApiReadOnly", ({ enumerable: true, get: function () { return __importDefault(readonly_1).default; } }));
-exports.default = TwitterApi;
+exports["default"] = TwitterApi;
 
 
 /***/ }),
@@ -2718,6 +4224,7 @@ const client_base_1 = __importDefault(__nccwpck_require__(8726));
 const client_v1_read_1 = __importDefault(__nccwpck_require__(4273));
 const client_v2_read_1 = __importDefault(__nccwpck_require__(7318));
 const oauth2_helper_1 = __nccwpck_require__(9791);
+const request_param_helper_1 = __importDefault(__nccwpck_require__(7954));
 /**
  * Twitter v1.1 and v2 API client.
  */
@@ -2735,19 +4242,34 @@ class TwitterApiReadOnly extends client_base_1.default {
     }
     /**
      * Fetch and cache current user.
-     * This method can only be called with a OAuth 1.0a user authentification.
+     * This method can only be called with a OAuth 1.0a user authentication.
      *
-     * You can use this method to test if authentification was successful.
+     * You can use this method to test if authentication was successful.
      * Next calls to this methods will use the cached user, unless `forceFetch: true` is given.
      */
     async currentUser(forceFetch = false) {
         return await this.getCurrentUserObject(forceFetch);
     }
+    /**
+     * Fetch and cache current user.
+     * This method can only be called with a OAuth 1.0a or OAuth2 user authentication.
+     *
+     * This can only be the slimest available `UserV2` object, with only id, name and username properties defined.
+     * To get a customized `UserV2Result`, use `.v2.me()`
+     *
+     * You can use this method to test if authentication was successful.
+     * Next calls to this methods will use the cached user, unless `forceFetch: true` is given.
+     *
+     * OAuth2 scopes: `tweet.read` & `users.read`
+     */
+    async currentUserV2(forceFetch = false) {
+        return await this.getCurrentUserV2Object(forceFetch);
+    }
     /* Shortcuts to endpoints */
     search(what, options) {
         return this.v2.search(what, options);
     }
-    /* Authentification */
+    /* Authentication */
     /**
      * Generate the OAuth request token link for user-based OAuth 1.0 auth.
      *
@@ -2769,6 +4291,13 @@ class TwitterApiReadOnly extends client_base_1.default {
         }
         if (screenName !== undefined) {
             url += `&screen_name=${encodeURIComponent(screenName)}`;
+        }
+        if (this._requestMaker.hasPlugins()) {
+            this._requestMaker.applyPluginMethod('onOAuth1RequestToken', {
+                client: this._requestMaker,
+                url,
+                oauthResult,
+            });
         }
         return {
             url,
@@ -2797,13 +4326,16 @@ class TwitterApiReadOnly extends client_base_1.default {
      * ```
      */
     async login(oauth_verifier) {
-        const oauth_result = await this.post('https://api.twitter.com/oauth/access_token', { oauth_token: this._accessToken, oauth_verifier });
+        const tokens = this.getActiveTokens();
+        if (tokens.type !== 'oauth-1.0a')
+            throw new Error('You must setup TwitterApi instance with consumer keys to accept OAuth 1.0 login');
+        const oauth_result = await this.post('https://api.twitter.com/oauth/access_token', { oauth_token: tokens.accessToken, oauth_verifier });
         const client = new _1.default({
-            appKey: this._consumerToken,
-            appSecret: this._consumerSecret,
+            appKey: tokens.appKey,
+            appSecret: tokens.appSecret,
             accessToken: oauth_result.oauth_token,
             accessSecret: oauth_result.oauth_token_secret,
-        });
+        }, this._requestMaker.clientSettings);
         return {
             accessToken: oauth_result.oauth_token,
             accessSecret: oauth_result.oauth_token_secret,
@@ -2813,7 +4345,7 @@ class TwitterApiReadOnly extends client_base_1.default {
         };
     }
     /**
-     * Enable application-only authentification.
+     * Enable application-only authentication.
      *
      * To make the request, instanciate TwitterApi with consumer and secret.
      *
@@ -2825,17 +4357,23 @@ class TwitterApiReadOnly extends client_base_1.default {
      * ```
      */
     async appLogin() {
-        if (!this._consumerToken || !this._consumerSecret)
-            throw new Error('You must setup TwitterApi instance with consumers to enable app-only login');
-        // Create a client with Basic authentification
-        const basicClient = new _1.default({ username: this._consumerToken, password: this._consumerSecret });
+        const tokens = this.getActiveTokens();
+        if (tokens.type !== 'oauth-1.0a')
+            throw new Error('You must setup TwitterApi instance with consumer keys to accept app-only login');
+        // Create a client with Basic authentication
+        const basicClient = new _1.default({ username: tokens.appKey, password: tokens.appSecret });
         const res = await basicClient.post('https://api.twitter.com/oauth2/token', { grant_type: 'client_credentials' });
         // New object with Bearer token
-        return new _1.default(res.access_token);
+        return new _1.default(res.access_token, this._requestMaker.clientSettings);
     }
-    /* OAuth 2 user authentification */
+    /* OAuth 2 user authentication */
     /**
      * Generate the OAuth request token link for user-based OAuth 2.0 auth.
+     *
+     * - **You can only use v2 API endpoints with this authentication method.**
+     * - **You need to specify which scope you want to have when you create your auth link. Make sure it matches your needs.**
+     *
+     * See https://developer.twitter.com/en/docs/authentication/oauth-2-0/user-access-token for details.
      *
      * ```ts
      * // Instanciate TwitterApi with client ID
@@ -2853,8 +4391,8 @@ class TwitterApiReadOnly extends client_base_1.default {
      */
     generateOAuth2AuthLink(redirectUri, options = {}) {
         var _a, _b;
-        if (!this._clientId) {
-            throw new Error('Twitter API instance is not initialized with client ID. ' +
+        if (!this._requestMaker.clientId) {
+            throw new Error('Twitter API instance is not initialized with client ID. You can find your client ID in Twitter Developer Portal. ' +
                 'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
         }
         const state = (_a = options.state) !== null && _a !== void 0 ? _a : oauth2_helper_1.OAuth2Helper.generateRandomString(32);
@@ -2863,25 +4401,38 @@ class TwitterApiReadOnly extends client_base_1.default {
         const rawScope = (_b = options.scope) !== null && _b !== void 0 ? _b : '';
         const scope = Array.isArray(rawScope) ? rawScope.join(' ') : rawScope;
         const url = new URL('https://twitter.com/i/oauth2/authorize');
-        url.searchParams.set('response_type', 'code');
-        url.searchParams.set('client_id', this._clientId);
-        url.searchParams.set('redirect_uri', redirectUri);
-        url.searchParams.set('state', state);
-        url.searchParams.set('code_challenge', codeChallenge);
-        url.searchParams.set('code_challenge_method', 's256');
-        url.searchParams.set('scope', scope);
-        return {
+        const query = {
+            response_type: 'code',
+            client_id: this._requestMaker.clientId,
+            redirect_uri: redirectUri,
+            state,
+            code_challenge: codeChallenge,
+            code_challenge_method: 's256',
+            scope,
+        };
+        request_param_helper_1.default.addQueryParamsToUrl(url, query);
+        const result = {
             url: url.toString(),
             state,
             codeVerifier,
             codeChallenge,
         };
+        if (this._requestMaker.hasPlugins()) {
+            this._requestMaker.applyPluginMethod('onOAuth2RequestToken', {
+                client: this._requestMaker,
+                result,
+                redirectUri,
+            });
+        }
+        return result;
     }
     /**
      * Obtain access to user-based OAuth 2.0 auth.
      *
      * After user is redirect from your callback, use obtained code to
      * instanciate the new TwitterApi instance.
+     *
+     * You need to obtain `codeVerifier` from a call to `.generateOAuth2AuthLink`.
      *
      * ```ts
      * // Use the saved codeVerifier associated to state (present in query string of callback)
@@ -2900,7 +4451,7 @@ class TwitterApiReadOnly extends client_base_1.default {
      * ```
      */
     async loginWithOAuth2({ code, codeVerifier, redirectUri }) {
-        if (!this._clientId) {
+        if (!this._requestMaker.clientId) {
             throw new Error('Twitter API instance is not initialized with client ID. ' +
                 'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
         }
@@ -2909,7 +4460,8 @@ class TwitterApiReadOnly extends client_base_1.default {
             code_verifier: codeVerifier,
             redirect_uri: redirectUri,
             grant_type: 'authorization_code',
-            client_id: this._clientId,
+            client_id: this._requestMaker.clientId,
+            client_secret: this._requestMaker.clientSecret,
         });
         return this.parseOAuth2AccessTokenResult(accessTokenResult);
     }
@@ -2924,14 +4476,15 @@ class TwitterApiReadOnly extends client_base_1.default {
      * ```
      */
     async refreshOAuth2Token(refreshToken) {
-        if (!this._clientId) {
+        if (!this._requestMaker.clientId) {
             throw new Error('Twitter API instance is not initialized with client ID. ' +
                 'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
         }
         const accessTokenResult = await this.post('https://api.twitter.com/2/oauth2/token', {
             refresh_token: refreshToken,
             grant_type: 'refresh_token',
-            client_id: this._clientId,
+            client_id: this._requestMaker.clientId,
+            client_secret: this._requestMaker.clientSecret,
         });
         return this.parseOAuth2AccessTokenResult(accessTokenResult);
     }
@@ -2942,18 +4495,19 @@ class TwitterApiReadOnly extends client_base_1.default {
      * or refresh token (if you've called `.refreshOAuth2Token` before).
      */
     async revokeOAuth2Token(token, tokenType = 'access_token') {
-        if (!this._clientId) {
+        if (!this._requestMaker.clientId) {
             throw new Error('Twitter API instance is not initialized with client ID. ' +
                 'Please build an instance with: new TwitterApi({ clientId: \'<yourClientId>\' })');
         }
         return await this.post('https://api.twitter.com/2/oauth2/revoke', {
-            client_id: this._clientId,
+            client_id: this._requestMaker.clientId,
+            client_secret: this._requestMaker.clientSecret,
             token,
             token_type_hint: tokenType,
         });
     }
     parseOAuth2AccessTokenResult(result) {
-        const client = new _1.default(result.access_token);
+        const client = new _1.default(result.access_token, this._requestMaker.clientSettings);
         const scope = result.scope.split(' ').filter(e => e);
         return {
             client,
@@ -2964,7 +4518,7 @@ class TwitterApiReadOnly extends client_base_1.default {
         };
     }
 }
-exports.default = TwitterApiReadOnly;
+exports["default"] = TwitterApiReadOnly;
 
 
 /***/ }),
@@ -3003,7 +4557,7 @@ class TwitterApiReadWrite extends readonly_1.default {
         return this;
     }
 }
-exports.default = TwitterApiReadWrite;
+exports["default"] = TwitterApiReadWrite;
 
 
 /***/ }),
@@ -3030,8 +4584,19 @@ exports.API_V1_1_STREAM_PREFIX = 'https://stream.twitter.com/1.1/';
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.safeDeprecationWarning = exports.hasMultipleItems = exports.isTweetStreamV2ErrorPayload = exports.trimUndefinedProperties = exports.arrayWrap = void 0;
+exports.safeDeprecationWarning = exports.hasMultipleItems = exports.isTweetStreamV2ErrorPayload = exports.trimUndefinedProperties = exports.arrayWrap = exports.sharedPromise = void 0;
 const settings_1 = __nccwpck_require__(6273);
+function sharedPromise(getter) {
+    const sharedPromise = {
+        value: undefined,
+        promise: getter().then(val => {
+            sharedPromise.value = val;
+            return val;
+        }),
+    };
+    return sharedPromise;
+}
+exports.sharedPromise = sharedPromise;
 function arrayWrap(value) {
     if (Array.isArray(value)) {
         return value;
@@ -3073,7 +4638,7 @@ function safeDeprecationWarning(message) {
     const formattedMsg = `[twitter-api-v2] Deprecation warning: In ${message.instance}.${message.method}() call` +
         `, ${message.problem}.\n${message.resolution}.`;
     console.warn(formattedMsg);
-    console.warn('To disable this message, import TwitterApiV2Settings from twitter-api-v2 and set TwitterApiV2Settings.deprecationWarnings to false.');
+    console.warn('To disable this message, import variable TwitterApiV2Settings from twitter-api-v2 and set TwitterApiV2Settings.deprecationWarnings to false.');
     deprecationWarningsCache.add(hash);
 }
 exports.safeDeprecationWarning = safeDeprecationWarning;
@@ -3088,7 +4653,11 @@ exports.safeDeprecationWarning = safeDeprecationWarning;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -3100,12 +4669,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.default = void 0;
+exports["default"] = void 0;
 var client_1 = __nccwpck_require__(6118);
 Object.defineProperty(exports, "default", ({ enumerable: true, get: function () { return __importDefault(client_1).default; } }));
 __exportStar(__nccwpck_require__(6118), exports);
 __exportStar(__nccwpck_require__(7030), exports);
 __exportStar(__nccwpck_require__(4692), exports);
+__exportStar(__nccwpck_require__(876), exports);
 __exportStar(__nccwpck_require__(1204), exports);
 __exportStar(__nccwpck_require__(1638), exports);
 __exportStar(__nccwpck_require__(5814), exports);
@@ -3134,6 +4704,9 @@ class TwitterPaginator {
         this._sharedParams = sharedParams;
     }
     get _isRateLimitOk() {
+        if (!this._rateLimit) {
+            return true;
+        }
         const resetDate = this._rateLimit.reset * 1000;
         if (resetDate < Date.now()) {
             return true;
@@ -3203,11 +4776,15 @@ class TwitterPaginator {
         return this;
     }
     get rateLimit() {
-        return { ...this._rateLimit };
+        var _a;
+        return { ...(_a = this._rateLimit) !== null && _a !== void 0 ? _a : {} };
     }
     /** Get raw data returned by Twitter API. */
     get data() {
         return this._realData;
+    }
+    get done() {
+        return !this.canFetchNextPage(this._realData);
     }
     /**
      * Iterate over currently fetched items.
@@ -3216,17 +4793,48 @@ class TwitterPaginator {
         yield* this.getItemArray();
     }
     /**
-     * Iterate over items "undefinitely" (until rate limit is hit / they're no more tweets available)
+     * Iterate over items "undefinitely" (until rate limit is hit / they're no more items available)
+     * This will **mutate the current instance** and fill data, metas, etc. inside this instance.
+     *
+     * If you need to handle concurrent requests, or you need to rely on immutability, please use `.fetchAndIterate()` instead.
      */
     async *[Symbol.asyncIterator]() {
         yield* this.getItemArray();
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         let paginator = this;
-        while (this._isRateLimitOk && paginator.getItemArray().length > 0) {
+        let canFetchNextPage = this.canFetchNextPage(this._realData);
+        while (canFetchNextPage && this._isRateLimitOk && paginator.getItemArray().length > 0) {
             const next = await paginator.next(this._maxResultsWhenFetchLast);
-            this._rateLimit = next._rateLimit;
+            // Store data into current instance [needed to access includes and meta]
+            this.refreshInstanceFromResult({ data: next._realData, headers: {}, rateLimit: next._rateLimit }, true);
+            canFetchNextPage = this.canFetchNextPage(next._realData);
             const items = next.getItemArray();
             yield* items;
+            paginator = next;
+        }
+    }
+    /**
+     * Iterate over items "undefinitely" without modifying the current instance (until rate limit is hit / they're no more items available)
+     *
+     * This will **NOT** mutate the current instance, meaning that current instance will not inherit from `includes` and `meta` (v2 API only).
+     * Use `Symbol.asyncIterator` (`for-await of`) to directly access items with current instance mutation.
+     */
+    async *fetchAndIterate() {
+        for (const item of this.getItemArray()) {
+            yield [item, this];
+        }
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        let paginator = this;
+        let canFetchNextPage = this.canFetchNextPage(this._realData);
+        while (canFetchNextPage && this._isRateLimitOk && paginator.getItemArray().length > 0) {
+            const next = await paginator.next(this._maxResultsWhenFetchLast);
+            // Store data into current instance [needed to access includes and meta]
+            this.refreshInstanceFromResult({ data: next._realData, headers: {}, rateLimit: next._rateLimit }, true);
+            canFetchNextPage = this.canFetchNextPage(next._realData);
+            for (const item of next.getItemArray()) {
+                yield [item, next];
+            }
+            this._rateLimit = next._rateLimit;
             paginator = next;
         }
     }
@@ -3253,7 +4861,7 @@ class PreviousableTwitterPaginator extends TwitterPaginator {
     }
 }
 exports.PreviousableTwitterPaginator = PreviousableTwitterPaginator;
-exports.default = TwitterPaginator;
+exports["default"] = TwitterPaginator;
 
 
 /***/ }),
@@ -3321,6 +4929,140 @@ exports.WelcomeDmV1Paginator = WelcomeDmV1Paginator;
 
 /***/ }),
 
+/***/ 4509:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserFollowerIdsV1Paginator = exports.UserFollowerListV1Paginator = void 0;
+const paginator_v1_1 = __nccwpck_require__(593);
+class UserFollowerListV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'followers/list.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.users.push(...result.users);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.users.length;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        return this._realData.users;
+    }
+}
+exports.UserFollowerListV1Paginator = UserFollowerListV1Paginator;
+class UserFollowerIdsV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'followers/ids.json';
+        this._maxResultsWhenFetchLast = 5000;
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.ids.push(...result.ids);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.ids.length;
+    }
+    getItemArray() {
+        return this.ids;
+    }
+    /**
+     * Users IDs returned by paginator.
+     */
+    get ids() {
+        return this._realData.ids;
+    }
+}
+exports.UserFollowerIdsV1Paginator = UserFollowerIdsV1Paginator;
+
+
+/***/ }),
+
+/***/ 5905:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserFollowersIdsV1Paginator = exports.UserFriendListV1Paginator = void 0;
+const paginator_v1_1 = __nccwpck_require__(593);
+class UserFriendListV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'friends/list.json';
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.users.push(...result.users);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.users.length;
+    }
+    getItemArray() {
+        return this.users;
+    }
+    /**
+     * Users returned by paginator.
+     */
+    get users() {
+        return this._realData.users;
+    }
+}
+exports.UserFriendListV1Paginator = UserFriendListV1Paginator;
+class UserFollowersIdsV1Paginator extends paginator_v1_1.CursoredV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'friends/ids.json';
+        this._maxResultsWhenFetchLast = 5000;
+    }
+    refreshInstanceFromResult(response, isNextPage) {
+        const result = response.data;
+        this._rateLimit = response.rateLimit;
+        if (isNextPage) {
+            this._realData.ids.push(...result.ids);
+            this._realData.next_cursor = result.next_cursor;
+        }
+    }
+    getPageLengthFromRequest(result) {
+        return result.data.ids.length;
+    }
+    getItemArray() {
+        return this.ids;
+    }
+    /**
+     * Users IDs returned by paginator.
+     */
+    get ids() {
+        return this._realData.ids;
+    }
+}
+exports.UserFollowersIdsV1Paginator = UserFollowersIdsV1Paginator;
+
+
+/***/ }),
+
 /***/ 5814:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -3328,7 +5070,11 @@ exports.WelcomeDmV1Paginator = WelcomeDmV1Paginator;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -3345,6 +5091,9 @@ __exportStar(__nccwpck_require__(9848), exports);
 __exportStar(__nccwpck_require__(8985), exports);
 __exportStar(__nccwpck_require__(2178), exports);
 __exportStar(__nccwpck_require__(5631), exports);
+__exportStar(__nccwpck_require__(7874), exports);
+__exportStar(__nccwpck_require__(5905), exports);
+__exportStar(__nccwpck_require__(4509), exports);
 
 
 /***/ }),
@@ -3440,6 +5189,54 @@ exports.ListSubscribersV1Paginator = ListSubscribersV1Paginator;
 
 /***/ }),
 
+/***/ 7874:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UserListFollowedV2Paginator = exports.UserListMembershipsV2Paginator = exports.UserOwnedListsV2Paginator = void 0;
+const v2_paginator_1 = __nccwpck_require__(8108);
+class ListTimelineV2Paginator extends v2_paginator_1.TimelineV2Paginator {
+    getItemArray() {
+        return this.lists;
+    }
+    /**
+     * Lists returned by paginator.
+     */
+    get lists() {
+        var _a;
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
+    }
+    get meta() {
+        return super.meta;
+    }
+}
+class UserOwnedListsV2Paginator extends ListTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/owned_lists';
+    }
+}
+exports.UserOwnedListsV2Paginator = UserOwnedListsV2Paginator;
+class UserListMembershipsV2Paginator extends ListTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/list_memberships';
+    }
+}
+exports.UserListMembershipsV2Paginator = UserListMembershipsV2Paginator;
+class UserListFollowedV2Paginator extends ListTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/followed_lists';
+    }
+}
+exports.UserListFollowedV2Paginator = UserListFollowedV2Paginator;
+
+
+/***/ }),
+
 /***/ 7277:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -3528,7 +5325,12 @@ class CursoredV1Paginator extends TwitterPaginator_1.default {
         };
     }
     isFetchLastOver(result) {
-        return this.isNextCursorInvalid(result.data.next_cursor) && this.isNextCursorInvalid(result.data.next_cursor_str);
+        // If we cant fetch next page
+        return !this.canFetchNextPage(result.data);
+    }
+    canFetchNextPage(result) {
+        // If one of cursor is valid
+        return !this.isNextCursorInvalid(result.next_cursor) || !this.isNextCursorInvalid(result.next_cursor_str);
     }
     isNextCursorInvalid(value) {
         return value === undefined
@@ -3552,15 +5354,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ListTimelineV1Paginator = exports.UserTimelineV1Paginator = exports.MentionTimelineV1Paginator = exports.HomeTimelineV1Paginator = void 0;
+exports.UserFavoritesV1Paginator = exports.ListTimelineV1Paginator = exports.UserTimelineV1Paginator = exports.MentionTimelineV1Paginator = exports.HomeTimelineV1Paginator = void 0;
 const TwitterPaginator_1 = __importDefault(__nccwpck_require__(5317));
 /** A generic TwitterPaginator able to consume TweetV1 timelines. */
 class TweetTimelineV1Paginator extends TwitterPaginator_1.default {
+    constructor() {
+        super(...arguments);
+        this.hasFinishedFetch = false;
+    }
     refreshInstanceFromResult(response, isNextPage) {
         const result = response.data;
         this._rateLimit = response.rateLimit;
         if (isNextPage) {
             this._realData.push(...result);
+            // HINT: This is an approximation, as "end" of pagination cannot be safely determined without cursors.
+            this.hasFinishedFetch = result.length === 0;
         }
     }
     getNextQueryParams(maxResults) {
@@ -3576,6 +5384,9 @@ class TweetTimelineV1Paginator extends TwitterPaginator_1.default {
     isFetchLastOver(result) {
         return !result.data.length;
     }
+    canFetchNextPage(result) {
+        return result.length > 0;
+    }
     getItemArray() {
         return this.tweets;
     }
@@ -3584,6 +5395,9 @@ class TweetTimelineV1Paginator extends TwitterPaginator_1.default {
      */
     get tweets() {
         return this._realData;
+    }
+    get done() {
+        return super.done || this.hasFinishedFetch;
     }
 }
 // Timelines
@@ -3619,6 +5433,14 @@ class ListTimelineV1Paginator extends TweetTimelineV1Paginator {
     }
 }
 exports.ListTimelineV1Paginator = ListTimelineV1Paginator;
+// Favorites
+class UserFavoritesV1Paginator extends TweetTimelineV1Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'favorites/list.json';
+    }
+}
+exports.UserFavoritesV1Paginator = UserFavoritesV1Paginator;
 
 
 /***/ }),
@@ -3629,56 +5451,10 @@ exports.ListTimelineV1Paginator = ListTimelineV1Paginator;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.TweetV2UserLikedTweetsPaginator = exports.TweetUserMentionTimelineV2Paginator = exports.TweetUserTimelineV2Paginator = exports.TweetSearchAllV2Paginator = exports.TweetSearchRecentV2Paginator = void 0;
-const TwitterPaginator_1 = __nccwpck_require__(5317);
-/** A generic PreviousableTwitterPaginator able to consume TweetV2[]. */
-class TweetsV2Paginator extends TwitterPaginator_1.PreviousableTwitterPaginator {
-    updateIncludes(data) {
-        if (!data.includes) {
-            return;
-        }
-        if (!this._realData.includes) {
-            this._realData.includes = {};
-        }
-        const includesRealData = this._realData.includes;
-        for (const [includeKey, includeArray] of Object.entries(data.includes)) {
-            if (!includesRealData[includeKey]) {
-                includesRealData[includeKey] = [];
-            }
-            includesRealData[includeKey] = [
-                ...includesRealData[includeKey],
-                ...includeArray,
-            ];
-        }
-    }
-    getPageLengthFromRequest(result) {
-        var _a, _b;
-        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
-    }
-    isFetchLastOver(result) {
-        var _a;
-        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !result.data.meta.next_token;
-    }
-    getItemArray() {
-        return this.tweets;
-    }
-    /**
-     * Tweets returned by paginator.
-     */
-    get tweets() {
-        var _a;
-        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
-    }
-    get meta() {
-        return this._realData.meta;
-    }
-    get includes() {
-        var _a;
-        return (_a = this._realData.includes) !== null && _a !== void 0 ? _a : {};
-    }
-}
-/** A generic PreviousableTwitterPaginator able to consume TweetV2 timelines. */
-class TweetTimelineV2Paginator extends TweetsV2Paginator {
+exports.TweetV2ListTweetsPaginator = exports.TweetV2UserLikedTweetsPaginator = exports.TweetBookmarksTimelineV2Paginator = exports.TweetUserMentionTimelineV2Paginator = exports.TweetUserTimelineV2Paginator = exports.TweetHomeTimelineV2Paginator = exports.QuotedTweetsTimelineV2Paginator = exports.TweetSearchAllV2Paginator = exports.TweetSearchRecentV2Paginator = void 0;
+const v2_paginator_1 = __nccwpck_require__(8108);
+/** A generic PreviousableTwitterPaginator able to consume TweetV2 timelines with since_id, until_id and next_token (when available). */
+class TweetTimelineV2Paginator extends v2_paginator_1.TwitterV2Paginator {
     refreshInstanceFromResult(response, isNextPage) {
         var _a;
         const result = response.data;
@@ -3701,16 +5477,90 @@ class TweetTimelineV2Paginator extends TweetsV2Paginator {
         this.updateIncludes(result);
     }
     getNextQueryParams(maxResults) {
-        return {
-            ...this.injectQueryParams(maxResults),
-            until_id: this._realData.meta.oldest_id,
-        };
+        this.assertUsable();
+        const params = { ...this.injectQueryParams(maxResults) };
+        if (this._realData.meta.next_token) {
+            params.next_token = this._realData.meta.next_token;
+        }
+        else {
+            if (params.start_time) {
+                // until_id and start_time are forbidden together for some reason, so convert start_time to a since_id.
+                params.since_id = this.dateStringToSnowflakeId(params.start_time);
+                delete params.start_time;
+            }
+            if (params.end_time) {
+                // until_id overrides end_time, so delete it
+                delete params.end_time;
+            }
+            params.until_id = this._realData.meta.oldest_id;
+        }
+        return params;
     }
     getPreviousQueryParams(maxResults) {
+        this.assertUsable();
         return {
             ...this.injectQueryParams(maxResults),
             since_id: this._realData.meta.newest_id,
         };
+    }
+    getPageLengthFromRequest(result) {
+        var _a, _b;
+        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+    }
+    isFetchLastOver(result) {
+        var _a;
+        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !this.canFetchNextPage(result.data);
+    }
+    canFetchNextPage(result) {
+        return !!result.meta.next_token;
+    }
+    getItemArray() {
+        return this.tweets;
+    }
+    dateStringToSnowflakeId(dateStr) {
+        const TWITTER_START_EPOCH = BigInt('1288834974657');
+        const date = new Date(dateStr);
+        if (isNaN(date.valueOf())) {
+            throw new Error('Unable to convert start_time/end_time to a valid date. A ISO 8601 DateTime is excepted, please check your input.');
+        }
+        const dateTimestamp = BigInt(date.valueOf());
+        return ((dateTimestamp - TWITTER_START_EPOCH) << BigInt('22')).toString();
+    }
+    /**
+     * Tweets returned by paginator.
+     */
+    get tweets() {
+        var _a;
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
+    }
+    get meta() {
+        return super.meta;
+    }
+}
+/** A generic PreviousableTwitterPaginator able to consume TweetV2 timelines with pagination_tokens. */
+class TweetPaginableTimelineV2Paginator extends v2_paginator_1.TimelineV2Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        super.refreshInstanceFromResult(response, isNextPage);
+        const result = response.data;
+        if (isNextPage) {
+            this._realData.meta.oldest_id = result.meta.oldest_id;
+        }
+        else {
+            this._realData.meta.newest_id = result.meta.newest_id;
+        }
+    }
+    getItemArray() {
+        return this.tweets;
+    }
+    /**
+     * Tweets returned by paginator.
+     */
+    get tweets() {
+        var _a;
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
+    }
+    get meta() {
+        return super.meta;
     }
 }
 // ----------------
@@ -3730,56 +5580,64 @@ class TweetSearchAllV2Paginator extends TweetTimelineV2Paginator {
     }
 }
 exports.TweetSearchAllV2Paginator = TweetSearchAllV2Paginator;
-class TweetUserTimelineV2Paginator extends TweetTimelineV2Paginator {
+class QuotedTweetsTimelineV2Paginator extends TweetPaginableTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'tweets/:id/quote_tweets';
+    }
+}
+exports.QuotedTweetsTimelineV2Paginator = QuotedTweetsTimelineV2Paginator;
+// -----------------
+// - Home timeline -
+// -----------------
+class TweetHomeTimelineV2Paginator extends TweetPaginableTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/timelines/reverse_chronological';
+    }
+}
+exports.TweetHomeTimelineV2Paginator = TweetHomeTimelineV2Paginator;
+class TweetUserTimelineV2Paginator extends TweetPaginableTimelineV2Paginator {
     constructor() {
         super(...arguments);
         this._endpoint = 'users/:id/tweets';
     }
 }
 exports.TweetUserTimelineV2Paginator = TweetUserTimelineV2Paginator;
-class TweetUserMentionTimelineV2Paginator extends TweetTimelineV2Paginator {
+class TweetUserMentionTimelineV2Paginator extends TweetPaginableTimelineV2Paginator {
     constructor() {
         super(...arguments);
         this._endpoint = 'users/:id/mentions';
     }
 }
 exports.TweetUserMentionTimelineV2Paginator = TweetUserMentionTimelineV2Paginator;
+// -------------
+// - Bookmarks -
+// -------------
+class TweetBookmarksTimelineV2Paginator extends TweetPaginableTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'users/:id/bookmarks';
+    }
+}
+exports.TweetBookmarksTimelineV2Paginator = TweetBookmarksTimelineV2Paginator;
 // ---------------------------------------------------------------------------------
 // - Tweet lists (consume tweets with pagination tokens instead of since/until id) -
 // ---------------------------------------------------------------------------------
 /** A generic TwitterPaginator able to consume TweetV2 timelines. */
-class TweetListV2Paginator extends TweetsV2Paginator {
-    refreshInstanceFromResult(response, isNextPage) {
+class TweetListV2Paginator extends v2_paginator_1.TimelineV2Paginator {
+    /**
+     * Tweets returned by paginator.
+     */
+    get tweets() {
         var _a;
-        const result = response.data;
-        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
-        this._rateLimit = response.rateLimit;
-        if (!this._realData.data) {
-            this._realData.data = [];
-        }
-        if (isNextPage) {
-            this._realData.meta.result_count += result.meta.result_count;
-            this._realData.meta.next_token = result.meta.next_token;
-            this._realData.data.push(...resultData);
-        }
-        else {
-            this._realData.meta.result_count += result.meta.result_count;
-            this._realData.meta.previous_token = result.meta.previous_token;
-            this._realData.data.unshift(...resultData);
-        }
-        this.updateIncludes(result);
+        return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
     }
-    getNextQueryParams(maxResults) {
-        return {
-            ...this.injectQueryParams(maxResults),
-            pagination_token: this._realData.meta.next_token,
-        };
+    get meta() {
+        return super.meta;
     }
-    getPreviousQueryParams(maxResults) {
-        return {
-            ...this.injectQueryParams(maxResults),
-            pagination_token: this._realData.meta.previous_token,
-        };
+    getItemArray() {
+        return this.tweets;
     }
 }
 class TweetV2UserLikedTweetsPaginator extends TweetListV2Paginator {
@@ -3789,6 +5647,13 @@ class TweetV2UserLikedTweetsPaginator extends TweetListV2Paginator {
     }
 }
 exports.TweetV2UserLikedTweetsPaginator = TweetV2UserLikedTweetsPaginator;
+class TweetV2ListTweetsPaginator extends TweetListV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/:id/tweets';
+    }
+}
+exports.TweetV2ListTweetsPaginator = TweetV2ListTweetsPaginator;
 
 
 /***/ }),
@@ -3832,6 +5697,9 @@ class UserSearchV1Paginator extends TwitterPaginator_1.default {
     }
     isFetchLastOver(result) {
         return !result.data.length;
+    }
+    canFetchNextPage(result) {
+        return result.length > 0;
     }
     getItemArray() {
         return this.users;
@@ -3889,68 +5757,10 @@ exports.FriendshipsOutgoingV1Paginator = FriendshipsOutgoingV1Paginator;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UserFollowingV2Paginator = exports.UserFollowersV2Paginator = exports.UserMutingUsersV2Paginator = exports.UserBlockingUsersV2Paginator = void 0;
-const TwitterPaginator_1 = __nccwpck_require__(5317);
+exports.TweetRetweetersUsersV2Paginator = exports.TweetLikingUsersV2Paginator = exports.UserListFollowersV2Paginator = exports.UserListMembersV2Paginator = exports.UserFollowingV2Paginator = exports.UserFollowersV2Paginator = exports.UserMutingUsersV2Paginator = exports.UserBlockingUsersV2Paginator = void 0;
+const v2_paginator_1 = __nccwpck_require__(8108);
 /** A generic PreviousableTwitterPaginator able to consume UserV2 timelines. */
-class UserTimelineV2Paginator extends TwitterPaginator_1.PreviousableTwitterPaginator {
-    refreshInstanceFromResult(response, isNextPage) {
-        var _a;
-        const result = response.data;
-        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
-        this._rateLimit = response.rateLimit;
-        if (!this._realData.data) {
-            this._realData.data = [];
-        }
-        if (isNextPage) {
-            this._realData.meta.result_count += result.meta.result_count;
-            this._realData.meta.next_token = result.meta.next_token;
-            this._realData.data.push(...resultData);
-        }
-        else {
-            this._realData.meta.result_count += result.meta.result_count;
-            this._realData.meta.previous_token = result.meta.previous_token;
-            this._realData.data.unshift(...resultData);
-        }
-        this.updateIncludes(result);
-    }
-    updateIncludes(data) {
-        if (!data.includes) {
-            return;
-        }
-        if (!this._realData.includes) {
-            this._realData.includes = {};
-        }
-        const includesRealData = this._realData.includes;
-        for (const [includeKey, includeArray] of Object.entries(data.includes)) {
-            if (!includesRealData[includeKey]) {
-                includesRealData[includeKey] = [];
-            }
-            includesRealData[includeKey] = [
-                ...includesRealData[includeKey],
-                ...includeArray,
-            ];
-        }
-    }
-    getNextQueryParams(maxResults) {
-        return {
-            ...this.injectQueryParams(maxResults),
-            pagination_token: this._realData.meta.next_token,
-        };
-    }
-    getPreviousQueryParams(maxResults) {
-        return {
-            ...this.injectQueryParams(maxResults),
-            pagination_token: this._realData.meta.previous_token,
-        };
-    }
-    getPageLengthFromRequest(result) {
-        var _a, _b;
-        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
-    }
-    isFetchLastOver(result) {
-        var _a;
-        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !result.data.meta.next_token;
-    }
+class UserTimelineV2Paginator extends v2_paginator_1.TimelineV2Paginator {
     getItemArray() {
         return this.users;
     }
@@ -3962,11 +5772,7 @@ class UserTimelineV2Paginator extends TwitterPaginator_1.PreviousableTwitterPagi
         return (_a = this._realData.data) !== null && _a !== void 0 ? _a : [];
     }
     get meta() {
-        return this._realData.meta;
-    }
-    get includes() {
-        var _a;
-        return (_a = this._realData.includes) !== null && _a !== void 0 ? _a : {};
+        return super.meta;
     }
 }
 class UserBlockingUsersV2Paginator extends UserTimelineV2Paginator {
@@ -3997,6 +5803,209 @@ class UserFollowingV2Paginator extends UserTimelineV2Paginator {
     }
 }
 exports.UserFollowingV2Paginator = UserFollowingV2Paginator;
+class UserListMembersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/:id/members';
+    }
+}
+exports.UserListMembersV2Paginator = UserListMembersV2Paginator;
+class UserListFollowersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'lists/:id/followers';
+    }
+}
+exports.UserListFollowersV2Paginator = UserListFollowersV2Paginator;
+class TweetLikingUsersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'tweets/:id/liking_users';
+    }
+}
+exports.TweetLikingUsersV2Paginator = TweetLikingUsersV2Paginator;
+class TweetRetweetersUsersV2Paginator extends UserTimelineV2Paginator {
+    constructor() {
+        super(...arguments);
+        this._endpoint = 'tweets/:id/retweeted_by';
+    }
+}
+exports.TweetRetweetersUsersV2Paginator = TweetRetweetersUsersV2Paginator;
+
+
+/***/ }),
+
+/***/ 8108:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TimelineV2Paginator = exports.TwitterV2Paginator = void 0;
+const includes_v2_helper_1 = __nccwpck_require__(876);
+const TwitterPaginator_1 = __nccwpck_require__(5317);
+/** A generic PreviousableTwitterPaginator with common v2 helper methods. */
+class TwitterV2Paginator extends TwitterPaginator_1.PreviousableTwitterPaginator {
+    updateIncludes(data) {
+        // Update errors
+        if (data.errors) {
+            if (!this._realData.errors) {
+                this._realData.errors = [];
+            }
+            this._realData.errors = [...this._realData.errors, ...data.errors];
+        }
+        // Update includes
+        if (!data.includes) {
+            return;
+        }
+        if (!this._realData.includes) {
+            this._realData.includes = {};
+        }
+        const includesRealData = this._realData.includes;
+        for (const [includeKey, includeArray] of Object.entries(data.includes)) {
+            if (!includesRealData[includeKey]) {
+                includesRealData[includeKey] = [];
+            }
+            includesRealData[includeKey] = [
+                ...includesRealData[includeKey],
+                ...includeArray,
+            ];
+        }
+    }
+    /** Throw if the current paginator is not usable. */
+    assertUsable() {
+        if (this.unusable) {
+            throw new Error('Unable to use this paginator to fetch more data, as it does not contain any metadata.' +
+                ' Check .errors property for more details.');
+        }
+    }
+    get meta() {
+        return this._realData.meta;
+    }
+    get includes() {
+        var _a;
+        if (!((_a = this._realData) === null || _a === void 0 ? void 0 : _a.includes)) {
+            return new includes_v2_helper_1.TwitterV2IncludesHelper(this._realData);
+        }
+        if (this._includesInstance) {
+            return this._includesInstance;
+        }
+        return this._includesInstance = new includes_v2_helper_1.TwitterV2IncludesHelper(this._realData);
+    }
+    get errors() {
+        var _a;
+        return (_a = this._realData.errors) !== null && _a !== void 0 ? _a : [];
+    }
+    /** `true` if this paginator only contains error payload and no metadata found to consume data. */
+    get unusable() {
+        return this.errors.length > 0 && !this._realData.meta && !this._realData.data;
+    }
+}
+exports.TwitterV2Paginator = TwitterV2Paginator;
+/** A generic TwitterV2Paginator able to consume v2 timelines that use max_results and pagination tokens. */
+class TimelineV2Paginator extends TwitterV2Paginator {
+    refreshInstanceFromResult(response, isNextPage) {
+        var _a;
+        const result = response.data;
+        const resultData = (_a = result.data) !== null && _a !== void 0 ? _a : [];
+        this._rateLimit = response.rateLimit;
+        if (!this._realData.data) {
+            this._realData.data = [];
+        }
+        if (isNextPage) {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.next_token = result.meta.next_token;
+            this._realData.data.push(...resultData);
+        }
+        else {
+            this._realData.meta.result_count += result.meta.result_count;
+            this._realData.meta.previous_token = result.meta.previous_token;
+            this._realData.data.unshift(...resultData);
+        }
+        this.updateIncludes(result);
+    }
+    getNextQueryParams(maxResults) {
+        this.assertUsable();
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.next_token,
+        };
+    }
+    getPreviousQueryParams(maxResults) {
+        this.assertUsable();
+        return {
+            ...this.injectQueryParams(maxResults),
+            pagination_token: this._realData.meta.previous_token,
+        };
+    }
+    getPageLengthFromRequest(result) {
+        var _a, _b;
+        return (_b = (_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0;
+    }
+    isFetchLastOver(result) {
+        var _a;
+        return !((_a = result.data.data) === null || _a === void 0 ? void 0 : _a.length) || !this.canFetchNextPage(result.data);
+    }
+    canFetchNextPage(result) {
+        var _a;
+        return !!((_a = result.meta) === null || _a === void 0 ? void 0 : _a.next_token);
+    }
+}
+exports.TimelineV2Paginator = TimelineV2Paginator;
+
+
+/***/ }),
+
+/***/ 247:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.applyResponseHooks = exports.hasRequestErrorPlugins = void 0;
+const types_1 = __nccwpck_require__(1638);
+/* Plugin helpers */
+function hasRequestErrorPlugins(client) {
+    var _a;
+    if (!((_a = client.clientSettings.plugins) === null || _a === void 0 ? void 0 : _a.length)) {
+        return false;
+    }
+    for (const plugin of client.clientSettings.plugins) {
+        if (plugin.onRequestError || plugin.onResponseError) {
+            return true;
+        }
+    }
+    return false;
+}
+exports.hasRequestErrorPlugins = hasRequestErrorPlugins;
+async function applyResponseHooks(requestParams, computedParams, requestOptions, error) {
+    let override;
+    if (error instanceof types_1.ApiRequestError || error instanceof types_1.ApiPartialResponseError) {
+        override = await this.applyPluginMethod('onRequestError', {
+            client: this,
+            url: this.getUrlObjectFromUrlString(requestParams.url),
+            params: requestParams,
+            computedParams,
+            requestOptions,
+            error,
+        });
+    }
+    else if (error instanceof types_1.ApiResponseError) {
+        override = await this.applyPluginMethod('onResponseError', {
+            client: this,
+            url: this.getUrlObjectFromUrlString(requestParams.url),
+            params: requestParams,
+            computedParams,
+            requestOptions,
+            error,
+        });
+    }
+    if (override && override instanceof types_1.TwitterApiPluginResponseOverride) {
+        return override.value;
+    }
+    return Promise.reject(error);
+}
+exports.applyResponseHooks = applyResponseHooks;
 
 
 /***/ }),
@@ -4011,6 +6020,7 @@ exports.TwitterApiV2Settings = void 0;
 exports.TwitterApiV2Settings = {
     debug: false,
     deprecationWarnings: true,
+    logger: { log: console.log.bind(console) },
 };
 
 
@@ -4023,7 +6033,11 @@ exports.TwitterApiV2Settings = {
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -4045,7 +6059,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TweetStream = void 0;
-const events_1 = __nccwpck_require__(8614);
+const events_1 = __nccwpck_require__(2361);
 const request_handler_helper_1 = __importDefault(__nccwpck_require__(3768));
 const types_1 = __nccwpck_require__(1638);
 const TweetStreamEventCombiner_1 = __importDefault(__nccwpck_require__(1132));
@@ -4057,7 +6071,7 @@ const basicReconnectRetry = tryOccurence => tryOccurence > basicRetriesAttempt.l
     ? 901000
     : basicRetriesAttempt[tryOccurence - 1] * 1000;
 class TweetStream extends events_1.EventEmitter {
-    constructor(requestData, req, res) {
+    constructor(requestData, connection) {
         super();
         this.requestData = requestData;
         this.autoReconnect = false;
@@ -4069,9 +6083,10 @@ class TweetStream extends events_1.EventEmitter {
         this.connectionProcessRunning = false;
         this.onKeepAliveTimeout = this.onKeepAliveTimeout.bind(this);
         this.initEventsFromParser();
-        if (req && res) {
-            this.req = req;
-            this.res = res;
+        if (connection) {
+            this.req = connection.req;
+            this.res = connection.res;
+            this.originalResponse = connection.originalResponse;
             this.initEventsFromRequest();
         }
     }
@@ -4248,9 +6263,10 @@ class TweetStream extends events_1.EventEmitter {
                 initialConnection = false;
                 this.closeWithoutEmit();
             }
-            const { req, res } = await new request_handler_helper_1.default(this.requestData).makeRequestAndResolveWhenReady();
+            const { req, res, originalResponse } = await new request_handler_helper_1.default(this.requestData).makeRequestAndResolveWhenReady();
             this.req = req;
             this.res = res;
+            this.originalResponse = originalResponse;
             this.emit(initialConnection ? types_1.ETwitterStreamEvent.Connected : types_1.ETwitterStreamEvent.Reconnected);
             this.parser.reset();
             this.initEventsFromRequest();
@@ -4316,7 +6332,7 @@ class TweetStream extends events_1.EventEmitter {
     }
 }
 exports.TweetStream = TweetStream;
-exports.default = TweetStream;
+exports["default"] = TweetStream;
 
 
 /***/ }),
@@ -4328,7 +6344,7 @@ exports.default = TweetStream;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.TweetStreamEventCombiner = void 0;
-const events_1 = __nccwpck_require__(8614);
+const events_1 = __nccwpck_require__(2361);
 const types_1 = __nccwpck_require__(1638);
 class TweetStreamEventCombiner extends events_1.EventEmitter {
     constructor(stream) {
@@ -4379,7 +6395,7 @@ class TweetStreamEventCombiner extends events_1.EventEmitter {
     }
 }
 exports.TweetStreamEventCombiner = TweetStreamEventCombiner;
-exports.default = TweetStreamEventCombiner;
+exports["default"] = TweetStreamEventCombiner;
 
 
 /***/ }),
@@ -4391,7 +6407,7 @@ exports.default = TweetStreamEventCombiner;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EStreamParserEvent = void 0;
-const events_1 = __nccwpck_require__(8614);
+const events_1 = __nccwpck_require__(2361);
 class TweetStreamParser extends events_1.EventEmitter {
     constructor() {
         super(...arguments);
@@ -4436,7 +6452,7 @@ class TweetStreamParser extends events_1.EventEmitter {
         this.currentMessage = '';
     }
 }
-exports.default = TweetStreamParser;
+exports["default"] = TweetStreamParser;
 var EStreamParserEvent;
 (function (EStreamParserEvent) {
     EStreamParserEvent["ParsedData"] = "parsed data";
@@ -4490,10 +6506,11 @@ var ETwitterStreamEvent;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EApiV2ErrorCode = exports.EApiV1ErrorCode = exports.ApiResponseError = exports.ApiRequestError = exports.ETwitterApiError = void 0;
+exports.EApiV2ErrorCode = exports.EApiV1ErrorCode = exports.ApiResponseError = exports.ApiPartialResponseError = exports.ApiRequestError = exports.ETwitterApiError = void 0;
 var ETwitterApiError;
 (function (ETwitterApiError) {
     ETwitterApiError["Request"] = "request";
+    ETwitterApiError["PartialResponse"] = "partial-response";
     ETwitterApiError["Response"] = "response";
 })(ETwitterApiError = exports.ETwitterApiError || (exports.ETwitterApiError = {}));
 /* ERRORS INSTANCES */
@@ -4525,6 +6542,34 @@ class ApiRequestError extends ApiError {
     }
 }
 exports.ApiRequestError = ApiRequestError;
+class ApiPartialResponseError extends ApiError {
+    constructor(message, options) {
+        super(message);
+        this.type = ETwitterApiError.PartialResponse;
+        Error.captureStackTrace(this, this.constructor);
+        // Do not show on Node stack trace
+        Object.defineProperty(this, '_options', { value: options });
+    }
+    get request() {
+        return this._options.request;
+    }
+    get response() {
+        return this._options.response;
+    }
+    get responseError() {
+        return this._options.responseError;
+    }
+    get rawContent() {
+        return this._options.rawContent;
+    }
+    toJSON() {
+        return {
+            type: this.type,
+            error: this.responseError,
+        };
+    }
+}
+exports.ApiPartialResponseError = ApiPartialResponseError;
 class ApiResponseError extends ApiError {
     constructor(message, options) {
         super(message);
@@ -4535,7 +6580,18 @@ class ApiResponseError extends ApiError {
         this.code = options.code;
         this.headers = options.headers;
         this.rateLimit = options.rateLimit;
-        this.data = options.data;
+        // Fix bad error data payload on some v1 endpoints (see https://github.com/PLhery/node-twitter-api-v2/issues/342)
+        if (options.data && typeof options.data === 'object' && 'error' in options.data && !options.data.errors) {
+            const data = { ...options.data };
+            data.errors = [{
+                    code: EApiV1ErrorCode.InternalError,
+                    message: data.error,
+                }];
+            this.data = data;
+        }
+        else {
+            this.data = options.data;
+        }
     }
     get request() {
         return this._options.request;
@@ -4588,7 +6644,7 @@ var EApiV1ErrorCode;
     // Location errors
     EApiV1ErrorCode[EApiV1ErrorCode["InvalidCoordinates"] = 3] = "InvalidCoordinates";
     EApiV1ErrorCode[EApiV1ErrorCode["NoLocationFound"] = 13] = "NoLocationFound";
-    // Authentification failures
+    // Authentication failures
     EApiV1ErrorCode[EApiV1ErrorCode["AuthenticationFail"] = 32] = "AuthenticationFail";
     EApiV1ErrorCode[EApiV1ErrorCode["InvalidOrExpiredToken"] = 89] = "InvalidOrExpiredToken";
     EApiV1ErrorCode[EApiV1ErrorCode["UnableToVerifyCredentials"] = 99] = "UnableToVerifyCredentials";
@@ -4682,7 +6738,11 @@ var EApiV2ErrorCode;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -4697,6 +6757,49 @@ __exportStar(__nccwpck_require__(3549), exports);
 __exportStar(__nccwpck_require__(6296), exports);
 __exportStar(__nccwpck_require__(948), exports);
 __exportStar(__nccwpck_require__(8294), exports);
+__exportStar(__nccwpck_require__(547), exports);
+
+
+/***/ }),
+
+/***/ 3924:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterApiPluginResponseOverride = void 0;
+class TwitterApiPluginResponseOverride {
+    constructor(value) {
+        this.value = value;
+    }
+}
+exports.TwitterApiPluginResponseOverride = TwitterApiPluginResponseOverride;
+
+
+/***/ }),
+
+/***/ 547:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(3924), exports);
 
 
 /***/ }),
@@ -4765,7 +6868,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -4823,6 +6930,16 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EUploadMimeType = void 0;
+var EUploadMimeType;
+(function (EUploadMimeType) {
+    EUploadMimeType["Jpeg"] = "image/jpeg";
+    EUploadMimeType["Mp4"] = "video/mp4";
+    EUploadMimeType["Gif"] = "image/gif";
+    EUploadMimeType["Png"] = "image/png";
+    EUploadMimeType["Srt"] = "text/plain";
+    EUploadMimeType["Webp"] = "image/webp";
+})(EUploadMimeType = exports.EUploadMimeType || (exports.EUploadMimeType = {}));
 
 
 /***/ }),
@@ -4844,7 +6961,11 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -4912,6 +7033,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+;
 
 
 /***/ }),
@@ -5140,9 +7262,28 @@ class TwitterApiv1 extends client_v1_write_1.default {
             recipient_id: recipientId,
         }, { forceBodyMode: 'url' });
     }
+    // Part: Images
+    /**
+     * Get a single image attached to a direct message. TwitterApi client must be logged with OAuth 1.0a.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/direct-messages/message-attachments/guides/retrieving-media
+     */
+    async downloadDmImage(urlOrDm) {
+        if (typeof urlOrDm !== 'string') {
+            const attachment = urlOrDm[types_1.EDirectMessageEventTypeV1.Create].message_data.attachment;
+            if (!attachment) {
+                throw new Error('The given direct message doesn\'t contain any attachment');
+            }
+            urlOrDm = attachment.media_url_https;
+        }
+        const data = await this.get(urlOrDm, undefined, { forceParseMode: 'buffer', prefix: '' });
+        if (!data.length) {
+            throw new Error('Image not found. Make sure you are logged with credentials able to access direct messages, and check the URL.');
+        }
+        return data;
+    }
 }
 exports.TwitterApiv1 = TwitterApiv1;
-exports.default = TwitterApiv1;
+exports["default"] = TwitterApiv1;
 
 
 /***/ }),
@@ -5162,6 +7303,8 @@ const helpers_1 = __nccwpck_require__(1120);
 const client_v1_1 = __importDefault(__nccwpck_require__(7030));
 const tweet_paginator_v1_1 = __nccwpck_require__(9848);
 const mutes_paginator_v1_1 = __nccwpck_require__(7277);
+const followers_paginator_v1_1 = __nccwpck_require__(4509);
+const friends_paginator_v1_1 = __nccwpck_require__(5905);
 const user_paginator_v1_1 = __nccwpck_require__(8985);
 const list_paginator_v1_1 = __nccwpck_require__(5631);
 /**
@@ -5269,6 +7412,44 @@ class TwitterApiv1ReadOnly extends client_subclient_1.default {
             queryParams,
         });
     }
+    /**
+     * Returns the most recent Tweets liked by the authenticating or specified user, 20 tweets by default.
+     * Note: favorites are now known as likes.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-favorites-list
+     */
+    async favoriteTimeline(userId, options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            user_id: userId,
+            ...options,
+        };
+        const initialRq = await this.get('favorites/list.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.UserFavoritesV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns the most recent Tweets liked by the authenticating or specified user, 20 tweets by default.
+     * Note: favorites are now known as likes.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/get-favorites-list
+     */
+    async favoriteTimelineByUsername(username, options = {}) {
+        const queryParams = {
+            tweet_mode: 'extended',
+            screen_name: username,
+            ...options,
+        };
+        const initialRq = await this.get('favorites/list.json', queryParams, { fullResponse: true });
+        return new tweet_paginator_v1_1.UserFavoritesV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
     /* Users */
     /**
      * Returns a variety of information about the user specified by the required user_id or screen_name parameter.
@@ -5323,6 +7504,72 @@ class TwitterApiv1ReadOnly extends client_subclient_1.default {
         };
         const initialRq = await this.get('mutes/users/ids.json', queryParams, { fullResponse: true });
         return new mutes_paginator_v1_1.MuteUserIdsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns an array of user objects of friends of the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-list
+     */
+    async userFriendList(options = {}) {
+        const queryParams = {
+            ...options,
+        };
+        const initialRq = await this.get('friends/list.json', queryParams, { fullResponse: true });
+        return new friends_paginator_v1_1.UserFriendListV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns an array of user objects of followers of the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-followers-list
+     */
+    async userFollowerList(options = {}) {
+        const queryParams = {
+            ...options,
+        };
+        const initialRq = await this.get('followers/list.json', queryParams, { fullResponse: true });
+        return new followers_paginator_v1_1.UserFollowerListV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns an array of numeric user ids of followers of the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-followers-ids
+     */
+    async userFollowerIds(options = {}) {
+        const queryParams = {
+            stringify_ids: true,
+            ...options,
+        };
+        const initialRq = await this.get('followers/ids.json', queryParams, { fullResponse: true });
+        return new followers_paginator_v1_1.UserFollowerIdsV1Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams,
+        });
+    }
+    /**
+     * Returns an array of numeric user ids of friends of the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/get-friends-ids
+     */
+    async userFollowingIds(options = {}) {
+        const queryParams = {
+            stringify_ids: true,
+            ...options,
+        };
+        const initialRq = await this.get('friends/ids.json', queryParams, { fullResponse: true });
+        return new friends_paginator_v1_1.UserFollowersIdsV1Paginator({
             realData: initialRq.data,
             rateLimit: initialRq.rateLimit,
             instance: this,
@@ -5574,7 +7821,7 @@ class TwitterApiv1ReadOnly extends client_subclient_1.default {
             }
             else if (key === 'locations') {
                 const locations = value;
-                parameters.locations = helpers_1.arrayWrap(locations).map(loc => `${loc.lng},${loc.lat}`).join(',');
+                parameters.locations = (0, helpers_1.arrayWrap)(locations).map(loc => `${loc.lng},${loc.lat}`).join(',');
             }
             else {
                 parameters[key] = value;
@@ -5662,7 +7909,7 @@ class TwitterApiv1ReadOnly extends client_subclient_1.default {
         return this.get('help/languages.json');
     }
 }
-exports.default = TwitterApiv1ReadOnly;
+exports["default"] = TwitterApiv1ReadOnly;
 
 
 /***/ }),
@@ -5674,7 +7921,11 @@ exports.default = TwitterApiv1ReadOnly;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -5697,7 +7948,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const globals_1 = __nccwpck_require__(3444);
 const client_v1_read_1 = __importDefault(__nccwpck_require__(4273));
-const fs = __importStar(__nccwpck_require__(5747));
+const types_1 = __nccwpck_require__(1638);
+const fs = __importStar(__nccwpck_require__(7147));
 const media_helpers_v1_1 = __nccwpck_require__(8738);
 const helpers_1 = __nccwpck_require__(1120);
 const UPLOAD_ENDPOINT = 'media/upload.json';
@@ -5727,6 +7979,14 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
             ...payload,
         };
         return this.post('statuses/update.json', queryParams);
+    }
+    /**
+     * Quote an existing tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/tweets/post-and-engage/api-reference/post-statuses-update
+     */
+    async quote(status, quotingStatusId, payload = {}) {
+        const url = 'https://twitter.com/i/statuses/' + quotingStatusId;
+        return this.tweet(status, { ...payload, attachment_url: url });
     }
     /**
      * Post a series of tweets.
@@ -5785,6 +8045,20 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
     updateFriendship(options) {
         return this.post('friendships/update.json', options);
     }
+    /**
+     * Follow the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/post-friendships-create
+     */
+    createFriendship(options) {
+        return this.post('friendships/create.json', options);
+    }
+    /**
+     * Unfollow the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/follow-search-get-users/api-reference/post-friendships-destroy
+     */
+    destroyFriendship(options) {
+        return this.post('friendships/destroy.json', options);
+    }
     /* Account API */
     /**
      * Update current account settings for authenticating user.
@@ -5806,7 +8080,7 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
      */
     async updateAccountProfileBanner(file, options = {}) {
         const queryParams = {
-            banner: await media_helpers_v1_1.readFileIntoBuffer(file),
+            banner: await (0, media_helpers_v1_1.readFileIntoBuffer)(file),
             ...options,
         };
         return this.post('account/update_profile_banner.json', queryParams, { forceBodyMode: 'form-data' });
@@ -5818,7 +8092,7 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
     async updateAccountProfileImage(file, options = {}) {
         const queryParams = {
             tweet_mode: 'extended',
-            image: await media_helpers_v1_1.readFileIntoBuffer(file),
+            image: await (0, media_helpers_v1_1.readFileIntoBuffer)(file),
             ...options,
         };
         return this.post('account/update_profile_image.json', queryParams, { forceBodyMode: 'form-data' });
@@ -5859,7 +8133,7 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
      * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-members-create_all
      */
     addListMembers(options) {
-        const hasMultiple = (options.user_id && helpers_1.hasMultipleItems(options.user_id)) || (options.screen_name && helpers_1.hasMultipleItems(options.screen_name));
+        const hasMultiple = (options.user_id && (0, helpers_1.hasMultipleItems)(options.user_id)) || (options.screen_name && (0, helpers_1.hasMultipleItems)(options.screen_name));
         const endpoint = hasMultiple ? 'lists/members/create_all.json' : 'lists/members/create.json';
         return this.post(endpoint, options);
     }
@@ -5870,7 +8144,7 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
      * https://developer.twitter.com/en/docs/twitter-api/v1/accounts-and-users/create-manage-lists/api-reference/post-lists-members-destroy_all
      */
     removeListMembers(options) {
-        const hasMultiple = (options.user_id && helpers_1.hasMultipleItems(options.user_id)) || (options.screen_name && helpers_1.hasMultipleItems(options.screen_name));
+        const hasMultiple = (options.user_id && (0, helpers_1.hasMultipleItems)(options.user_id)) || (options.screen_name && (0, helpers_1.hasMultipleItems)(options.screen_name));
         const endpoint = hasMultiple ? 'lists/members/destroy_all.json' : 'lists/members/destroy.json';
         return this.post(endpoint, options);
     }
@@ -5983,44 +8257,49 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
         // eslint-disable-next-line no-constant-condition
         while (true) {
             fullMediaData = await this.mediaInfo(fullMediaData.media_id_string);
-            if (!fullMediaData.processing_info || fullMediaData.processing_info.state === 'succeeded') {
+            const { processing_info } = fullMediaData;
+            if (!processing_info || processing_info.state === 'succeeded') {
                 // Ok, completed!
                 return;
             }
-            if (fullMediaData.processing_info.state === 'failed') {
+            if (processing_info.state === 'failed') {
+                if (processing_info.error) {
+                    const { name, message } = processing_info.error;
+                    throw new Error(`Failed to process media: ${name} - ${message}.`);
+                }
                 throw new Error('Failed to process the media.');
             }
-            if (fullMediaData.processing_info.check_after_secs) {
+            if (processing_info.check_after_secs) {
                 // Await for given seconds
-                await media_helpers_v1_1.sleepSecs(fullMediaData.processing_info.check_after_secs);
+                await (0, media_helpers_v1_1.sleepSecs)(processing_info.check_after_secs);
             }
             else {
                 // No info; Await for 5 seconds
-                await media_helpers_v1_1.sleepSecs(5);
+                await (0, media_helpers_v1_1.sleepSecs)(5);
             }
         }
     }
-    async getUploadMediaRequirements(file, { type, target } = {}) {
+    async getUploadMediaRequirements(file, { mimeType, type, target, longVideo } = {}) {
         // Get the file handle (if not buffer)
         let fileHandle;
         try {
-            fileHandle = await media_helpers_v1_1.getFileHandle(file);
+            fileHandle = await (0, media_helpers_v1_1.getFileHandle)(file);
             // Get the mimetype
-            const mimeType = media_helpers_v1_1.getMimeType(file, type);
+            const realMimeType = (0, media_helpers_v1_1.getMimeType)(file, type, mimeType);
             // Get the media category
             let mediaCategory;
             // If explicit longmp4 OR explicit MIME type and not DM target
-            if (type === 'longmp4' || (type === 'video/mp4' && target !== 'dm')) {
+            if (realMimeType === types_1.EUploadMimeType.Mp4 && ((!mimeType && !type && target !== 'dm') || longVideo)) {
                 mediaCategory = 'amplify_video';
             }
             else {
-                mediaCategory = media_helpers_v1_1.getMediaCategoryByMime(mimeType, target !== null && target !== void 0 ? target : 'tweet');
+                mediaCategory = (0, media_helpers_v1_1.getMediaCategoryByMime)(realMimeType, target !== null && target !== void 0 ? target : 'tweet');
             }
             return {
                 fileHandle,
                 mediaCategory,
-                fileSize: await media_helpers_v1_1.getFileSizeFromFileHandle(fileHandle),
-                mimeType,
+                fileSize: await (0, media_helpers_v1_1.getFileSizeFromFileHandle)(fileHandle),
+                mimeType: realMimeType,
             };
         }
         catch (e) {
@@ -6049,7 +8328,7 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
         let nread;
         // Needed to use the buffer object (file handles always "remembers" file position)
         let offset = 0;
-        [readBuffer, nread] = await media_helpers_v1_1.readNextPartOf(fileHandle, chunkLength, offset, buffer);
+        [readBuffer, nread] = await (0, media_helpers_v1_1.readNextPartOf)(fileHandle, chunkLength, offset, buffer);
         offset += nread;
         // Handle max concurrent uploads
         const currentUploads = new Set();
@@ -6074,13 +8353,13 @@ class TwitterApiv1ReadWrite extends client_v1_read_1.default {
                 // Await for first promise to be finished
                 await Promise.race(currentUploads);
             }
-            [readBuffer, nread] = await media_helpers_v1_1.readNextPartOf(fileHandle, chunkLength, offset, buffer);
+            [readBuffer, nread] = await (0, media_helpers_v1_1.readNextPartOf)(fileHandle, chunkLength, offset, buffer);
             offset += nread;
         }
         await Promise.all([...currentUploads]);
     }
 }
-exports.default = TwitterApiv1ReadWrite;
+exports["default"] = TwitterApiv1ReadWrite;
 
 
 /***/ }),
@@ -6092,7 +8371,11 @@ exports.default = TwitterApiv1ReadWrite;
 
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -6111,7 +8394,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.readNextPartOf = exports.sleepSecs = exports.getMediaCategoryByMime = exports.getMimeType = exports.getFileSizeFromFileHandle = exports.getFileHandle = exports.readFileIntoBuffer = void 0;
-const fs = __importStar(__nccwpck_require__(5747));
+const fs = __importStar(__nccwpck_require__(7147));
+const helpers_1 = __nccwpck_require__(1120);
+const types_1 = __nccwpck_require__(1638);
 async function readFileIntoBuffer(file) {
     const handle = await getFileHandle(file);
     if (typeof handle === 'number') {
@@ -6170,8 +8455,11 @@ async function getFileSizeFromFileHandle(fileHandle) {
     }
 }
 exports.getFileSizeFromFileHandle = getFileSizeFromFileHandle;
-function getMimeType(file, type) {
-    if (typeof file === 'string' && !type) {
+function getMimeType(file, type, mimeType) {
+    if (typeof mimeType === 'string') {
+        return mimeType;
+    }
+    else if (typeof file === 'string' && !type) {
         return getMimeByName(file);
     }
     else if (typeof type === 'string') {
@@ -6182,40 +8470,53 @@ function getMimeType(file, type) {
 exports.getMimeType = getMimeType;
 function getMimeByName(name) {
     if (name.endsWith('.jpeg') || name.endsWith('.jpg'))
-        return 'image/jpeg';
+        return types_1.EUploadMimeType.Jpeg;
     if (name.endsWith('.png'))
-        return 'image/png';
+        return types_1.EUploadMimeType.Png;
     if (name.endsWith('.webp'))
-        return 'image/webp';
+        return types_1.EUploadMimeType.Webp;
     if (name.endsWith('.gif'))
-        return 'image/gif';
+        return types_1.EUploadMimeType.Gif;
     if (name.endsWith('.mpeg4') || name.endsWith('.mp4'))
-        return 'video/mp4';
+        return types_1.EUploadMimeType.Mp4;
     if (name.endsWith('.srt'))
-        return 'text/plain';
-    return 'image/jpeg';
+        return types_1.EUploadMimeType.Srt;
+    (0, helpers_1.safeDeprecationWarning)({
+        instance: 'TwitterApiv1ReadWrite',
+        method: 'uploadMedia',
+        problem: `options.mimeType is missing and filename couldn't help to resolve MIME type, so it will fallback to image/jpeg`,
+        resolution: `If you except to give filenames without extensions, please specify explicitlty the MIME type using options.mimeType`,
+    });
+    return types_1.EUploadMimeType.Jpeg;
 }
 function getMimeByType(type) {
+    (0, helpers_1.safeDeprecationWarning)({
+        instance: 'TwitterApiv1ReadWrite',
+        method: 'uploadMedia',
+        problem: `you're using options.type`,
+        resolution: `Remove options.type argument and migrate to options.mimeType which takes the real MIME type. ` +
+            `If you're using type=longmp4, add options.longVideo alongside of mimeType=EUploadMimeType.Mp4`,
+    });
     if (type === 'gif')
-        return 'image/gif';
+        return types_1.EUploadMimeType.Gif;
     if (type === 'jpg')
-        return 'image/jpeg';
+        return types_1.EUploadMimeType.Jpeg;
     if (type === 'png')
-        return 'image/png';
+        return types_1.EUploadMimeType.Png;
     if (type === 'webp')
-        return 'image/webp';
+        return types_1.EUploadMimeType.Webp;
     if (type === 'srt')
-        return 'text/plain';
+        return types_1.EUploadMimeType.Srt;
     if (type === 'mp4' || type === 'longmp4')
-        return 'video/mp4';
+        return types_1.EUploadMimeType.Mp4;
     return type;
 }
 function getMediaCategoryByMime(name, target) {
-    if (name === 'video/mp4')
+    if (name === types_1.EUploadMimeType.Mp4)
         return target === 'tweet' ? 'TweetVideo' : 'DmVideo';
-    if (name === 'image/gif')
+    if (name === types_1.EUploadMimeType.Gif)
         return target === 'tweet' ? 'TweetGif' : 'DmGif';
-    if (name === 'text/plain')
+    if (name === types_1.EUploadMimeType.Srt)
         return 'Subtitles';
     else
         return target === 'tweet' ? 'TweetImage' : 'DmImage';
@@ -6282,7 +8583,7 @@ class TwitterApiv2Labs extends client_v2_labs_write_1.default {
     }
 }
 exports.TwitterApiv2Labs = TwitterApiv2Labs;
-exports.default = TwitterApiv2Labs;
+exports["default"] = TwitterApiv2Labs;
 
 
 /***/ }),
@@ -6307,7 +8608,7 @@ class TwitterApiv2LabsReadOnly extends client_subclient_1.default {
         this._prefix = globals_1.API_V2_LABS_PREFIX;
     }
 }
-exports.default = TwitterApiv2LabsReadOnly;
+exports["default"] = TwitterApiv2LabsReadOnly;
 
 
 /***/ }),
@@ -6338,7 +8639,7 @@ class TwitterApiv2LabsReadWrite extends client_v2_labs_read_1.default {
         return this;
     }
 }
-exports.default = TwitterApiv2LabsReadWrite;
+exports["default"] = TwitterApiv2LabsReadWrite;
 
 
 /***/ }),
@@ -6381,7 +8682,7 @@ class TwitterApiv2 extends client_v2_write_1.default {
     }
 }
 exports.TwitterApiv2 = TwitterApiv2;
-exports.default = TwitterApiv2;
+exports["default"] = TwitterApiv2;
 
 
 /***/ }),
@@ -6418,13 +8719,10 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
             return this._labs;
         return this._labs = new client_v2_labs_read_1.default(this);
     }
-    /* Tweets */
-    /**
-     * The recent search endpoint returns Tweets from the last seven days that match a search query.
-     * https://developer.twitter.com/en/docs/twitter-api/tweets/search/api-reference/get-tweets-search-recent
-     */
-    async search(query, options = {}) {
-        const queryParams = { ...options, query };
+    async search(queryOrOptions, options = {}) {
+        const query = typeof queryOrOptions === 'string' ? queryOrOptions : undefined;
+        const realOptions = typeof queryOrOptions === 'object' && queryOrOptions !== null ? queryOrOptions : options;
+        const queryParams = { ...realOptions, query };
         const initialRq = await this.get('tweets/search/recent', queryParams, { fullResponse: true });
         return new paginators_1.TweetSearchRecentV2Paginator({
             realData: initialRq.data,
@@ -6487,19 +8785,60 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
     tweetCountAll(query, options = {}) {
         return this.get('tweets/counts/all', { query, ...options });
     }
-    /**
-     * Allows you to get information about who has Retweeted a Tweet.
-     * https://developer.twitter.com/en/docs/twitter-api/tweets/retweets/api-reference/get-tweets-id-retweeted_by
-     */
-    tweetRetweetedBy(tweetId, options = {}) {
-        return this.get('tweets/:id/retweeted_by', options, { params: { id: tweetId } });
+    async tweetRetweetedBy(tweetId, options = {}) {
+        const { asPaginator, ...parameters } = options;
+        const initialRq = await this.get('tweets/:id/retweeted_by', parameters, {
+            fullResponse: true,
+            params: { id: tweetId },
+        });
+        if (!asPaginator) {
+            return initialRq.data;
+        }
+        return new user_paginator_v2_1.TweetRetweetersUsersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: parameters,
+            sharedParams: { id: tweetId },
+        });
+    }
+    async tweetLikedBy(tweetId, options = {}) {
+        const { asPaginator, ...parameters } = options;
+        const initialRq = await this.get('tweets/:id/liking_users', parameters, {
+            fullResponse: true,
+            params: { id: tweetId },
+        });
+        if (!asPaginator) {
+            return initialRq.data;
+        }
+        return new user_paginator_v2_1.TweetLikingUsersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: parameters,
+            sharedParams: { id: tweetId },
+        });
     }
     /**
-     * Allows you to get information about who has Liked a Tweet.
-     * https://developer.twitter.com/en/docs/twitter-api/tweets/likes/api-reference/get-tweets-id-liking_users
+     * Allows you to retrieve a collection of the most recent Tweets and Retweets posted by you and users you follow, also known as home timeline.
+     * This endpoint returns up to the last 3200 Tweets.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-reverse-chronological
+     *
+     * OAuth 2 scopes: `tweet.read` `users.read`
      */
-    tweetLikedBy(tweetId, options = {}) {
-        return this.get('tweets/:id/liking_users', options, { params: { id: tweetId } });
+    async homeTimeline(options = {}) {
+        const meUser = await this.getCurrentUserV2Object();
+        const initialRq = await this.get('users/:id/timelines/reverse_chronological', options, {
+            fullResponse: true,
+            params: { id: meUser.data.id },
+        });
+        return new paginators_1.TweetHomeTimelineV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: options,
+            sharedParams: { id: meUser.data.id },
+        });
     }
     /**
      * Returns Tweets composed by a single user, specified by the requested user ID.
@@ -6539,7 +8878,56 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
             sharedParams: { id: userId },
         });
     }
+    /**
+     * Returns Quote Tweets for a Tweet specified by the requested Tweet ID.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/quote-tweets/api-reference/get-tweets-id-quote_tweets
+     *
+     * OAuth2 scopes: `users.read` `tweet.read`
+     */
+    async quotes(tweetId, options = {}) {
+        const initialRq = await this.get('tweets/:id/quote_tweets', options, {
+            fullResponse: true,
+            params: { id: tweetId },
+        });
+        return new paginators_1.QuotedTweetsTimelineV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: options,
+            sharedParams: { id: tweetId },
+        });
+    }
+    /* Bookmarks */
+    /**
+     * Allows you to get information about a authenticated user’s 800 most recent bookmarked Tweets.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/bookmarks/api-reference/get-users-id-bookmarks
+     *
+     * OAuth2 scopes: `users.read` `tweet.read` `bookmark.read`
+     */
+    async bookmarks(options = {}) {
+        const user = await this.getCurrentUserV2Object();
+        const initialRq = await this.get('users/:id/bookmarks', options, {
+            fullResponse: true,
+            params: { id: user.data.id },
+        });
+        return new paginators_1.TweetBookmarksTimelineV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: options,
+            sharedParams: { id: user.data.id },
+        });
+    }
     /* Users */
+    /**
+     * Returns information about an authorized user.
+     * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me
+     *
+     * OAuth2 scopes: `tweet.read` & `users.read`
+     */
+    me(options = {}) {
+        return this.get('users/me', options);
+    }
     /**
      * Returns a variety of information about a single user specified by the requested ID.
      * https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-id
@@ -6636,11 +9024,108 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
      * Returns a list of users who are muted by the authenticating user.
      * https://developer.twitter.com/en/docs/twitter-api/users/mutes/api-reference/get-users-muting
      */
-    async userMutingUsers(options = {}) {
-        const { id_str: userId } = await this.getCurrentUserObject();
+    async userMutingUsers(userId, options = {}) {
         const params = { id: userId };
         const initialRq = await this.get('users/:id/muting', options, { fullResponse: true, params });
         return new user_paginator_v2_1.UserMutingUsersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /* Lists */
+    /**
+     * Returns the details of a specified List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-lookup/api-reference/get-lists-id
+     */
+    list(id, options = {}) {
+        return this.get('lists/:id', options, { params: { id } });
+    }
+    /**
+     * Returns all Lists owned by the specified user.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-lookup/api-reference/get-users-id-owned_lists
+     */
+    async listsOwned(userId, options = {}) {
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/owned_lists', options, { fullResponse: true, params });
+        return new paginators_1.UserOwnedListsV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns all Lists a specified user is a member of.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-members/api-reference/get-users-id-list_memberships
+     */
+    async listMemberships(userId, options = {}) {
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/list_memberships', options, { fullResponse: true, params });
+        return new paginators_1.UserListMembershipsV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns all Lists a specified user follows.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-follows/api-reference/get-users-id-followed_lists
+     */
+    async listFollowed(userId, options = {}) {
+        const params = { id: userId };
+        const initialRq = await this.get('users/:id/followed_lists', options, { fullResponse: true, params });
+        return new paginators_1.UserListFollowedV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns a list of Tweets from the specified List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-tweets/api-reference/get-lists-id-tweets
+     */
+    async listTweets(listId, options = {}) {
+        const params = { id: listId };
+        const initialRq = await this.get('lists/:id/tweets', options, { fullResponse: true, params });
+        return new paginators_1.TweetV2ListTweetsPaginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns a list of users who are members of the specified List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-members/api-reference/get-lists-id-members
+     */
+    async listMembers(listId, options = {}) {
+        const params = { id: listId };
+        const initialRq = await this.get('lists/:id/members', options, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserListMembersV2Paginator({
+            realData: initialRq.data,
+            rateLimit: initialRq.rateLimit,
+            instance: this,
+            queryParams: { ...options },
+            sharedParams: params,
+        });
+    }
+    /**
+     * Returns a list of users who are followers of the specified List.
+     * https://developer.twitter.com/en/docs/twitter-api/lists/list-follows/api-reference/get-lists-id-followers
+     */
+    async listFollowers(listId, options = {}) {
+        const params = { id: listId };
+        const initialRq = await this.get('lists/:id/followers', options, { fullResponse: true, params });
+        return new user_paginator_v2_1.UserListFollowersV2Paginator({
             realData: initialRq.data,
             rateLimit: initialRq.rateLimit,
             instance: this,
@@ -6682,6 +9167,19 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
      */
     searchSpaces(options) {
         return this.get('spaces/search', options);
+    }
+    /**
+    * Returns a list of user who purchased a ticket to the requested Space.
+    * You must authenticate the request using the Access Token of the creator of the requested Space.
+    *
+    * **OAuth 2.0 Access Token required**
+    *
+    * https://developer.twitter.com/en/docs/twitter-api/spaces/lookup/api-reference/get-spaces-id-buyers
+    *
+    * OAuth2 scopes: `tweet.read`, `users.read`, `space.read`.
+    */
+    spaceBuyers(spaceId, options = {}) {
+        return this.get('spaces/:id/buyers', options, { params: { id: spaceId } });
     }
     searchStream({ autoConnect, ...options } = {}) {
         return this.getStream('tweets/search/stream', options, { payloadIsError: helpers_1.isTweetStreamV2ErrorPayload, autoConnect });
@@ -6760,7 +9258,7 @@ class TwitterApiv2ReadOnly extends client_subclient_1.default {
             .map(line => JSON.parse(line));
     }
 }
-exports.default = TwitterApiv2ReadOnly;
+exports["default"] = TwitterApiv2ReadOnly;
 
 
 /***/ }),
@@ -6850,13 +9348,94 @@ class TwitterApiv2ReadWrite extends client_v2_read_1.default {
             params: { id: loggedUserId, tweet_id: targetTweetId },
         });
     }
+    tweet(status, payload = {}) {
+        if (typeof status === 'object') {
+            payload = status;
+        }
+        else {
+            payload = { text: status, ...payload };
+        }
+        return this.post('tweets', payload);
+    }
+    /**
+     * Reply to a Tweet on behalf of an authenticated user.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
+     */
+    reply(status, toTweetId, payload = {}) {
+        var _a;
+        const reply = { in_reply_to_tweet_id: toTweetId, ...(_a = payload.reply) !== null && _a !== void 0 ? _a : {} };
+        return this.post('tweets', { text: status, ...payload, reply });
+    }
+    /**
+     * Quote an existing Tweet on behalf of an authenticated user.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
+     */
+    quote(status, quotedTweetId, payload = {}) {
+        return this.tweet(status, { ...payload, quote_tweet_id: quotedTweetId });
+    }
+    /**
+     * Post a series of tweets.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/post-tweets
+     */
+    async tweetThread(tweets) {
+        var _a, _b;
+        const postedTweets = [];
+        for (const tweet of tweets) {
+            // Retrieve the last sent tweet
+            const lastTweet = postedTweets.length ? postedTweets[postedTweets.length - 1] : null;
+            // Build the tweet query params
+            const queryParams = { ...(typeof tweet === 'string' ? ({ text: tweet }) : tweet) };
+            // Reply to an existing tweet if needed
+            const inReplyToId = lastTweet ? lastTweet.data.id : (_a = queryParams.reply) === null || _a === void 0 ? void 0 : _a.in_reply_to_tweet_id;
+            const status = (_b = queryParams.text) !== null && _b !== void 0 ? _b : '';
+            if (inReplyToId) {
+                postedTweets.push(await this.reply(status, inReplyToId, queryParams));
+            }
+            else {
+                postedTweets.push(await this.tweet(status, queryParams));
+            }
+        }
+        return postedTweets;
+    }
+    /**
+     * Allows a user or authenticated user ID to delete a Tweet
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/manage-tweets/api-reference/delete-tweets-id
+     */
+    deleteTweet(tweetId) {
+        return this.delete('tweets/:id', undefined, {
+            params: {
+                id: tweetId,
+            },
+        });
+    }
+    /* Bookmarks */
+    /**
+     * Causes the user ID of an authenticated user identified in the path parameter to Bookmark the target Tweet provided in the request body.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/bookmarks/api-reference/post-users-id-bookmarks
+     *
+     * OAuth2 scopes: `users.read` `tweet.read` `bookmark.write`
+     */
+    async bookmark(tweetId) {
+        const user = await this.getCurrentUserV2Object();
+        return this.post('users/:id/bookmarks', { tweet_id: tweetId }, { params: { id: user.data.id } });
+    }
+    /**
+     * Allows a user or authenticated user ID to remove a Bookmark of a Tweet.
+     * https://developer.twitter.com/en/docs/twitter-api/tweets/bookmarks/api-reference/delete-users-id-bookmarks-tweet_id
+     *
+     * OAuth2 scopes: `users.read` `tweet.read` `bookmark.write`
+     */
+    async deleteBookmark(tweetId) {
+        const user = await this.getCurrentUserV2Object();
+        return this.delete('users/:id/bookmarks/:tweet_id', undefined, { params: { id: user.data.id, tweet_id: tweetId } });
+    }
     /* Users */
     /**
      * Allows a user ID to follow another user.
      * If the target user does not have public Tweets, this endpoint will send a follow request.
      * https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/post-users-source_user_id-following
      *
-     * OAuth2 scope: `account.follows.write`
+     * OAuth2 scope: `follows.write`
      *
      * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
      */
@@ -6867,7 +9446,7 @@ class TwitterApiv2ReadWrite extends client_v2_read_1.default {
      * Allows a user ID to unfollow another user.
      * https://developer.twitter.com/en/docs/twitter-api/users/follows/api-reference/delete-users-source_id-following
      *
-     * OAuth2 scope: `account.follows.write`
+     * OAuth2 scope: `follows.write`
      *
      * **Note**: You must specify the currently logged user ID ; you can obtain it through v1.1 API.
      */
@@ -6983,12 +9562,231 @@ class TwitterApiv2ReadWrite extends client_v2_read_1.default {
         return this.delete('users/:id/pinned_lists/:list_id', undefined, { params: { id: loggedUserId, list_id: listId } });
     }
 }
-exports.default = TwitterApiv2ReadWrite;
+exports["default"] = TwitterApiv2ReadWrite;
 
 
 /***/ }),
 
-/***/ 2357:
+/***/ 876:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TwitterV2IncludesHelper = void 0;
+/**
+ * Provide helpers for `.includes` of a v2 API result.
+ * Needed expansions for a method to work are specified (*`like this`*).
+ */
+class TwitterV2IncludesHelper {
+    constructor(result) {
+        this.result = result;
+    }
+    /* Tweets */
+    get tweets() {
+        return TwitterV2IncludesHelper.tweets(this.result);
+    }
+    static tweets(result) {
+        var _a, _b;
+        return (_b = (_a = result.includes) === null || _a === void 0 ? void 0 : _a.tweets) !== null && _b !== void 0 ? _b : [];
+    }
+    tweetById(id) {
+        return TwitterV2IncludesHelper.tweetById(this.result, id);
+    }
+    static tweetById(result, id) {
+        return this.tweets(result).find(tweet => tweet.id === id);
+    }
+    /** Retweet associated with the given tweet (*`referenced_tweets.id`*) */
+    retweet(tweet) {
+        return TwitterV2IncludesHelper.retweet(this.result, tweet);
+    }
+    /** Retweet associated with the given tweet (*`referenced_tweets.id`*) */
+    static retweet(result, tweet) {
+        var _a;
+        const retweetIds = ((_a = tweet.referenced_tweets) !== null && _a !== void 0 ? _a : [])
+            .filter(ref => ref.type === 'retweeted')
+            .map(ref => ref.id);
+        return this.tweets(result).find(t => retweetIds.includes(t.id));
+    }
+    /** Quoted tweet associated with the given tweet (*`referenced_tweets.id`*) */
+    quote(tweet) {
+        return TwitterV2IncludesHelper.quote(this.result, tweet);
+    }
+    /** Quoted tweet associated with the given tweet (*`referenced_tweets.id`*) */
+    static quote(result, tweet) {
+        var _a;
+        const quoteIds = ((_a = tweet.referenced_tweets) !== null && _a !== void 0 ? _a : [])
+            .filter(ref => ref.type === 'quoted')
+            .map(ref => ref.id);
+        return this.tweets(result).find(t => quoteIds.includes(t.id));
+    }
+    /** Tweet whose has been answered by the given tweet (*`referenced_tweets.id`*) */
+    repliedTo(tweet) {
+        return TwitterV2IncludesHelper.repliedTo(this.result, tweet);
+    }
+    /** Tweet whose has been answered by the given tweet (*`referenced_tweets.id`*) */
+    static repliedTo(result, tweet) {
+        var _a;
+        const repliesIds = ((_a = tweet.referenced_tweets) !== null && _a !== void 0 ? _a : [])
+            .filter(ref => ref.type === 'replied_to')
+            .map(ref => ref.id);
+        return this.tweets(result).find(t => repliesIds.includes(t.id));
+    }
+    /** Tweet author user object of the given tweet (*`author_id`* or *`referenced_tweets.id.author_id`*) */
+    author(tweet) {
+        return TwitterV2IncludesHelper.author(this.result, tweet);
+    }
+    /** Tweet author user object of the given tweet (*`author_id`* or *`referenced_tweets.id.author_id`*) */
+    static author(result, tweet) {
+        const authorId = tweet.author_id;
+        return authorId ? this.users(result).find(u => u.id === authorId) : undefined;
+    }
+    /** Tweet author user object of the tweet answered by the given tweet (*`in_reply_to_user_id`*) */
+    repliedToAuthor(tweet) {
+        return TwitterV2IncludesHelper.repliedToAuthor(this.result, tweet);
+    }
+    /** Tweet author user object of the tweet answered by the given tweet (*`in_reply_to_user_id`*) */
+    static repliedToAuthor(result, tweet) {
+        const inReplyUserId = tweet.in_reply_to_user_id;
+        return inReplyUserId ? this.users(result).find(u => u.id === inReplyUserId) : undefined;
+    }
+    /* Users */
+    get users() {
+        return TwitterV2IncludesHelper.users(this.result);
+    }
+    static users(result) {
+        var _a, _b;
+        return (_b = (_a = result.includes) === null || _a === void 0 ? void 0 : _a.users) !== null && _b !== void 0 ? _b : [];
+    }
+    userById(id) {
+        return TwitterV2IncludesHelper.userById(this.result, id);
+    }
+    static userById(result, id) {
+        return this.users(result).find(u => u.id === id);
+    }
+    /** Pinned tweet of the given user (*`pinned_tweet_id`*) */
+    pinnedTweet(user) {
+        return TwitterV2IncludesHelper.pinnedTweet(this.result, user);
+    }
+    /** Pinned tweet of the given user (*`pinned_tweet_id`*) */
+    static pinnedTweet(result, user) {
+        return user.pinned_tweet_id ? this.tweets(result).find(t => t.id === user.pinned_tweet_id) : undefined;
+    }
+    /* Medias */
+    get media() {
+        return TwitterV2IncludesHelper.media(this.result);
+    }
+    static media(result) {
+        var _a, _b;
+        return (_b = (_a = result.includes) === null || _a === void 0 ? void 0 : _a.media) !== null && _b !== void 0 ? _b : [];
+    }
+    /** Medias associated with the given tweet (*`attachments.media_keys`*) */
+    medias(tweet) {
+        return TwitterV2IncludesHelper.medias(this.result, tweet);
+    }
+    /** Medias associated with the given tweet (*`attachments.media_keys`*) */
+    static medias(result, tweet) {
+        var _a, _b;
+        const keys = (_b = (_a = tweet.attachments) === null || _a === void 0 ? void 0 : _a.media_keys) !== null && _b !== void 0 ? _b : [];
+        return this.media(result).filter(m => keys.includes(m.media_key));
+    }
+    /* Polls */
+    get polls() {
+        return TwitterV2IncludesHelper.polls(this.result);
+    }
+    static polls(result) {
+        var _a, _b;
+        return (_b = (_a = result.includes) === null || _a === void 0 ? void 0 : _a.polls) !== null && _b !== void 0 ? _b : [];
+    }
+    /** Poll associated with the given tweet (*`attachments.poll_ids`*) */
+    poll(tweet) {
+        return TwitterV2IncludesHelper.poll(this.result, tweet);
+    }
+    /** Poll associated with the given tweet (*`attachments.poll_ids`*) */
+    static poll(result, tweet) {
+        var _a, _b;
+        const pollIds = (_b = (_a = tweet.attachments) === null || _a === void 0 ? void 0 : _a.poll_ids) !== null && _b !== void 0 ? _b : [];
+        if (pollIds.length) {
+            const pollId = pollIds[0];
+            return this.polls(result).find(p => p.id === pollId);
+        }
+        return undefined;
+    }
+    /* Places */
+    get places() {
+        return TwitterV2IncludesHelper.places(this.result);
+    }
+    static places(result) {
+        var _a, _b;
+        return (_b = (_a = result.includes) === null || _a === void 0 ? void 0 : _a.places) !== null && _b !== void 0 ? _b : [];
+    }
+    /** Place associated with the given tweet (*`geo.place_id`*) */
+    place(tweet) {
+        return TwitterV2IncludesHelper.place(this.result, tweet);
+    }
+    /** Place associated with the given tweet (*`geo.place_id`*) */
+    static place(result, tweet) {
+        var _a;
+        const placeId = (_a = tweet.geo) === null || _a === void 0 ? void 0 : _a.place_id;
+        return placeId ? this.places(result).find(p => p.id === placeId) : undefined;
+    }
+    /* Lists */
+    /** List owner of the given list (*`owner_id`*) */
+    listOwner(list) {
+        return TwitterV2IncludesHelper.listOwner(this.result, list);
+    }
+    /** List owner of the given list (*`owner_id`*) */
+    static listOwner(result, list) {
+        const creatorId = list.owner_id;
+        return creatorId ? this.users(result).find(p => p.id === creatorId) : undefined;
+    }
+    /* Spaces */
+    /** Creator of the given space (*`creator_id`*) */
+    spaceCreator(space) {
+        return TwitterV2IncludesHelper.spaceCreator(this.result, space);
+    }
+    /** Creator of the given space (*`creator_id`*) */
+    static spaceCreator(result, space) {
+        const creatorId = space.creator_id;
+        return creatorId ? this.users(result).find(p => p.id === creatorId) : undefined;
+    }
+    /** Current hosts of the given space (*`host_ids`*) */
+    spaceHosts(space) {
+        return TwitterV2IncludesHelper.spaceHosts(this.result, space);
+    }
+    /** Current hosts of the given space (*`host_ids`*) */
+    static spaceHosts(result, space) {
+        var _a;
+        const hostIds = (_a = space.host_ids) !== null && _a !== void 0 ? _a : [];
+        return this.users(result).filter(u => hostIds.includes(u.id));
+    }
+    /** Current speakers of the given space (*`speaker_ids`*) */
+    spaceSpeakers(space) {
+        return TwitterV2IncludesHelper.spaceSpeakers(this.result, space);
+    }
+    /** Current speakers of the given space (*`speaker_ids`*) */
+    static spaceSpeakers(result, space) {
+        var _a;
+        const speakerIds = (_a = space.speaker_ids) !== null && _a !== void 0 ? _a : [];
+        return this.users(result).filter(u => speakerIds.includes(u.id));
+    }
+    /** Current invited users of the given space (*`invited_user_ids`*) */
+    spaceInvitedUsers(space) {
+        return TwitterV2IncludesHelper.spaceInvitedUsers(this.result, space);
+    }
+    /** Current invited users of the given space (*`invited_user_ids`*) */
+    static spaceInvitedUsers(result, space) {
+        var _a;
+        const invitedUserIds = (_a = space.invited_user_ids) !== null && _a !== void 0 ? _a : [];
+        return this.users(result).filter(u => invitedUserIds.includes(u.id));
+    }
+}
+exports.TwitterV2IncludesHelper = TwitterV2IncludesHelper;
+
+
+/***/ }),
+
+/***/ 9491:
 /***/ ((module) => {
 
 "use strict";
@@ -6996,7 +9794,7 @@ module.exports = require("assert");
 
 /***/ }),
 
-/***/ 6417:
+/***/ 6113:
 /***/ ((module) => {
 
 "use strict";
@@ -7004,7 +9802,7 @@ module.exports = require("crypto");
 
 /***/ }),
 
-/***/ 8614:
+/***/ 2361:
 /***/ ((module) => {
 
 "use strict";
@@ -7012,7 +9810,7 @@ module.exports = require("events");
 
 /***/ }),
 
-/***/ 5747:
+/***/ 7147:
 /***/ ((module) => {
 
 "use strict";
@@ -7020,7 +9818,7 @@ module.exports = require("fs");
 
 /***/ }),
 
-/***/ 8605:
+/***/ 3685:
 /***/ ((module) => {
 
 "use strict";
@@ -7028,7 +9826,7 @@ module.exports = require("http");
 
 /***/ }),
 
-/***/ 7211:
+/***/ 5687:
 /***/ ((module) => {
 
 "use strict";
@@ -7036,7 +9834,7 @@ module.exports = require("https");
 
 /***/ }),
 
-/***/ 1631:
+/***/ 1808:
 /***/ ((module) => {
 
 "use strict";
@@ -7044,7 +9842,7 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 2087:
+/***/ 2037:
 /***/ ((module) => {
 
 "use strict";
@@ -7052,7 +9850,7 @@ module.exports = require("os");
 
 /***/ }),
 
-/***/ 5622:
+/***/ 1017:
 /***/ ((module) => {
 
 "use strict";
@@ -7060,7 +9858,7 @@ module.exports = require("path");
 
 /***/ }),
 
-/***/ 4016:
+/***/ 4404:
 /***/ ((module) => {
 
 "use strict";
@@ -7068,11 +9866,19 @@ module.exports = require("tls");
 
 /***/ }),
 
-/***/ 1669:
+/***/ 3837:
 /***/ ((module) => {
 
 "use strict";
 module.exports = require("util");
+
+/***/ }),
+
+/***/ 9796:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("zlib");
 
 /***/ })
 
