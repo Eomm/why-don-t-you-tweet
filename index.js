@@ -21,7 +21,7 @@ async function run () {
     const client = new TwitterApi({
       appKey: consumerKey,
       appSecret: consumerSecret,
-      accessToken: accessToken,
+      accessToken,
       accessSecret: accessTokenSecret
     })
 
