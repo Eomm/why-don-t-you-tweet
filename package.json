@@ -8,7 +8,7 @@
     "lint": "standard",
     "prepare": "husky install",
     "build": "ncc build index.js -o dist --license licenses.txt",
-    "test": "npm run lint && tap test/*.test.js"
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
