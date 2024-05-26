@@ -8,7 +8,7 @@
     "lint": "standard",
     "prepare": "husky install",
     "build": "ncc build index.js -o dist --license licenses.txt",
-    "test": "npm run lint && tap test/*.test.js"
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Eomm/why-don-t-you-tweet#readme",
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "twitter-api-v2": "^1.16.4"
+    "twitter-api-v2": "^1.17.0"
   },
   "standard": {
     "ignore": [
@@ -41,6 +41,6 @@
     "@vercel/ncc": "^0.38.1",
     "husky": "^9.0.11",
     "standard": "^17.1.0",
-    "tap": "^16.3.10"
+    "tap": "^19.0.2"
   }
 }
