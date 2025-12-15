@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/Eomm/why-don-t-you-tweet#readme",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^2.0.1",
     "twitter-api-v2": "^1.28.0"
   },
   "standard": {
